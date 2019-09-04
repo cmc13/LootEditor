@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         xmlns:local="clr-namespace:LootEditor.View"
         xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
+        xmlns:cvt="clr-namespace:LootEditor.View.Converters"
         DataContext="{StaticResource MainViewModel}"
         mc:Ignorable="d"
         Height="450" Width="800">
@@ -14,9 +17,15 @@
             <Binding Path="IsDirty" Converter="{StaticResource BoolToAsteriskConverter}" />
         </MultiBinding>
     </Window.Title>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <cmd:EventToCommand Command="{Binding ClosingCommand}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Window.Resources>
+        <cvt:NameToFontWeightConverter x:Key="NameToFontWeightConverter" />
         <DataTemplate x:Key="LootRuleItemTemplate" DataType="{x:Type vm:LootRuleViewModel}">
-            <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}">
+            <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
@@ -37,11 +46,31 @@
                 <MenuItem Header="New File" Command="{Binding NewFileCommand}" />
                 <MenuItem Header="Open File" Command="{Binding OpenFileCommand}" />
                 <MenuItem Header="Save File" Command="{Binding SaveFileCommand}" />
+                <MenuItem Header="Save As" Command="{Binding SaveAsCommand}" />
+                <Separator />
+                <MenuItem Header="Exit" />
             </MenuItem>
         </Menu>
 
-        <ListBox DockPanel.Dock="Left" ItemsSource="{Binding LootRules}" ItemTemplate="{StaticResource LootRuleItemTemplate}"
+        <Grid DockPanel.Dock="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}">Add</Button>
+            <Button Grid.Row="0" Grid.Column="1" Command="{Binding CloneRuleCommand}">Clone</Button>
+            <Button Grid.Row="0" Grid.Column="2" Command="{Binding DeleteRuleCommand}">Delete</Button>
+            
+            <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding LootRules}" ItemTemplate="{StaticResource LootRuleItemTemplate}"
                  SelectedItem="{Binding SelectedRule}" Width="300" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+        </Grid>
 
         <local:LootRuleEditor DataContext="{Binding SelectedRule}" />
     </DockPanel>

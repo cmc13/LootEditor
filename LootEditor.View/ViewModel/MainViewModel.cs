@@ -4,6 +4,7 @@ using LootEditor.Model;
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,22 +82,33 @@ namespace LootEditor.View.ViewModel
         public RelayCommand NewFileCommand { get; }
         public RelayCommand OpenFileCommand { get; }
         public RelayCommand SaveFileCommand { get; }
+        public RelayCommand SaveAsCommand { get; }
+        public RelayCommand<CancelEventArgs> ClosingCommand { get; }
+        public RelayCommand AddRuleCommand { get; }
+        public RelayCommand CloneRuleCommand { get; }
+        public RelayCommand DeleteRuleCommand { get; }
 
         public MainViewModel()
         {
             LootFile = new LootFile();
 
-            NewFileCommand = new RelayCommand(() =>
+            NewFileCommand = new RelayCommand(async () =>
             {
-                if (LootRules.Any(r => r.IsDirty))
+                if (IsDirty)
                 {
-                    MessageBox.Show("asdfsa");
+                    var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    if (mbResult == MessageBoxResult.Yes)
+                    {
+                        await SaveFileAsync(saveFileName).ConfigureAwait(false);
+                    }
+                    else if (mbResult != MessageBoxResult.Cancel)
+                        LootFile = new LootFile();
                 }
             });
 
             OpenFileCommand = new RelayCommand(async () =>
             {
-                if (LootRules.Any(r => r.IsDirty))
+                if (IsDirty)
                 {
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
@@ -142,11 +154,80 @@ namespace LootEditor.View.ViewModel
                     {
                         SaveFileName = sfd.FileName;
                     }
+                    else
+                        return;
                 }
 
                 if (!string.IsNullOrEmpty(saveFileName))
                     await SaveFileAsync(saveFileName).ConfigureAwait(false);
             });
+
+            SaveAsCommand = new RelayCommand(async () =>
+            {
+                var sfd = new SaveFileDialog()
+                {
+                    CheckPathExists = true,
+                    FileName = "Loot Files|*.utl",
+                    OverwritePrompt = true
+                };
+
+                var result = sfd.ShowDialog();
+                if (result.HasValue && result.Value)
+                {
+                    SaveFileName = sfd.FileName;
+
+                    if (!string.IsNullOrEmpty(saveFileName))
+                        await SaveFileAsync(saveFileName).ConfigureAwait(false);
+                }
+            });
+
+            ClosingCommand = new RelayCommand<CancelEventArgs>(async e =>
+            {
+                if (IsDirty)
+                {
+                    var mbResult = MessageBox.Show("File has changed. Would you like to save changes? Press cancel to keep running the application.", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    if (mbResult == MessageBoxResult.Cancel)
+                        e.Cancel = true;
+                    else if (mbResult == MessageBoxResult.Yes)
+                    {
+                        if (string.IsNullOrEmpty(saveFileName))
+                        {
+                            var sfd = new SaveFileDialog()
+                            {
+                                CheckPathExists = true,
+                                FileName = "Loot Files|*.utl",
+                                OverwritePrompt = true
+                            };
+
+                            var result = sfd.ShowDialog();
+                            if (result.HasValue && result.Value)
+                            {
+                                SaveFileName = sfd.FileName;
+                            }
+                            else if (!result.HasValue)
+                                e.Cancel = true;
+                        }
+                        if (!string.IsNullOrEmpty(saveFileName))
+                            await SaveFileAsync(saveFileName).ConfigureAwait(false);
+                    }
+                }
+            });
+
+
+            AddRuleCommand = new RelayCommand(() =>
+            {
+
+            });
+
+            CloneRuleCommand = new RelayCommand(() =>
+            {
+
+            }, () => SelectedRule != null);
+
+            DeleteRuleCommand = new RelayCommand(() =>
+            {
+
+            }, () => SelectedRule != null);
         }
 
         private async Task SaveFileAsync(string fileName)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using LootEditor.Model;
@@ -101,19 +102,44 @@ namespace LootEditor.View.ViewModel
 
             AddCriteriaCommand = new RelayCommand(() => { });
 
-            CloneCriteriaCommand = new RelayCommand(() =>
+            CloneCriteriaCommand = new RelayCommand(CloneCriteria, () => SelectedCriteria != null);
+
+            DeleteCriteriaCommand = new RelayCommand(RemoveCriteria, () => SelectedCriteria != null);
+        }
+
+        private void CloneCriteria()
+        {
+            var sel = SelectedCriteria;
+            if (sel != null)
             {
+                var newCriteria = LootCriteria.CreateLootCriteria(sel.Type);
+                foreach (var prop in newCriteria.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (prop.CanWrite)
+                        prop.SetValue(newCriteria, prop.GetValue(sel.Criteria));
+                }
 
-            }, () => SelectedCriteria != null);
+                rule.AddCriteria(newCriteria);
+                Criteria.Add(new LootCriteriaViewModel(newCriteria));
+                IsDirty = true;
+            }
+        }
 
-            DeleteCriteriaCommand = new RelayCommand(() =>
+        private void RemoveCriteria()
+        {
+            var sel = SelectedCriteria;
+            if (sel != null)
             {
-
-            }, () => SelectedCriteria != null);
+                rule.RemoveCriteria(sel.Criteria);
+                Criteria.Remove(sel);
+                IsDirty = true;
+            }
         }
 
         public void Clean()
         {
+            foreach (var criteria in Criteria)
+                criteria.Clean();
             IsDirty = false;
         }
     }
