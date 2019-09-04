@@ -19,10 +19,10 @@ namespace LootEditor.Model
             Slot = await ReadValue<int>(reader).ConfigureAwait(false);
         }
 
-        public override async Task WriteAsync(TextWriter writer)
+        public override async Task WriteAsync(Stream stream)
         {
-            await base.WriteAsync(writer).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(Slot.ToString()).ConfigureAwait(false);
+            await base.WriteAsync(stream).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Slot.ToString()).ConfigureAwait(false);
         }
     }
 }

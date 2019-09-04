@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using Microsoft.Win32;
 using System;
@@ -12,11 +13,12 @@ using System.Windows;
 
 namespace LootEditor.View.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase, IDropTarget
     {
         private string saveFileName;
         private LootFile lootFile;
         private LootRuleViewModel selectedRule;
+        private bool isDirty = false;
 
         public string SaveFileName
         {
@@ -77,7 +79,18 @@ namespace LootEditor.View.ViewModel
             }
         }
 
-        public bool IsDirty => LootRules.Any(r => r.IsDirty);
+        public bool IsDirty
+        {
+            get => isDirty || LootRules.Any(r => r.IsDirty);
+            set
+            {
+                if (isDirty != value)
+                {
+                    isDirty = value;
+                    RaisePropertyChanged(nameof(IsDirty));
+                }
+            }
+        }
 
         public RelayCommand NewFileCommand { get; }
         public RelayCommand OpenFileCommand { get; }
@@ -87,6 +100,8 @@ namespace LootEditor.View.ViewModel
         public RelayCommand AddRuleCommand { get; }
         public RelayCommand CloneRuleCommand { get; }
         public RelayCommand DeleteRuleCommand { get; }
+        public RelayCommand<int> MoveSelectedItemDownCommand { get; }
+        public RelayCommand<int> MoveSelectedItemUpCommand { get; }
 
         public MainViewModel()
         {
@@ -167,7 +182,7 @@ namespace LootEditor.View.ViewModel
                 var sfd = new SaveFileDialog()
                 {
                     CheckPathExists = true,
-                    FileName = "Loot Files|*.utl",
+                    Filter = "Loot Files|*.utl",
                     OverwritePrompt = true
                 };
 
@@ -216,29 +231,97 @@ namespace LootEditor.View.ViewModel
 
             AddRuleCommand = new RelayCommand(() =>
             {
+                var rule = new LootRule()
+                {
+                    Name = "New Rule",
+                    Action = LootAction.Keep
+                };
 
+                lootFile.AddRule(rule);
+
+                var vm = new LootRuleViewModel(rule);
+                LootRules.Add(vm);
+
+                SelectedRule = vm;
             });
 
             CloneRuleCommand = new RelayCommand(() =>
             {
+                var sel = SelectedRule;
+                if (sel != null)
+                {
+                    var newRule = sel.CloneRule();
+                    lootFile.AddRule(newRule);
 
+                    var vm = new LootRuleViewModel(newRule);
+                    LootRules.Add(vm);
+
+                    IsDirty = true;
+                    SelectedRule = vm;
+                }
             }, () => SelectedRule != null);
 
             DeleteRuleCommand = new RelayCommand(() =>
             {
-
+                var sel = SelectedRule;
+                if (sel != null)
+                {
+                    LootRules.Remove(sel);
+                    lootFile.RemoveRule(sel.Rule);
+                    IsDirty = true;
+                }
             }, () => SelectedRule != null);
+
+            MoveSelectedItemDownCommand = new RelayCommand<int>(index =>
+            {
+                LootRules.Move(index, index + 1);
+                LootFile.MoveRule(index, index + 1);
+                IsDirty = true;
+            }, _ => SelectedRule != null);
+
+            MoveSelectedItemUpCommand = new RelayCommand<int>(index =>
+            {
+                LootRules.Move(index, index - 1);
+                LootFile.MoveRule(index, index - 1);
+                IsDirty = true;
+            }, _ => SelectedRule != null);
         }
 
         private async Task SaveFileAsync(string fileName)
         {
-            using (var fs = File.OpenWrite(SaveFileName))
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 await LootFile.WriteFileAsync(fs).ConfigureAwait(false);
-
-                foreach (var rule in LootRules.Where(r => r.IsDirty))
-                    rule.Clean();
+                await fs.FlushAsync();
+                fs.Close();
             }
+
+            foreach (var rule in LootRules.Where(r => r.IsDirty))
+                rule.Clean();
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is LootRuleViewModel)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                dropInfo.Effects = DragDropEffects.Move;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.InsertIndex > dropInfo.DragInfo.SourceIndex)
+            {
+                LootFile.MoveRule(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                LootRules.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+            }
+            else
+            {
+                LootFile.MoveRule(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+                LootRules.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+            }
+            IsDirty = true;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LootEditor.Model
 {
-    public class LootRule
+    public class LootRule : ICloneable
     {
         private List<LootCriteria> criteria = new List<LootCriteria>();
 
@@ -77,26 +77,43 @@ namespace LootEditor.Model
 
         public void AddCriteria(LootCriteria criteria) => this.criteria.Add(criteria);
 
-        public async Task WriteAsync(TextWriter writer)
+        public async Task WriteAsync(Stream stream)
         {
-            await writer.WriteLineForRealAsync(Name).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(CustomExpression).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Name).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(CustomExpression).ConfigureAwait(false);
 
-            var bigLine = new List<string> { ((int)Action).ToString(), Priority.ToString() };
+            var bigLine = new List<int> { Priority, (int)Action };
+            await stream.WriteLineForRealAsync(string.Join(";", bigLine.Concat(Criteria.Select(c => (int)c.Type))));
             if (Action == LootAction.KeepUpTo)
-                bigLine.Add(KeepUpToCount.ToString());
-            await writer.WriteLineForRealAsync(string.Join(";", bigLine.Concat(Criteria.Select(c => ((int)c.Type).ToString()))));
+                await stream.WriteLineForRealAsync(KeepUpToCount.ToString()).ConfigureAwait(false);
             foreach (var criteria in Criteria)
             {
-                using (var subWriter = new StringWriter())
-                {
-                    await criteria.WriteAsync(subWriter).ConfigureAwait(false);
-                    var str = subWriter.ToString();
-
-                    await writer.WriteLineForRealAsync(str.Length.ToString()).ConfigureAwait(false);
-                    await writer.WriteLineForRealAsync(str).ConfigureAwait(false);
-                }
+                await criteria.WriteAsync(stream).ConfigureAwait(false);
             }
+        }
+
+        public object Clone()
+        {
+            var rule = new LootRule()
+            {
+                Name = this.Name,
+                Action = this.Action,
+                Priority = this.Priority,
+                CustomExpression = this.CustomExpression,
+                KeepUpToCount = this.KeepUpToCount
+            };
+
+            foreach (var criteria in this.Criteria)
+                rule.AddCriteria(criteria.Clone() as LootCriteria);
+
+            return rule;
+        }
+
+        public void MoveCriteria(int sourceIndex, int targetIndex)
+        {
+            var item = criteria[sourceIndex];
+            criteria.RemoveAt(sourceIndex);
+            criteria.Insert(targetIndex, item);
         }
     }
 }

@@ -11,7 +11,12 @@ namespace LootEditor.Model
         public static Task<string> ReadLineForRealAsync(this TextReader reader)
             => Task.FromResult(reader.ReadLine());
 
-        public static Task WriteLineForRealAsync(this TextWriter writer, string text)
-            => Task.Run(() => writer.WriteLine(text));
+        public static async Task WriteLineForRealAsync(this Stream stream, string text)
+        {
+            var bytes = Encoding.Default.GetBytes(text);
+            await stream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+            bytes = Encoding.Default.GetBytes(Environment.NewLine);
+            await stream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace LootEditor.Model
     public abstract class ExtraBlock
     {
         public string Name { get; set; }
-        public int Length { get; set; }
+        public long Length { get; set; }
 
         public static async Task<ExtraBlock> ReadBlockAsync(TextReader reader)
         {
@@ -15,7 +15,7 @@ namespace LootEditor.Model
             switch (blockType)
             {
                 case "SalvageCombine":
-                    var block = new SalvageCombineBlockType();
+                    var block = new SalvageCombineBlockType() { Name = blockType };
                     await block.ReadAsync(reader).ConfigureAwait(false);
                     return block;
 
@@ -24,16 +24,16 @@ namespace LootEditor.Model
             }
         }
 
-        public virtual async Task WriteAsync(TextWriter writer)
+        public virtual async Task WriteAsync(Stream stream)
         {
-            await writer.WriteLineForRealAsync(Name).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(Length.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Name).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Length.ToString()).ConfigureAwait(false);
         }
 
         public virtual async Task ReadAsync(TextReader reader)
         {
             var lengthLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
-            if (!int.TryParse(lengthLine, out var length))
+            if (!long.TryParse(lengthLine, out var length))
             {
                 throw new Exception();
             }

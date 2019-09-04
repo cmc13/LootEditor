@@ -52,14 +52,14 @@ namespace LootEditor.Model
             SVDiff = svDiff;
         }
 
-        public override async Task WriteAsync(TextWriter writer)
+        public override async Task WriteAsync(Stream stream)
         {
-            await base.WriteAsync(writer).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(R.ToString()).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(G.ToString()).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(B.ToString()).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(HDiff.ToString()).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(SVDiff.ToString()).ConfigureAwait(false);
+            await base.WriteAsync(stream).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(R.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(G.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(B.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(HDiff.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(SVDiff.ToString()).ConfigureAwait(false);
         }
     }
 }

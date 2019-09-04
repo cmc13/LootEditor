@@ -33,10 +33,21 @@ namespace LootEditor.Model
             }
         }
 
-        public override async Task WriteAsync(TextWriter writer)
+        public override async Task WriteAsync(Stream stream)
         {
-            await base.WriteAsync(writer).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
+            await base.WriteAsync(stream).ConfigureAwait(false);
+            if (typeof(T) == typeof(bool))
+            {
+                await stream.WriteLineForRealAsync(Value.ToString().ToLower()).ConfigureAwait(false);
+            }
+            else if (typeof(T).IsEnum)
+            {
+                await stream.WriteLineForRealAsync(Convert.ToInt32(Value).ToString()).ConfigureAwait(false);
+            }
+            else
+            {
+                await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
+            }
         }
     }
 }

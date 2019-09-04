@@ -8,6 +8,7 @@
         xmlns:local="clr-namespace:LootEditor.View"
         xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
         xmlns:cvt="clr-namespace:LootEditor.View.Converters"
+        xmlns:dd="urn:gong-wpf-dragdrop"
         DataContext="{StaticResource MainViewModel}"
         mc:Ignorable="d"
         Height="450" Width="800">
@@ -24,6 +25,7 @@
     </i:Interaction.Triggers>
     <Window.Resources>
         <cvt:NameToFontWeightConverter x:Key="NameToFontWeightConverter" />
+        <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <DataTemplate x:Key="LootRuleItemTemplate" DataType="{x:Type vm:LootRuleViewModel}">
             <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}">
                 <TextBlock.Style>
@@ -67,11 +69,19 @@
             <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}">Add</Button>
             <Button Grid.Row="0" Grid.Column="1" Command="{Binding CloneRuleCommand}">Clone</Button>
             <Button Grid.Row="0" Grid.Column="2" Command="{Binding DeleteRuleCommand}">Delete</Button>
-            
+
             <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding LootRules}" ItemTemplate="{StaticResource LootRuleItemTemplate}"
-                 SelectedItem="{Binding SelectedRule}" Width="300" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                 SelectedItem="{Binding SelectedRule}" Width="300" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
+                <ListBox.InputBindings>
+                    <KeyBinding Key="Up" Modifiers="Shift" Command="{Binding MoveSelectedItemUpCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
+                    <KeyBinding Key="Down" Modifiers="Shift" Command="{Binding MoveSelectedItemDownCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
+                </ListBox.InputBindings>
+            </ListBox>
         </Grid>
 
-        <local:LootRuleEditor DataContext="{Binding SelectedRule}" />
+        <Grid Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}">
+            <local:LootRuleEditor DataContext="{Binding SelectedRule}" />
+        </Grid>
     </DockPanel>
 </Window>

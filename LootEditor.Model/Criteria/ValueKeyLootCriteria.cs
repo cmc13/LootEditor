@@ -36,11 +36,11 @@ namespace LootEditor.Model
             Key = (TKey)key;
         }
 
-        public override async Task WriteAsync(TextWriter writer)
+        public override async Task WriteAsync(Stream stream)
         {
-            await base.WriteAsync(writer).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(Convert.ToInt32(Key).ToString()).ConfigureAwait(false);
+            await base.WriteAsync(stream).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Convert.ToInt32(Key).ToString()).ConfigureAwait(false);
         }
     }
 }

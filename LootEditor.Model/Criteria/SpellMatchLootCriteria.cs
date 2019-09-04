@@ -21,12 +21,12 @@ namespace LootEditor.Model
             SpellCount = await ReadValue<int>(reader).ConfigureAwait(false);
         }
 
-        public override async Task WriteAsync(TextWriter writer)
+        public override async Task WriteAsync(Stream stream)
         {
-            await base.WriteAsync(writer).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(Match).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(NoMatch).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(SpellCount.ToString()).ConfigureAwait(false);
+            await base.WriteAsync(stream).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Match).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(NoMatch).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(SpellCount.ToString()).ConfigureAwait(false);
         }
     }
 }

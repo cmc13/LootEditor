@@ -83,30 +83,34 @@ namespace LootEditor.Model
 
         public async Task WriteFileAsync(Stream stream)
         {
-            using (var writer = new StreamWriter(stream))
-            {
-                await writer.WriteLineForRealAsync("UTL").ConfigureAwait(false);
-                await writer.WriteLineForRealAsync(MAX_FILE_VERSION.ToString()).ConfigureAwait(false);
-                await writer.WriteLineForRealAsync(RuleCount.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync("UTL").ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(MAX_FILE_VERSION.ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(RuleCount.ToString()).ConfigureAwait(false);
 
-                foreach (var rule in Rules)
-                    await rule.WriteAsync(writer);
+            foreach (var rule in Rules)
+                await rule.WriteAsync(stream);
 
-                foreach (var block in ExtraBlocks)
-                    await block.WriteAsync(writer);
-            }
+            foreach (var block in ExtraBlocks)
+                await block.WriteAsync(stream);
         }
 
-        private void AddRule(LootRule newRule)
+        public void AddRule(LootRule newRule)
         {
             lootRules.Add(newRule);
             RuleCount++;
         }
 
-        private void RemoveAt(int index)
+        public void RemoveRule(LootRule rule)
         {
-            lootRules.RemoveAt(index);
+            lootRules.Remove(rule);
             RuleCount--;
+        }
+
+        public void MoveRule(int index, int newIndex)
+        {
+            var item = lootRules[index];
+            lootRules.RemoveAt(index);
+            lootRules.Insert(newIndex, item);
         }
     }
 }

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Reflection;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 
 namespace LootEditor.View.ViewModel
 {
-    public class LootRuleViewModel : ViewModelBase
+    public class LootRuleViewModel : ViewModelBase, IDropTarget
     {
-        private readonly LootRule rule;
         private bool isDirty;
         private LootCriteriaViewModel selectedCriteria;
 
@@ -29,12 +29,12 @@ namespace LootEditor.View.ViewModel
 
         public string Name
         {
-            get => rule.Name;
+            get => Rule.Name;
             set
             {
-                if (rule.Name != value)
+                if (Rule.Name != value)
                 {
-                    rule.Name = value;
+                    Rule.Name = value;
                     RaisePropertyChanged(nameof(Name));
                     IsDirty = true;
                 }
@@ -43,12 +43,12 @@ namespace LootEditor.View.ViewModel
 
         public LootAction Action
         {
-            get => rule.Action;
+            get => Rule.Action;
             set
             {
-                if (rule.Action != value)
+                if (Rule.Action != value)
                 {
-                    rule.Action = value;
+                    Rule.Action = value;
                     RaisePropertyChanged(nameof(Action));
                     IsDirty = true;
                 }
@@ -57,19 +57,21 @@ namespace LootEditor.View.ViewModel
 
         public int KeepUpToCount
         {
-            get => rule.KeepUpToCount;
+            get => Rule.KeepUpToCount;
             set
             {
-                if (rule.KeepUpToCount != value)
+                if (Rule.KeepUpToCount != value)
                 {
-                    rule.KeepUpToCount = value;
+                    Rule.KeepUpToCount = value;
                     RaisePropertyChanged(nameof(KeepUpToCount));
                     IsDirty = true;
                 }
             }
         }
 
-        public bool IsDisabled => rule.Criteria.Any(c => c.Type == LootCriteriaType.DisabledRule && ((ValueLootCriteria<bool>)c).Value == true);
+        public LootRule Rule { get; }
+
+        public bool IsDisabled => Rule.Criteria.Any(c => c.Type == LootCriteriaType.DisabledRule && ((ValueLootCriteria<bool>)c).Value == true);
 
         public ObservableCollection<LootCriteriaViewModel> Criteria { get; } = new ObservableCollection<LootCriteriaViewModel>();
 
@@ -95,12 +97,22 @@ namespace LootEditor.View.ViewModel
 
         public LootRuleViewModel(LootRule rule)
         {
-            this.rule = rule;
+            this.Rule = rule;
             Criteria.Clear();
             foreach (var crit in rule.Criteria)
                 Criteria.Add(new LootCriteriaViewModel(crit));
 
-            AddCriteriaCommand = new RelayCommand(() => { });
+            AddCriteriaCommand = new RelayCommand(() =>
+            {
+                var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.AnySimilarColor);
+                rule.AddCriteria(newCriteria);
+
+                var vm = new LootCriteriaViewModel(newCriteria);
+                Criteria.Add(vm);
+
+                IsDirty = true;
+                SelectedCriteria = vm;
+            });
 
             CloneCriteriaCommand = new RelayCommand(CloneCriteria, () => SelectedCriteria != null);
 
@@ -112,14 +124,9 @@ namespace LootEditor.View.ViewModel
             var sel = SelectedCriteria;
             if (sel != null)
             {
-                var newCriteria = LootCriteria.CreateLootCriteria(sel.Type);
-                foreach (var prop in newCriteria.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (prop.CanWrite)
-                        prop.SetValue(newCriteria, prop.GetValue(sel.Criteria));
-                }
+                var newCriteria = sel.Criteria.Clone() as LootCriteria;
 
-                rule.AddCriteria(newCriteria);
+                Rule.AddCriteria(newCriteria);
                 Criteria.Add(new LootCriteriaViewModel(newCriteria));
                 IsDirty = true;
             }
@@ -130,7 +137,7 @@ namespace LootEditor.View.ViewModel
             var sel = SelectedCriteria;
             if (sel != null)
             {
-                rule.RemoveCriteria(sel.Criteria);
+                Rule.RemoveCriteria(sel.Criteria);
                 Criteria.Remove(sel);
                 IsDirty = true;
             }
@@ -141,6 +148,32 @@ namespace LootEditor.View.ViewModel
             foreach (var criteria in Criteria)
                 criteria.Clean();
             IsDirty = false;
+        }
+
+        public LootRule CloneRule() => Rule.Clone() as LootRule;
+
+        void IDropTarget.DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is LootCriteriaViewModel)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                dropInfo.Effects = System.Windows.DragDropEffects.Move;
+            }
+        }
+
+        void IDropTarget.Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.InsertIndex > dropInfo.DragInfo.SourceIndex)
+            {
+                Rule.MoveCriteria(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                Criteria.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+            }
+            else
+            {
+                Rule.MoveCriteria(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+                Criteria.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+            }
+            IsDirty = true;
         }
     }
 }

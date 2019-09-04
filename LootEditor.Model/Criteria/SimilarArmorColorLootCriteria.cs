@@ -20,10 +20,10 @@ namespace LootEditor.Model
             ArmorGroup = await ReadValue<string>(reader).ConfigureAwait(false);
         }
 
-        public override async Task WriteAsync(TextWriter writer)
+        public override async Task WriteAsync(Stream stream)
         {
-            await base.WriteAsync(writer).ConfigureAwait(false);
-            await writer.WriteLineForRealAsync(ArmorGroup).ConfigureAwait(false);
+            await base.WriteAsync(stream).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(ArmorGroup).ConfigureAwait(false);
         }
     }
 }

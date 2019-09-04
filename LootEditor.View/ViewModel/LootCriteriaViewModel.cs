@@ -1,5 +1,4 @@
-﻿using System;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using LootEditor.Model;
 
 namespace LootEditor.View.ViewModel
