@@ -102,6 +102,9 @@ namespace LootEditor.View.ViewModel
         public RelayCommand DeleteRuleCommand { get; }
         public RelayCommand<int> MoveSelectedItemDownCommand { get; }
         public RelayCommand<int> MoveSelectedItemUpCommand { get; }
+        public RelayCommand CutItemCommand { get; }
+        public RelayCommand CopyItemCommand { get; }
+        public RelayCommand PasteItemCommand { get; }
 
         public MainViewModel()
         {
@@ -285,6 +288,31 @@ namespace LootEditor.View.ViewModel
                 LootFile.MoveRule(index, index - 1);
                 IsDirty = true;
             }, _ => SelectedRule != null);
+
+            CutItemCommand = new RelayCommand(() =>
+            {
+                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
+                DeleteRuleCommand.Execute(null);
+            }, () => SelectedRule != null);
+
+            CopyItemCommand = new RelayCommand(() =>
+            {
+                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
+            }, () => SelectedRule != null);
+
+            PasteItemCommand = new RelayCommand(() =>
+            {
+                var data = Clipboard.GetData(typeof(LootRule).Name) as LootRule;
+
+                var newRule = data.Clone() as LootRule;
+                LootFile.AddRule(newRule);
+
+                var vm = new LootRuleViewModel(newRule);
+                LootRules.Add(vm);
+
+                IsDirty = true;
+                SelectedRule = vm;
+            }, () => Clipboard.ContainsData(typeof(LootRule).Name));
         }
 
         private async Task SaveFileAsync(string fileName)

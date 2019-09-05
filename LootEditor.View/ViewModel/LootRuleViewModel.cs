@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reflection;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace LootEditor.View.ViewModel
 {
@@ -16,7 +15,7 @@ namespace LootEditor.View.ViewModel
 
         public bool IsDirty
         {
-            get => isDirty;
+            get => isDirty || Criteria.Any(c => c.IsDirty);
             set
             {
                 if (isDirty != value)
@@ -94,13 +93,20 @@ namespace LootEditor.View.ViewModel
         public RelayCommand AddCriteriaCommand { get; }
         public RelayCommand CloneCriteriaCommand { get; }
         public RelayCommand DeleteCriteriaCommand { get; }
+        public RelayCommand CutItemCommand { get; }
+        public RelayCommand CopyItemCommand { get; }
+        public RelayCommand PasteItemCommand { get; }
 
         public LootRuleViewModel(LootRule rule)
         {
             this.Rule = rule;
             Criteria.Clear();
             foreach (var crit in rule.Criteria)
-                Criteria.Add(new LootCriteriaViewModel(crit));
+            {
+                var vm = new LootCriteriaViewModel(crit);
+                vm.PropertyChanged += Vm_PropertyChanged;
+                Criteria.Add(vm);
+            }
 
             AddCriteriaCommand = new RelayCommand(() =>
             {
@@ -108,6 +114,7 @@ namespace LootEditor.View.ViewModel
                 rule.AddCriteria(newCriteria);
 
                 var vm = new LootCriteriaViewModel(newCriteria);
+                vm.PropertyChanged += Vm_PropertyChanged;
                 Criteria.Add(vm);
 
                 IsDirty = true;
@@ -117,8 +124,42 @@ namespace LootEditor.View.ViewModel
             CloneCriteriaCommand = new RelayCommand(CloneCriteria, CanExecute);
 
             DeleteCriteriaCommand = new RelayCommand(RemoveCriteria, CanExecute);
+
+            CutItemCommand = new RelayCommand(() =>
+            {
+                Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
+                DeleteCriteriaCommand.Execute(null);
+            }, () => SelectedCriteria != null);
+
+            CopyItemCommand = new RelayCommand(() =>
+            {
+                Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
+            }, () => SelectedCriteria != null);
+
+            PasteItemCommand = new RelayCommand(() =>
+            {
+                var data = Clipboard.GetData(typeof(LootCriteria).Name) as LootCriteria;
+
+                var newCriteria = data.Clone() as LootCriteria;
+                rule.AddCriteria(newCriteria);
+
+                var vm = new LootCriteriaViewModel(newCriteria);
+                vm.PropertyChanged += Vm_PropertyChanged;
+                Criteria.Add(vm);
+
+                IsDirty = true;
+                SelectedCriteria = vm;
+            }, () => Clipboard.ContainsData(typeof(LootCriteria).Name));
         }
-        
+
+        private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var v = sender as LootCriteriaViewModel;
+            if (v.Type == LootCriteriaType.DisabledRule)
+                RaisePropertyChanged(nameof(IsDisabled));
+            RaisePropertyChanged(nameof(IsDirty));
+        }
+
         private bool CanExecute()
         {
             return SelectedCriteria != null;
@@ -132,7 +173,9 @@ namespace LootEditor.View.ViewModel
                 var newCriteria = sel.Criteria.Clone() as LootCriteria;
 
                 Rule.AddCriteria(newCriteria);
-                Criteria.Add(new LootCriteriaViewModel(newCriteria));
+                var vm = new LootCriteriaViewModel(newCriteria);
+                vm.PropertyChanged += Vm_PropertyChanged;
+                Criteria.Add(vm);
                 IsDirty = true;
             }
         }
@@ -142,6 +185,7 @@ namespace LootEditor.View.ViewModel
             var sel = SelectedCriteria;
             if (sel != null)
             {
+                sel.PropertyChanged -= Vm_PropertyChanged;
                 Rule.RemoveCriteria(sel.Criteria);
                 Criteria.Remove(sel);
                 IsDirty = true;
@@ -162,7 +206,7 @@ namespace LootEditor.View.ViewModel
             if (dropInfo.Data is LootCriteriaViewModel)
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
-                dropInfo.Effects = System.Windows.DragDropEffects.Move;
+                dropInfo.Effects = DragDropEffects.Move;
             }
         }
 

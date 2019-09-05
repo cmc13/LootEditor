@@ -76,6 +76,7 @@
                 <ListBox.InputBindings>
                     <KeyBinding Key="Up" Modifiers="Shift" Command="{Binding MoveSelectedItemUpCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
                     <KeyBinding Key="Down" Modifiers="Shift" Command="{Binding MoveSelectedItemDownCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
+                    <KeyBinding Key="Delete" Command="{Binding DeleteRuleCommand}" />
                 </ListBox.InputBindings>
             </ListBox>
         </Grid>

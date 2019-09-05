@@ -78,12 +78,14 @@
     <Compile Include="Converters\NameToFontWeightConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
+    <Compile Include="LootCriteriaDataTemplateSelector.cs" />
     <Compile Include="LootCriteriaEditor.xaml.cs">
       <DependentUpon>LootCriteriaEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="LootRuleEditor.xaml.cs">
       <DependentUpon>LootRuleEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\DisabledRuleLootCriteriaViewModel.cs" />
     <Compile Include="ViewModel\LootCriteriaViewModel.cs" />
     <Compile Include="ViewModel\LootRuleViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -141,5 +143,6 @@
       <Name>LootEditor.Model</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

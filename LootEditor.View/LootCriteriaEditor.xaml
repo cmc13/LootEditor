@@ -4,9 +4,94 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor.View"
+             xmlns:cvt="clr-namespace:LootEditor.View.Converters"
+             xmlns:model="clr-namespace:LootEditor.Model;assembly=LootEditor.Model"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <UserControl.Resources>
+        <DataTemplate x:Key="ColorLootCriteriaTemplate"></DataTemplate>
+        <DataTemplate x:Key="DisabledRuleTemplate">
+            <CheckBox IsChecked="{Binding DynamicCriteria.Value}">Disabled</CheckBox>
+        </DataTemplate>
+        <DataTemplate x:Key="LongValueKeyTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:LongValueKey}}" SelectedItem="{Binding DynamicCriteria.Key}" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Value, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="DoubleValueKeyTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:DoubleValueKey}}" SelectedItem="{Binding DynamicCriteria.Key}" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Value, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="StringValueKeyTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:StringValueKey}}" SelectedItem="{Binding DynamicCriteria.Key}" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Value, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DataTemplate>
+
+        <local:LootCriteriaDataTemplateSelector x:Key="TemplateSelector"
+                                                ColorLootCriteriaTemplate="{StaticResource ColorLootCriteriaTemplate}"
+                                                DisabledRuleTemplate="{StaticResource DisabledRuleTemplate}"
+                                                LongValueKeyTemplate="{StaticResource LongValueKeyTemplate}"
+                                                DoubleValueKeyTemplate="{StaticResource DoubleValueKeyTemplate}"
+                                                StringValueKeyTemplate="{StaticResource StringValueKeyTemplate}"/>
+
+        <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </UserControl.Resources>
+    <GroupBox Header="Criteria" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Type:" />
+            <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type model:LootCriteriaType}}" SelectedItem="{Binding Type}" />
+
+            <ContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding}" ContentTemplateSelector="{StaticResource TemplateSelector}" />
+        </Grid>
+    </GroupBox>
 </UserControl>

@@ -31,7 +31,7 @@ namespace LootEditor.Model
                 case LootCriteriaType.CharacterMainPackEmptySlotsGE: return new ValueLootCriteria<int>(type, "Empty Pack Slots >= {0}");
                 case LootCriteriaType.CharacterSkillGE: return new ValueKeyLootCriteria<SkillType, int>(type, "{0} >= {1}");
                 case LootCriteriaType.DamagePercentGE: return new ValueLootCriteria<double>(type, "Damage % >= {0}");
-                case LootCriteriaType.DisabledRule: return new ValueLootCriteria<bool>(type, "This Rule is Disabled");
+                case LootCriteriaType.DisabledRule: return new ValueLootCriteria<bool>(type, "Disabled: {0}");
                 case LootCriteriaType.DoubleValKeyGE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type, "{0} >= {1}");
                 case LootCriteriaType.DoubleValKeyLE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type, "{0} <= ");
                 case LootCriteriaType.LongValKeyE: return new ValueKeyLootCriteria<LongValueKey, int>(type, "{0} == {1}");
