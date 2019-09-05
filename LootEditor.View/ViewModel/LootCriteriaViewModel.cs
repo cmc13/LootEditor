@@ -25,8 +25,6 @@ namespace LootEditor.View.ViewModel
             this.criteria = criteria;
         }
 
-        public ObservableCollection<ArmorSlot> Selected
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
