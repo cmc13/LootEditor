@@ -114,9 +114,14 @@ namespace LootEditor.View.ViewModel
                 SelectedCriteria = vm;
             });
 
-            CloneCriteriaCommand = new RelayCommand(CloneCriteria, () => SelectedCriteria != null);
+            CloneCriteriaCommand = new RelayCommand(CloneCriteria, CanExecute);
 
-            DeleteCriteriaCommand = new RelayCommand(RemoveCriteria, () => SelectedCriteria != null);
+            DeleteCriteriaCommand = new RelayCommand(RemoveCriteria, CanExecute);
+        }
+        
+        private bool CanExecute()
+        {
+            return SelectedCriteria != null;
         }
 
         private void CloneCriteria()
