@@ -2,6 +2,7 @@
 using LootEditor.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Reflection;
@@ -24,6 +25,8 @@ namespace LootEditor.View.ViewModel
             this.criteria = criteria;
         }
 
+        public ObservableCollection<ArmorSlot> Selected
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -36,7 +39,7 @@ namespace LootEditor.View.ViewModel
             if (props.ContainsKey(binder.Name))
             {
                 var prop = criteria.GetType().GetProperty(binder.Name, BindingFlags.Public | BindingFlags.Instance);
-                prop.SetValue(criteria, Convert.ChangeType(value, prop.PropertyType));
+                prop.SetValue(criteria, value.GetType() != prop.PropertyType ? Convert.ChangeType(value, prop.PropertyType) : value);
                 props[binder.Name] = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(binder.Name));
                 return true;

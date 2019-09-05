@@ -8,5 +8,6 @@
     <Application.Resources>
         <vm:MainViewModel x:Key="MainViewModel" />
         <cvt:BoolToAsteriskConverter x:Key="BoolToAsteriskConverter" />
+        <cvt:EnumFlagsToBoolConverter x:Key="EnumFlagsToBoolConverter" />
     </Application.Resources>
 </Application>

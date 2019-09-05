@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,6 +53,7 @@
     <Compile Include="Criteria\SpellMatchLootCriteria.cs" />
     <Compile Include="Criteria\ValueKeyLootCriteria.cs" />
     <Compile Include="Criteria\ValueLootCriteria.cs" />
+    <Compile Include="Enums\ArmorSlot.cs" />
     <Compile Include="Enums\DoubleValueKey.cs" />
     <Compile Include="Enums\LongValueKey.cs" />
     <Compile Include="Enums\LootCriteriaType.cs" />

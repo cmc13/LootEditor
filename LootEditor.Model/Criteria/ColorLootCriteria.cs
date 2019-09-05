@@ -2,14 +2,25 @@
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace LootEditor.Model
 {
     public class ColorLootCriteria : LootCriteria
     {
-        public int R { get; set; }
-        public int G { get; set; }
-        public int B { get; set; }
+        public byte R { get; set; }
+        public byte G { get; set; }
+        public byte B { get; set; }
+        public Color Color
+        {
+            get => Color.FromArgb(255, R, G, B);
+            set
+            {
+                R = value.R;
+                G = value.G;
+                B = value.B;
+            }
+        }
         public double HDiff { get; set; }
         public decimal SVDiff { get; set; }
 
@@ -22,8 +33,11 @@ namespace LootEditor.Model
 
         public override string ToString()
         {
-            var c = ColorTranslator.FromHtml($"{R:X2}{G:X2}{B:X2}");
-            return $"Any Color [{c.Name}]; {HDiff}; {SVDiff}";
+            var name = $"#{R:X2}{G:X2}{B:X2}";
+            foreach (var color in typeof(Colors).GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public))
+                if ((Color)color.GetValue(null) == Color)
+                    name = color.Name;
+            return $"Any Color [{name}]; {HDiff}; {SVDiff}";
         }
 
         public override async Task ReadAsync(TextReader reader, int version)
@@ -36,9 +50,9 @@ namespace LootEditor.Model
             var hDiffLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
             var svDiffLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
 
-            if (!int.TryParse(rLine, out var r)
-                || !int.TryParse(gLine, out var g)
-                || !int.TryParse(bLine, out var b)
+            if (!byte.TryParse(rLine, out var r)
+                || !byte.TryParse(gLine, out var g)
+                || !byte.TryParse(bLine, out var b)
                 || !double.TryParse(hDiffLine, out var hDiff)
                 || !decimal.TryParse(svDiffLine, out var svDiff))
             {
