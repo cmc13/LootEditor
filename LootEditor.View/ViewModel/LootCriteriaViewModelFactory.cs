@@ -1,87 +1,114 @@
-﻿using LootEditor.Model;
+﻿using GalaSoft.MvvmLight;
+using LootEditor.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LootEditor.View.ViewModel
 {
     public static class LootCriteriaViewModelFactory
     {
-        private static Dictionary<Type, Type> dynamicTypes = new Dictionary<Type, Type>();
+        private static Dictionary<Type, Type> typedict = new Dictionary<Type, Type>();
 
         public static LootCriteriaViewModel CreateViewModel(LootCriteria criteria)
         {
             var vmType = criteria.GetType();
-            if (!dynamicTypes.TryGetValue(vmType, out var dynamicType))
+            if (!typedict.TryGetValue(vmType, out var dynamicType))
             {
-                var assemblyName = new AssemblyName("LootEditor.View.ViewModel.Dynamic");
+                // generate new type 
+                // Create everything required to get a module builder
+                var assemblyName = new AssemblyName("LootEditor.View.DynamicViewModel");
                 var domain = AppDomain.CurrentDomain;
-                var assemblyBuilder = domain.DefineDynamicAssembly(assemblyName, System.Reflection.Emit.AssemblyBuilderAccess.Run);
+                var assemblyBuilder = domain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+                //AssemblyBuilderAccess.RunAndSave);
                 var moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyName.Name);
 
-                var dynamicTypeName = Assembly.CreateQualifiedName(vmType.AssemblyQualifiedName, vmType.Name + "ViewModel");
+                string dynamicTypeName = Assembly.CreateQualifiedName(vmType.AssemblyQualifiedName, vmType.Name+"DynamicViewModel");
 
                 var typeBuilder = moduleBuilder.DefineType(dynamicTypeName, TypeAttributes.Public | TypeAttributes.Class, typeof(LootCriteriaViewModel));
 
-                var ctor = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard | CallingConventions.HasThis, new[] { typeof(LootCriteria) });
-                var baseCtor = typeof(LootCriteriaViewModel).GetConstructors()[0];
-                var param = baseCtor.GetParameters()[0];
-                ctor.DefineParameter(1, param.Attributes, param.Name);
-                var gen = ctor.GetILGenerator();
-                gen.Emit(OpCodes.Nop);
-                gen.Emit(OpCodes.Ldarg_0); // load this
-                gen.Emit(OpCodes.Ldarg, 1); // load param
-                gen.Emit(OpCodes.Call, baseCtor); // call base constructor
-                gen.Emit(OpCodes.Ret);
+                MethodInfo raisePropertyChangedMethod = typeof(ViewModelBase).GetMethod("RaisePropertyChanged",
+                    BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(string) }, null);
 
-                var raisePropertyChangedMethod = typeof(LootCriteriaViewModel).GetMethod("RaisePropertyChanged", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string) }, null);
+                var constructorBuilder = typeBuilder.DefineConstructor(MethodAttributes.Public, CallingConventions.Standard | CallingConventions.HasThis,
+                    new[] { typeof(LootCriteria) });
+                var baseConstructor = typeof(LootCriteriaViewModel).GetConstructors()[0];
+                var baseParam = baseConstructor.GetParameters()[0];
 
-                foreach (var prop in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (prop.CanWrite && typeof(LootCriteriaViewModel).GetProperty(prop.Name) == null)
-                    {
-                        // Update the setter of the class
-                        var propertyBuilder = typeBuilder.DefineProperty(prop.Name, PropertyAttributes.None, prop.PropertyType, null);
+                var param = constructorBuilder.DefineParameter(1, baseParam.Attributes, baseParam.Name);
 
-                        var builder = typeBuilder.DefineMethod("get_" + prop.Name, MethodAttributes.Public | MethodAttributes.Virtual, prop.PropertyType, Type.EmptyTypes);
-                        var generator = builder.GetILGenerator();
-                        generator.Emit(OpCodes.Ldarg_0);
-                        generator.Emit(OpCodes.Call, prop.GetGetMethod());
-                        generator.Emit(OpCodes.Ret);
-                        propertyBuilder.SetGetMethod(builder);
+                var generator = constructorBuilder.GetILGenerator();
+                generator.Emit(OpCodes.Ldarg_0);
+                generator.Emit(OpCodes.Ldarg, 1);
+                generator.Emit(OpCodes.Call, baseConstructor);
+                generator.Emit(OpCodes.Ret);
 
-                        // Create set method
-                        builder = typeBuilder.DefineMethod("set_" + prop.Name,
-                            MethodAttributes.Public | MethodAttributes.Virtual, null, new Type[] { prop.PropertyType });
-                        builder.DefineParameter(1, ParameterAttributes.None, "value");
-                        generator = builder.GetILGenerator();
+                foreach (PropertyInfo propertyInfo in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(p => typeof(LootCriteriaViewModel).GetProperty(p.Name) == null))
+                {        // Update the setter of the class
+                    PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(propertyInfo.Name,
+                        PropertyAttributes.None, propertyInfo.PropertyType, null);
 
-                        // Add IL code for set method
-                        generator.Emit(OpCodes.Nop);
-                        generator.Emit(OpCodes.Ldarg_0);
-                        generator.Emit(OpCodes.Ldarg_1);
-                        generator.Emit(OpCodes.Call, prop.GetSetMethod());
+                    // Create get method
+                    MethodBuilder builder = typeBuilder.DefineMethod("get_" + propertyInfo.Name,
+                        MethodAttributes.Public | MethodAttributes.Virtual,
+                        propertyInfo.PropertyType, TypeInfo.EmptyTypes);
+                    generator = builder.GetILGenerator();
+                    generator.Emit(OpCodes.Ldarg_0);
+                    generator.Emit(OpCodes.Call, typeof(LootCriteriaViewModel).GetProperty("Criteria").GetGetMethod());
+                    generator.Emit(OpCodes.Castclass, vmType);
+                    generator.Emit(OpCodes.Callvirt, propertyInfo.GetGetMethod());
+                    generator.Emit(OpCodes.Ret);
+                    propertyBuilder.SetGetMethod(builder);
 
-                        // Call property changed for object
-                        generator.Emit(OpCodes.Nop);
-                        generator.Emit(OpCodes.Ldarg_0);
-                        generator.Emit(OpCodes.Ldstr, prop.Name);
-                        generator.Emit(OpCodes.Callvirt, raisePropertyChangedMethod);
-                        generator.Emit(OpCodes.Nop);
-                        generator.Emit(OpCodes.Ret);
-                        propertyBuilder.SetSetMethod(builder);
-                    }
+                    // Create set method
+                    builder = typeBuilder.DefineMethod("set_" + propertyInfo.Name,
+                        MethodAttributes.Public | MethodAttributes.Virtual, null, new Type[] { propertyInfo.PropertyType });
+                    builder.DefineParameter(1, ParameterAttributes.None, "value");
+                    generator = builder.GetILGenerator();
+
+                    // Set value
+                    generator.Emit(OpCodes.Nop);
+                    generator.Emit(OpCodes.Ldarg_0);
+                    generator.Emit(OpCodes.Call, typeof(LootCriteriaViewModel).GetProperty("Criteria").GetGetMethod());
+                    generator.Emit(OpCodes.Castclass, vmType);
+                    generator.Emit(OpCodes.Ldarg, 1);
+                    generator.Emit(OpCodes.Callvirt, propertyInfo.GetSetMethod());
+                    generator.Emit(OpCodes.Nop);
+
+                    // Raise property changed
+                    generator.Emit(OpCodes.Ldarg_0);
+                    generator.Emit(OpCodes.Ldstr, propertyInfo.Name);
+                    generator.Emit(OpCodes.Callvirt, raisePropertyChangedMethod);
+                    generator.Emit(OpCodes.Nop);
+
+                    // Raise property changed for display value
+                    generator.Emit(OpCodes.Ldarg_0);
+                    generator.Emit(OpCodes.Ldstr, "DisplayValue");
+                    generator.Emit(OpCodes.Callvirt, raisePropertyChangedMethod);
+                    generator.Emit(OpCodes.Nop);
+
+                    // Set IsDirty flag on VM
+                    generator.Emit(OpCodes.Ldarg_0);
+                    generator.Emit(OpCodes.Ldc_I4_1);
+                    generator.Emit(OpCodes.Call, typeof(LootCriteriaViewModel).GetProperty("IsDirty").GetSetMethod());
+                    generator.Emit(OpCodes.Nop);
+                    generator.Emit(OpCodes.Nop);
+                    
+                    generator.Emit(OpCodes.Ret);
+
+                    propertyBuilder.SetSetMethod(builder);
                 }
 
                 dynamicType = typeBuilder.CreateType();
-                dynamicTypes.Add(vmType, dynamicType);
+                typedict.Add(vmType, dynamicType);
             }
 
-            return (LootCriteriaViewModel)Activator.CreateInstance(dynamicType, new[] { criteria });
+            var vm = (LootCriteriaViewModel)Activator.CreateInstance(dynamicType, criteria);
+            var type = vm.Type;
+            return vm;
         }
     }
 }

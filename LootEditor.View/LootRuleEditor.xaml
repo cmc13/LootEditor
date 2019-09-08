@@ -52,7 +52,7 @@
             </ListBox.InputBindings>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:LootCriteriaViewModel}">
-                    <TextBlock Text="{Binding Criteria}" />
+                    <TextBlock Text="{Binding DisplayValue}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

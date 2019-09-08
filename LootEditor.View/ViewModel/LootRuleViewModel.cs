@@ -103,7 +103,7 @@ namespace LootEditor.View.ViewModel
             Criteria.Clear();
             foreach (var crit in rule.Criteria)
             {
-                var vm = new LootCriteriaViewModel(crit);
+                var vm = LootCriteriaViewModelFactory.CreateViewModel(crit);
                 vm.PropertyChanged += Vm_PropertyChanged;
                 Criteria.Add(vm);
             }
@@ -113,7 +113,7 @@ namespace LootEditor.View.ViewModel
                 var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.AnySimilarColor);
                 rule.AddCriteria(newCriteria);
 
-                var vm = new LootCriteriaViewModel(newCriteria);
+                var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
                 vm.PropertyChanged += Vm_PropertyChanged;
                 Criteria.Add(vm);
 
@@ -143,7 +143,7 @@ namespace LootEditor.View.ViewModel
                 var newCriteria = data.Clone() as LootCriteria;
                 rule.AddCriteria(newCriteria);
 
-                var vm = new LootCriteriaViewModel(newCriteria);
+                var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
                 vm.PropertyChanged += Vm_PropertyChanged;
                 Criteria.Add(vm);
 
@@ -155,7 +155,21 @@ namespace LootEditor.View.ViewModel
         private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             var v = sender as LootCriteriaViewModel;
-            if (v.Type == LootCriteriaType.DisabledRule)
+            if (e.PropertyName == "Type")
+            {
+                var idx = Criteria.IndexOf(v);
+                Criteria.RemoveAt(idx);
+
+                // property type was changed, need to generate new VM
+                var newCriteria = LootCriteria.CreateLootCriteria(v.Type);
+                var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
+                vm.PropertyChanged += Vm_PropertyChanged;
+                Criteria.Insert(idx, vm);
+
+                SelectedCriteria = vm;
+                IsDirty = true;
+            }
+            else if (v.Type == LootCriteriaType.DisabledRule)
                 RaisePropertyChanged(nameof(IsDisabled));
             RaisePropertyChanged(nameof(IsDirty));
         }
@@ -173,7 +187,7 @@ namespace LootEditor.View.ViewModel
                 var newCriteria = sel.Criteria.Clone() as LootCriteria;
 
                 Rule.AddCriteria(newCriteria);
-                var vm = new LootCriteriaViewModel(newCriteria);
+                var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
                 vm.PropertyChanged += Vm_PropertyChanged;
                 Criteria.Add(vm);
                 IsDirty = true;

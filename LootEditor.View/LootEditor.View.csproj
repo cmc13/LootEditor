@@ -101,10 +101,11 @@
     <Compile Include="LootRuleEditor.xaml.cs">
       <DependentUpon>LootRuleEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\DisabledRuleLootCriteriaViewModel.cs" />
     <Compile Include="ViewModel\LootCriteriaViewModel.cs" />
+    <Compile Include="ViewModel\LootCriteriaViewModelFactory.cs" />
     <Compile Include="ViewModel\LootRuleViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\TestVM.cs" />
     <Page Include="LootCriteriaEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

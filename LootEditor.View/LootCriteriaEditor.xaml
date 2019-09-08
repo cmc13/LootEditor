@@ -20,25 +20,20 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" />
-                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding DynamicCriteria.Color}" DisplayColorAndName="True" />
+                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" />
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding DynamicCriteria.HDiff}" Minimum="0" Maximum="255" Increment="1" />
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" />
-                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding DynamicCriteria.SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="DisabledRuleTemplate">
-            <CheckBox IsChecked="{Binding DynamicCriteria.Value}">Disabled</CheckBox>
+            <CheckBox IsChecked="{Binding Value}">Disabled</CheckBox>
         </DataTemplate>
         <DataTemplate x:Key="LongValueKeyTemplate">
             <Grid>
@@ -52,10 +47,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:LongValueKey}}" SelectedItem="{Binding DynamicCriteria.Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:LongValueKey}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="DoubleValueKeyTemplate">
@@ -70,10 +65,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:DoubleValueKey}}" SelectedItem="{Binding DynamicCriteria.Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:DoubleValueKey}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="StringValueKeyTemplate">
@@ -88,10 +83,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:StringValueKey}}" SelectedItem="{Binding DynamicCriteria.Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:StringValueKey}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ObjectClassTemplate">
@@ -102,7 +97,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Object Class:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:ObjectClass}}" SelectedItem="{Binding DynamicCriteria.Value}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:ObjectClass}}" SelectedItem="{Binding Value}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ValueTemplate">
@@ -116,7 +111,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DynamicCriteria.Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SpellMatchTemplate">
@@ -132,13 +127,13 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Matches:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DynamicCriteria.Match}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Match}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Does NOT Match:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.NoMatch}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NoMatch}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Matching Spell Count:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DynamicCriteria.SpellCount}" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CharacterBaseSkillTemplate">
@@ -154,13 +149,13 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:SkillType}}" SelectedItem="{Binding DynamicCriteria.SkillType}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:SkillType}}" SelectedItem="{Binding SkillType}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Minimum Base Skill Level:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.MinSkillValue}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MinSkillValue}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum Base Skill Level:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DynamicCriteria.MaxSkillValue}" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MaxSkillValue}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CalcedBuffedTinkedTargetMeleeGETemplate">
@@ -176,13 +171,13 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Calc'd Buffed/Tinked Damage over Time:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DynamicCriteria.CalculatedBuffedTinkedDamageOverTime}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CalculatedBuffedTinkedDamageOverTime}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Buffed Melee D Bonus:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.BuffedMeleeDefenseBonus}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BuffedMeleeDefenseBonus}" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Buffed Attack Bonus:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DynamicCriteria.BuffedAttackBonus}" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BuffedAttackBonus}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SlotExactPaletteTemplate">
@@ -197,10 +192,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DynamicCriteria.Slot}" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Slot}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Palette}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CharacterSkillGETemplate">
@@ -215,10 +210,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:SkillType}}" SelectedItem="{Binding DynamicCriteria.Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:SkillType}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Skill Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DynamicCriteria.Value}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SlotSimilarColorTemplate">
@@ -235,18 +230,16 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" />
-                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding DynamicCriteria.Color}" DisplayColorAndName="True" />
+                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" />
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding DynamicCriteria.HDiff}" Minimum="0" Maximum="255" Increment="1" />
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" />
-                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding DynamicCriteria.SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot" />
-                <xctk:CheckListBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:ArmorSlot}}" ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100"
-                                   SelectedItemsOverride="{Binding SelectedArmorSlots, Mode=TwoWay}" />
-                <!--<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DynamicCriteria.Slot}" />-->
+                <xctk:CheckComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:ArmorSlot}}" SelectedItemsOverride="{Binding Slot}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SimilarColorArmorTypeTemplate">
@@ -263,16 +256,16 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" />
-                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding DynamicCriteria.Color}" DisplayColorAndName="True" />
+                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" />
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding DynamicCriteria.HDiff}" Minimum="0" Maximum="255" Increment="1" />
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" />
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" />
-                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding DynamicCriteria.SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Armor Group:" />
-                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DynamicCriteria.ArmorGroup}" />
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ArmorGroup}" />
             </Grid>
         </DataTemplate>
 

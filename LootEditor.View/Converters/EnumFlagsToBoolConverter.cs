@@ -1,5 +1,6 @@
 ﻿using LootEditor.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -22,15 +23,16 @@ namespace LootEditor.View.Converters
                 }
             }
 
-            return checkedSlots;
+            return string.Join(",", checkedSlots);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int combined = 0;
-            //var list = ((string)value).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //foreach (var slotValue in list.Select(s => (ArmorSlot)Enum.Parse(typeof(ArmorSlot), s)))
-            //    combined |= (int)slotValue;
+            var items = ((string)value).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => (ArmorSlot)Enum.Parse(typeof(ArmorSlot), s));
+            foreach (ArmorSlot slotValue in items)
+                combined |= (int)slotValue;
             return combined;
         }
     }
