@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:cvt="clr-namespace:LootEditor.View.Converters"
              xmlns:model="clr-namespace:LootEditor.Model;assembly=LootEditor.Model"
+             xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -47,10 +48,20 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:LongValueKey}}" SelectedItem="{Binding Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LongValueKey}}" SelectedItem="{Binding Key, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Key}" Value="{x:Static modelEnums:LongValueKey.Material}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="DoubleValueKeyTemplate">
@@ -65,7 +76,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:DoubleValueKey}}" SelectedItem="{Binding Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:DoubleValueKey}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
@@ -83,7 +94,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:StringValueKey}}" SelectedItem="{Binding Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
@@ -97,7 +108,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Object Class:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:ObjectClass}}" SelectedItem="{Binding Value}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ObjectClass}}" SelectedItem="{Binding Value}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ValueTemplate">
@@ -149,7 +160,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:SkillType}}" SelectedItem="{Binding SkillType}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding SkillType}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Minimum Base Skill Level:" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MinSkillValue}" />
@@ -210,7 +221,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:SkillType}}" SelectedItem="{Binding Key}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Skill Value:" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value}" />
@@ -239,7 +250,7 @@
                 <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot" />
-                <xctk:CheckComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:ArmorSlot}}" SelectedItemsOverride="{Binding Slot}" />
+                <xctk:CheckComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}" SelectedItemsOverride="{Binding Slot}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SimilarColorArmorTypeTemplate">
@@ -299,7 +310,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Type:" />
-            <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type model:LootCriteriaType}}" SelectedItem="{Binding Type}" />
+            <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LootCriteriaType}}" SelectedItem="{Binding Type}" />
 
             <ContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding}" ContentTemplateSelector="{StaticResource TemplateSelector}" />
         </Grid>

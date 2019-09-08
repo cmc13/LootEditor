@@ -53,10 +53,12 @@
     <Compile Include="Criteria\SpellMatchLootCriteria.cs" />
     <Compile Include="Criteria\ValueKeyLootCriteria.cs" />
     <Compile Include="Criteria\ValueLootCriteria.cs" />
+    <Compile Include="Enums\ArmorSet.cs" />
     <Compile Include="Enums\ArmorSlot.cs" />
     <Compile Include="Enums\DoubleValueKey.cs" />
     <Compile Include="Enums\LongValueKey.cs" />
     <Compile Include="Enums\LootCriteriaType.cs" />
+    <Compile Include="Enums\Material.cs" />
     <Compile Include="Enums\ObjectClass.cs" />
     <Compile Include="Enums\SkillType.cs" />
     <Compile Include="Enums\StringValueKey.cs" />

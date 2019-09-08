@@ -105,7 +105,6 @@
     <Compile Include="ViewModel\LootCriteriaViewModelFactory.cs" />
     <Compile Include="ViewModel\LootRuleViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\TestVM.cs" />
     <Page Include="LootCriteriaEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,5 +160,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\Close_16x.png" />
+    <Resource Include="Assets\NewFile_16x.png" />
+    <Resource Include="Assets\OpenFile_16x.png" />
+    <Resource Include="Assets\SaveAs_16x.png" />
+    <Resource Include="Assets\Save_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

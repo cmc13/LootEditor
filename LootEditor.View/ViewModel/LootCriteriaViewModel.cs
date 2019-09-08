@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using LootEditor.Model;
+using LootEditor.Model.Enums;
 
 namespace LootEditor.View.ViewModel
 {

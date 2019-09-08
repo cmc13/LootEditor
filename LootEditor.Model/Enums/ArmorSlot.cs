@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LootEditor.Model
+namespace LootEditor.Model.Enums
 {
     [Flags]
     public enum ArmorSlot

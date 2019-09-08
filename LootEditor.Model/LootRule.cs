@@ -63,7 +63,7 @@ namespace LootEditor.Model
                     throw new Exception();
                 }
 
-                var ruleType = (LootCriteriaType)rt;
+                var ruleType = (Enums.LootCriteriaType)rt;
                 var criteria = LootCriteria.CreateLootCriteria(ruleType);
                 await criteria.ReadAsync(reader, version);
 
@@ -76,6 +76,8 @@ namespace LootEditor.Model
         public void RemoveCriteria(LootCriteria criteria) => this.criteria.Remove(criteria);
 
         public void AddCriteria(LootCriteria criteria) => this.criteria.Add(criteria);
+
+        public void AddCriteria(LootCriteria criteria, int idx) => this.criteria.Insert(idx, criteria);
 
         public async Task WriteAsync(Stream stream)
         {

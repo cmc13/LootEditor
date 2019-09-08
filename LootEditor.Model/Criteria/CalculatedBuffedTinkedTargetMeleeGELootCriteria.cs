@@ -9,7 +9,7 @@ namespace LootEditor.Model
         public double BuffedMeleeDefenseBonus { get; set; }
         public double BuffedAttackBonus { get; set; }
 
-        public override LootCriteriaType Type => LootCriteriaType.CalcedBuffedTinkedTargetMeleeGE;
+        public override Enums.LootCriteriaType Type => Enums.LootCriteriaType.CalcedBuffedTinkedTargetMeleeGE;
 
         public override async Task ReadAsync(TextReader reader, int version)
         {

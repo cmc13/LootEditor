@@ -6,9 +6,9 @@ namespace LootEditor.Model
 {
     public class CharacterBaseSkillLootCriteria : LootCriteria
     {
-        public override LootCriteriaType Type => LootCriteriaType.CharacterBaseSkill;
+        public override Enums.LootCriteriaType Type => Enums.LootCriteriaType.CharacterBaseSkill;
 
-        public SkillType SkillType { get; set; }
+        public Enums.SkillType SkillType { get; set; }
         public int MinSkillValue { get; set; } = 0;
         public int MaxSkillValue { get; set; } = 999;
 
@@ -17,7 +17,7 @@ namespace LootEditor.Model
         public override async Task ReadAsync(TextReader reader, int version)
         {
             await base.ReadAsync(reader, version).ConfigureAwait(false);
-            SkillType = await ReadValue<SkillType>(reader).ConfigureAwait(false);
+            SkillType = await ReadValue<Enums.SkillType>(reader).ConfigureAwait(false);
             MinSkillValue = await ReadValue<int>(reader).ConfigureAwait(false);
             MaxSkillValue = await ReadValue<int>(reader).ConfigureAwait(false);
         }

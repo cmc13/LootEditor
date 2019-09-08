@@ -6,7 +6,7 @@ namespace LootEditor.Model
 {
     public class SimilarArmorColorLootCriteria : ColorLootCriteria
     {
-        public SimilarArmorColorLootCriteria() : base(LootCriteriaType.SimilarColorArmorType)
+        public SimilarArmorColorLootCriteria() : base(Enums.LootCriteriaType.SimilarColorArmorType)
         {
         }
 

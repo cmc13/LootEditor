@@ -8,9 +8,9 @@ namespace LootEditor.Model
     {
         private readonly string template;
 
-        public override LootCriteriaType Type { get; }
+        public override Enums.LootCriteriaType Type { get; }
 
-        public ValueKeyLootCriteria(LootCriteriaType type, string template)
+        public ValueKeyLootCriteria(Enums.LootCriteriaType type, string template)
         {
             Type = type;
             this.template = template;

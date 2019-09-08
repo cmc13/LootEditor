@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LootEditor.Model
+﻿namespace LootEditor.Model.Enums
 {
     public enum DoubleValueKey
     {

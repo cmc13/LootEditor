@@ -24,9 +24,9 @@ namespace LootEditor.Model
         public double HDiff { get; set; }
         public decimal SVDiff { get; set; }
 
-        public override LootCriteriaType Type { get; }
+        public override Enums.LootCriteriaType Type { get; }
 
-        public ColorLootCriteria(LootCriteriaType type)
+        public ColorLootCriteria(Enums.LootCriteriaType type)
         {
             Type = type;
         }

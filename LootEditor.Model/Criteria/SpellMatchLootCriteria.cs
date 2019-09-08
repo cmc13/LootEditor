@@ -5,7 +5,7 @@ namespace LootEditor.Model
 {
     public class SpellMatchLootCriteria : LootCriteria
     {
-        public override LootCriteriaType Type => LootCriteriaType.SpellMatch;
+        public override Enums.LootCriteriaType Type => Enums.LootCriteriaType.SpellMatch;
 
         public string Match { get; set; }
         public string NoMatch { get; set; }

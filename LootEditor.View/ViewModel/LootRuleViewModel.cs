@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
+using LootEditor.Model.Enums;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -157,16 +158,20 @@ namespace LootEditor.View.ViewModel
             var v = sender as LootCriteriaViewModel;
             if (e.PropertyName == "Type")
             {
+                SelectedCriteria = null;
+
                 var idx = Criteria.IndexOf(v);
+                Rule.RemoveCriteria(v.Criteria);
                 Criteria.RemoveAt(idx);
 
                 // property type was changed, need to generate new VM
                 var newCriteria = LootCriteria.CreateLootCriteria(v.Type);
                 var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
                 vm.PropertyChanged += Vm_PropertyChanged;
+
+                Rule.AddCriteria(newCriteria, idx);
                 Criteria.Insert(idx, vm);
 
-                SelectedCriteria = vm;
                 IsDirty = true;
             }
             else if (v.Type == LootCriteriaType.DisabledRule)

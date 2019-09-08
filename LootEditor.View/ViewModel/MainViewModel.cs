@@ -3,7 +3,6 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using Microsoft.Win32;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -105,6 +104,7 @@ namespace LootEditor.View.ViewModel
         public RelayCommand CutItemCommand { get; }
         public RelayCommand CopyItemCommand { get; }
         public RelayCommand PasteItemCommand { get; }
+        public RelayCommand<Window> ExitCommand { get; }
 
         public MainViewModel()
         {
@@ -246,6 +246,7 @@ namespace LootEditor.View.ViewModel
                 LootRules.Add(vm);
 
                 SelectedRule = vm;
+                IsDirty = true;
             });
 
             CloneRuleCommand = new RelayCommand(() =>
@@ -313,6 +314,8 @@ namespace LootEditor.View.ViewModel
                 IsDirty = true;
                 SelectedRule = vm;
             }, () => Clipboard.ContainsData(typeof(LootRule).Name));
+
+            ExitCommand = new RelayCommand<Window>(w => w.Close());
         }
 
         private async Task SaveFileAsync(string fileName)

@@ -6,7 +6,7 @@ namespace LootEditor.Model
 {
     public class SlotExactPaletteLootCriteria : LootCriteria
     {
-        public override LootCriteriaType Type => LootCriteriaType.SlotExactPalette;
+        public override Enums.LootCriteriaType Type => Enums.LootCriteriaType.SlotExactPalette;
 
         public int Slot { get; set; }
         public int Palette { get; set; }
