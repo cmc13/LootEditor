@@ -9,5 +9,11 @@
         <vm:MainViewModel x:Key="MainViewModel" />
         <cvt:BoolToAsteriskConverter x:Key="BoolToAsteriskConverter" />
         <cvt:EnumFlagsToBoolConverter x:Key="EnumFlagsToBoolConverter" />
+        <cvt:LongValueKeyToVisibilityConverter x:Key="LongValueKeyToVisibilityConverter" />
+        <cvt:EqualityConverter x:Key="EqualityConverter" />
+        <cvt:EnumToIntConverter x:Key="EnumToIntConverter" />
+        <cvt:ArmorSlotLogicalAndConverter x:Key="ArmorSlotLogicalAndConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <cvt:ReverseBooleanToVisibilityConverter x:Key="ReverseBooleanToVisibilityConverter" />
     </Application.Resources>
 </Application>

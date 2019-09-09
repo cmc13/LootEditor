@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace LootEditor.Model.Enums
 {
+    [TypeConverter(typeof(EnumDescriptionConverter))]
     public enum Material
     {
         [Description("Agate")] Agate = 10,

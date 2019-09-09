@@ -1,5 +1,8 @@
-﻿namespace LootEditor.Model.Enums
+﻿using System.ComponentModel;
+
+namespace LootEditor.Model.Enums
 {
+    [TypeConverter(typeof(EnumDescriptionConverter))]
     public enum StringValueKey
     {
         Name = 1,

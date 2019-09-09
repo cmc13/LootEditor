@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -128,11 +129,13 @@ namespace LootEditor.View.ViewModel
             {
                 if (IsDirty)
                 {
-                    var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
                         await SaveFileAsync(saveFileName).ConfigureAwait(false);
                     }
+                    else if (mbResult == MessageBoxResult.Cancel)
+                        return;
                 }
 
                 var ofd = new OpenFileDialog()
@@ -292,20 +295,24 @@ namespace LootEditor.View.ViewModel
 
             CutItemCommand = new RelayCommand(() =>
             {
-                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
+                var data = JsonConvert.SerializeObject(SelectedRule.Rule);
+                Clipboard.SetText(data);
                 DeleteRuleCommand.Execute(null);
+                PasteItemCommand?.RaiseCanExecuteChanged();
             }, () => SelectedRule != null);
 
             CopyItemCommand = new RelayCommand(() =>
             {
-                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
+                var data = JsonConvert.SerializeObject(SelectedRule.Rule);
+                Clipboard.SetText(data);
+                PasteItemCommand?.RaiseCanExecuteChanged();
             }, () => SelectedRule != null);
 
             PasteItemCommand = new RelayCommand(() =>
             {
-                var data = Clipboard.GetData(typeof(LootRule).Name) as LootRule;
+                var data = Clipboard.GetText();
 
-                var newRule = data.Clone() as LootRule;
+                var newRule = JsonConvert.DeserializeObject<LootRule>(data, new LootRuleConverter());
                 LootFile.AddRule(newRule);
 
                 var vm = new LootRuleViewModel(newRule);
@@ -313,7 +320,7 @@ namespace LootEditor.View.ViewModel
 
                 IsDirty = true;
                 SelectedRule = vm;
-            }, () => Clipboard.ContainsData(typeof(LootRule).Name));
+            }, () => Clipboard.ContainsText());
 
             ExitCommand = new RelayCommand<Window>(w => w.Close());
         }

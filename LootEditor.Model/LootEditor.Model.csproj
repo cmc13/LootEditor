@@ -53,6 +53,7 @@
     <Compile Include="Criteria\SpellMatchLootCriteria.cs" />
     <Compile Include="Criteria\ValueKeyLootCriteria.cs" />
     <Compile Include="Criteria\ValueLootCriteria.cs" />
+    <Compile Include="EnumDescriptionConverter.cs" />
     <Compile Include="Enums\ArmorSet.cs" />
     <Compile Include="Enums\ArmorSlot.cs" />
     <Compile Include="Enums\DoubleValueKey.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Enums\ObjectClass.cs" />
     <Compile Include="Enums\SkillType.cs" />
     <Compile Include="Enums\StringValueKey.cs" />
+    <Compile Include="Enums\WeaponMasteryCategory.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ExtraBlock.cs" />
     <Compile Include="LootAction.cs" />

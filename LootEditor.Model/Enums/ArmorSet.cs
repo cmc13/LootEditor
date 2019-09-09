@@ -2,6 +2,7 @@
 
 namespace LootEditor.Model.Enums
 {
+    [TypeConverter(typeof(EnumDescriptionConverter))]
     public enum ArmorSet
     {
         [Description("Protective Clothing")] ProtectiveClothing = 32,

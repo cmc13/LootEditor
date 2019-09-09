@@ -48,6 +48,9 @@
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenFileCommand}" />
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveFileCommand}" />
         <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="{Binding SaveAsCommand}" />
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyItemCommand}" />
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding PasteItemCommand}"/>
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top" Grid.ColumnSpan="3">
@@ -78,6 +81,11 @@
                         <Image Source="Assets/Close_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}" />
+                <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}" />
+                <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}" />
             </MenuItem>
         </Menu>
 

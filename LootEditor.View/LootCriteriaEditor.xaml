@@ -8,6 +8,7 @@
              xmlns:model="clr-namespace:LootEditor.Model;assembly=LootEditor.Model"
              xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:vr="clr-namespace:LootEditor.View.ValidationRules"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -51,17 +52,30 @@
                 <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LongValueKey}}" SelectedItem="{Binding Key, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Key}" Value="{x:Static modelEnums:LongValueKey.Material}">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                         Visibility="{Binding Key, Converter={StaticResource LongValueKeyToVisibilityConverter}}" />
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Material}}"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:WeaponMasteryCategory}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WeaponMasteryCategory}}" />
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.EquipSkill}}" />
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WieldReqAttribute}}" />
+                <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
+                         Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Slot}}"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
+                            <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
+                                    EnumValue="{Binding Path=DataContext.Value, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:ArmorSlot}}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="DoubleValueKeyTemplate">
@@ -97,7 +111,30 @@
                 <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="1" Grid.Column="1">
+                    <TextBox.Text>
+                        <Binding Path="Value"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <vr:RegexValidationRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="True">
+                                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                                    <Setter Property="Background" Value="Salmon" />
+                                    <Setter Property="BorderThickness" Value="2" />
+                                    <Setter Property="BorderBrush" Value="Red" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ObjectClassTemplate">
@@ -108,7 +145,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Object Class:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ObjectClass}}" SelectedItem="{Binding Value}" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ObjectClass}}" SelectedItem="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ValueTemplate">
@@ -138,10 +175,56 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Matches:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Match}" />
+                <TextBox Grid.Row="0" Grid.Column="1">
+                    <TextBox.Text>
+                        <Binding Path="Match"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <vr:RegexValidationRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="True">
+                                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                                    <Setter Property="Background" Value="Salmon" />
+                                    <Setter Property="BorderThickness" Value="2" />
+                                    <Setter Property="BorderBrush" Value="Red" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Does NOT Match:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NoMatch}" />
+                <TextBox Grid.Row="1" Grid.Column="1">
+                    <TextBox.Text>
+                        <Binding Path="NoMatch"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <vr:RegexValidationRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="True">
+                                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                                    <Setter Property="Background" Value="Salmon" />
+                                    <Setter Property="BorderThickness" Value="2" />
+                                    <Setter Property="BorderBrush" Value="Red" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Matching Spell Count:" />
                 <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" />
@@ -203,7 +286,15 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Slot}" />
+                <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
+                            <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
+                                    EnumValue="{Binding Path=DataContext.Slot, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette}" />
@@ -224,7 +315,7 @@
                 <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding Key}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Skill Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SlotSimilarColorTemplate">
@@ -249,8 +340,16 @@
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" />
                 <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot" />
-                <xctk:CheckComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}" SelectedItemsOverride="{Binding Slot}" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot:" />
+                <ListBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
+                            <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
+                                    EnumValue="{Binding Path=DataContext.Slot, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SimilarColorArmorTypeTemplate">

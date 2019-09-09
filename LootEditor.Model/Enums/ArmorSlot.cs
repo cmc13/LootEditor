@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace LootEditor.Model.Enums
 {
+    [TypeConverter(typeof(EnumDescriptionConverter))]
     [Flags]
     public enum ArmorSlot
     {

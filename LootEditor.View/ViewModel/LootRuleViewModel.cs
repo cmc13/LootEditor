@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Threading;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using LootEditor.Model.Enums;
