@@ -1,14 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LootEditor.Model;
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Reflection;
 using System.Windows.Markup;
 
 namespace LootEditor.View
 {
     public class EnumBindingSourceExtension : MarkupExtension
     {
+        private class EnumComparer : IComparer
+        {
+            public int Compare(object x, object y)
+            {
+                var converter = TypeDescriptor.GetConverter(x.GetType());
+                return StringComparer.OrdinalIgnoreCase.Compare(converter.ConvertToInvariantString(x), converter.ConvertToInvariantString(y));
+            }
+
+        }
         private Type _enumType;
         public Type EnumType
         {
@@ -46,10 +55,14 @@ namespace LootEditor.View
             Array enumValues = Enum.GetValues(actualEnumType);
 
             if (actualEnumType == this._enumType)
+            {
+                Array.Sort(enumValues, new EnumComparer());
                 return enumValues;
+            }
 
             Array tempArray = Array.CreateInstance(actualEnumType, enumValues.Length + 1);
             enumValues.CopyTo(tempArray, 1);
+            Array.Sort(tempArray, new EnumComparer());
             return tempArray;
         }
     }

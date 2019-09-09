@@ -66,6 +66,9 @@
                 <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WieldReqAttribute}}" />
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSet}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.ArmorSetID}}" />
                 <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
                          Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Slot}}"
                          ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
