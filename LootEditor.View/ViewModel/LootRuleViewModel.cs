@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight.Threading;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using LootEditor.Model.Enums;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -88,6 +89,8 @@ namespace LootEditor.View.ViewModel
 
                     CloneCriteriaCommand?.RaiseCanExecuteChanged();
                     DeleteCriteriaCommand?.RaiseCanExecuteChanged();
+                    CutItemCommand?.RaiseCanExecuteChanged();
+                    CopyItemCommand?.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -98,6 +101,7 @@ namespace LootEditor.View.ViewModel
         public RelayCommand CutItemCommand { get; }
         public RelayCommand CopyItemCommand { get; }
         public RelayCommand PasteItemCommand { get; }
+        public RelayCommand ToggleDisabledCommand { get; }
 
         public LootRuleViewModel(LootRule rule)
         {
@@ -131,11 +135,13 @@ namespace LootEditor.View.ViewModel
             {
                 Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
                 DeleteCriteriaCommand.Execute(null);
+                PasteItemCommand?.RaiseCanExecuteChanged();
             }, () => SelectedCriteria != null);
 
             CopyItemCommand = new RelayCommand(() =>
             {
                 Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
+                PasteItemCommand?.RaiseCanExecuteChanged();
             }, () => SelectedCriteria != null);
 
             PasteItemCommand = new RelayCommand(() =>
@@ -152,6 +158,33 @@ namespace LootEditor.View.ViewModel
                 IsDirty = true;
                 SelectedCriteria = vm;
             }, () => Clipboard.ContainsData(typeof(LootCriteria).Name));
+
+            ToggleDisabledCommand = new RelayCommand(ToggleDisabled);
+        }
+
+        private void ToggleDisabled()
+        {
+            if (IsDisabled)
+            {
+                foreach (var crit in Criteria.Where(c => c.Type == LootCriteriaType.DisabledRule).ToList())
+                {
+                    crit.PropertyChanged -= Vm_PropertyChanged;
+                    Rule.RemoveCriteria(crit.Criteria);
+                    Criteria.Remove(crit);
+                }
+            }
+            else
+            {
+                var disabledRule = LootCriteria.CreateLootCriteria(LootCriteriaType.DisabledRule) as ValueLootCriteria<bool>;
+                disabledRule.Value = true;
+                Rule.AddCriteria(disabledRule);
+                var vm = LootCriteriaViewModelFactory.CreateViewModel(disabledRule);
+                vm.PropertyChanged += Vm_PropertyChanged;
+                Criteria.Add(vm);
+            }
+
+            IsDirty = true;
+            RaisePropertyChanged(nameof(IsDisabled));
         }
 
         private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -174,6 +207,9 @@ namespace LootEditor.View.ViewModel
                 Criteria.Insert(idx, vm);
 
                 IsDirty = true;
+
+                if (newCriteria.Type == LootCriteriaType.DisabledRule)
+                    RaisePropertyChanged(nameof(IsDisabled));
             }
             else if (v.Type == LootCriteriaType.DisabledRule)
                 RaisePropertyChanged(nameof(IsDisabled));
@@ -209,6 +245,9 @@ namespace LootEditor.View.ViewModel
                 Rule.RemoveCriteria(sel.Criteria);
                 Criteria.Remove(sel);
                 IsDirty = true;
+
+                if (sel.Type == LootCriteriaType.DisabledRule)
+                    RaisePropertyChanged(nameof(IsDisabled));
             }
         }
 

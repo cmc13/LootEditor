@@ -24,18 +24,18 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" />
-                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" />
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Hue Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" Margin="10" />
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" />
-                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Max S/V Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="DisabledRuleTemplate">
-            <CheckBox IsChecked="{Binding Value}">Disabled</CheckBox>
+            <CheckBox IsChecked="{Binding Value}" Margin="10">Disabled</CheckBox>
         </DataTemplate>
         <DataTemplate x:Key="LongValueKeyTemplate">
             <Grid>
@@ -48,37 +48,39 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LongValueKey}}" SelectedItem="{Binding Key, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LongValueKey}}" SelectedItem="{Binding Key, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <Grid Grid.Row="1" Grid.Column="1" Margin="10">
+                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
                          Visibility="{Binding Key, Converter={StaticResource LongValueKeyToVisibilityConverter}}" />
-                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}"
+                    <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Material}}"/>
-                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:WeaponMasteryCategory}}"
+                    <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:WeaponMasteryCategory}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WeaponMasteryCategory}}" />
-                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
+                    <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.EquipSkill}}" />
-                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
+                    <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WieldReqAttribute}}" />
-                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSet}}"
+                    <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSet}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.ArmorSetID}}" />
-                <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
+                    <ListBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
                          Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Slot}}"
                          ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
-                            <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
+                                <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
                                     EnumValue="{Binding Path=DataContext.Value, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:ArmorSlot}}" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="DoubleValueKeyTemplate">
@@ -92,11 +94,11 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:DoubleValueKey}}" SelectedItem="{Binding Key}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:DoubleValueKey}}" SelectedItem="{Binding Key}" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="StringValueKeyTemplate">
@@ -110,11 +112,11 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1">
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="10">
                     <TextBox.Text>
                         <Binding Path="Value"
                                  Mode="TwoWay"
@@ -147,8 +149,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Object Class:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ObjectClass}}" SelectedItem="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Object Class:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ObjectClass}}" SelectedItem="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ValueTemplate">
@@ -161,8 +163,8 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Value:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SpellMatchTemplate">
@@ -177,8 +179,8 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Matches:" />
-                <TextBox Grid.Row="0" Grid.Column="1">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Matches:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="10">
                     <TextBox.Text>
                         <Binding Path="Match"
                                  Mode="TwoWay"
@@ -203,8 +205,8 @@
                     </TextBox.Style>
                 </TextBox>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Does NOT Match:" />
-                <TextBox Grid.Row="1" Grid.Column="1">
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Does NOT Match:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="10">
                     <TextBox.Text>
                         <Binding Path="NoMatch"
                                  Mode="TwoWay"
@@ -229,8 +231,8 @@
                     </TextBox.Style>
                 </TextBox>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Matching Spell Count:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Matching Spell Count:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CharacterBaseSkillTemplate">
@@ -245,14 +247,14 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding SkillType}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding SkillType}" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Minimum Base Skill Level:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MinSkillValue}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Min Base Skill Level:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MinSkillValue}" Margin="10" />
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum Base Skill Level:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MaxSkillValue}" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Base Skill Level:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MaxSkillValue}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CalcedBuffedTinkedTargetMeleeGETemplate">
@@ -267,14 +269,14 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Calc'd Buffed/Tinked Damage over Time:" />
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CalculatedBuffedTinkedDamageOverTime}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Calc'd Buffed/Tinked Damage over Time:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CalculatedBuffedTinkedDamageOverTime}" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Buffed Melee D Bonus:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BuffedMeleeDefenseBonus}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Buffed Melee D Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BuffedMeleeDefenseBonus}" Margin="10" />
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Buffed Attack Bonus:" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BuffedAttackBonus}" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Buffed Attack Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BuffedAttackBonus}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SlotExactPaletteTemplate">
@@ -288,9 +290,9 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100" Margin="10">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
                             <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
@@ -299,8 +301,8 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CharacterSkillGETemplate">
@@ -314,11 +316,11 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding Key}" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Skill:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding Key}" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Skill Value:" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Skill Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SlotSimilarColorTemplate">
@@ -334,18 +336,18 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" />
-                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" />
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1"  Margin="10"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" />
-                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" Margin="10" />
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot:" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ListBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100" Margin="10">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
                             <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
@@ -368,17 +370,17 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" />
-                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" />
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" Margin="10" />
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" />
-                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Maximum Hue Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" Margin="10" />
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" />
-                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" />
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Maximum S/V Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" Margin="10" />
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Armor Group:" />
-                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ArmorGroup}" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Armor Group:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ArmorGroup}" Margin="10" />
             </Grid>
         </DataTemplate>
 
@@ -400,7 +402,7 @@
 
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     </UserControl.Resources>
-    <GroupBox Header="Criteria" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}">
+    <GroupBox Header="Criteria" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}" Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -411,8 +413,8 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Type:" />
-            <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LootCriteriaType}}" SelectedItem="{Binding Type}" />
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Type:" VerticalAlignment="Center" />
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LootCriteriaType}}" SelectedItem="{Binding Type}" Margin="10" />
 
             <ContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding}" ContentTemplateSelector="{StaticResource TemplateSelector}" />
         </Grid>

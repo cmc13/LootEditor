@@ -75,6 +75,12 @@ namespace LootEditor.View.ViewModel
                 {
                     selectedRule = value;
                     RaisePropertyChanged(nameof(SelectedRule));
+
+                    CutItemCommand?.RaiseCanExecuteChanged();
+                    CopyItemCommand.RaiseCanExecuteChanged();
+                    MoveSelectedItemUpCommand?.RaiseCanExecuteChanged();
+                    MoveSelectedItemDownCommand?.RaiseCanExecuteChanged();
+                    ToggleDisabledCommand?.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -106,6 +112,7 @@ namespace LootEditor.View.ViewModel
         public RelayCommand CopyItemCommand { get; }
         public RelayCommand PasteItemCommand { get; }
         public RelayCommand<Window> ExitCommand { get; }
+        public RelayCommand ToggleDisabledCommand { get; }
 
         public MainViewModel()
         {
@@ -323,6 +330,8 @@ namespace LootEditor.View.ViewModel
             }, () => Clipboard.ContainsText());
 
             ExitCommand = new RelayCommand<Window>(w => w.Close());
+
+            ToggleDisabledCommand = new RelayCommand(() => SelectedRule.ToggleDisabledCommand.Execute(null), () => SelectedRule != null);
         }
 
         private async Task SaveFileAsync(string fileName)

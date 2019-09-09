@@ -170,13 +170,36 @@
       <Name>LootEditor.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\Cut_16x.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Close_16x.png" />
     <Resource Include="Assets\NewFile_16x.png" />
     <Resource Include="Assets\OpenFile_16x.png" />
     <Resource Include="Assets\SaveAs_16x.png" />
     <Resource Include="Assets\Save_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Copy_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Paste_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\DeleteListItem_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Lock_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Add_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Remove_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Clone_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

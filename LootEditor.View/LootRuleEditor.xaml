@@ -55,6 +55,31 @@
                     <TextBlock Text="{Binding DisplayValue}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Cut_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Copy_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Paste_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Delete Criteria" Command="{Binding DeleteCriteriaCommand}" InputGestureText="Del">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/DeleteListItem_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
         </ListBox>
 
         <Grid Grid.Row="3" Grid.Column="1">
