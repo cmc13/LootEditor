@@ -86,7 +86,7 @@
                 <local:LootRuleListEditor DataContext="{Binding LootRuleListViewModel}" />
             </TabItem>
             <TabItem Header="Salvage Combine">
-                <local:SalvageCombineEditor DataContext="{Binding SalvageCombineViewModel}" />
+                <local:SalvageCombineListEditor DataContext="{Binding SalvageCombineListViewModel}" />
             </TabItem>
         </TabControl>
     </DockPanel>

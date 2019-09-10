@@ -15,7 +15,7 @@ namespace LootEditor.View.ViewModel
         private string saveFileName;
         private LootFile lootFile;
         private LootRuleListViewModel lootRuleListViewModel;
-        private SalvageCombineViewModel salvageCombineViewModel;
+        private SalvageCombineListViewModel salvageCombineViewModel;
 
         public string SaveFileName
         {
@@ -40,7 +40,7 @@ namespace LootEditor.View.ViewModel
                     lootFile = value;
 
                     LootRuleListViewModel = new LootRuleListViewModel(lootFile);
-                    SalvageCombineViewModel = new SalvageCombineViewModel(LootFile);
+                    SalvageCombineListViewModel = new SalvageCombineListViewModel(LootFile);
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace LootEditor.View.ViewModel
             }
         }
 
-        public SalvageCombineViewModel SalvageCombineViewModel
+        public SalvageCombineListViewModel SalvageCombineListViewModel
         {
             get => salvageCombineViewModel;
             set
@@ -75,13 +75,13 @@ namespace LootEditor.View.ViewModel
 
                     salvageCombineViewModel = value;
                     salvageCombineViewModel.PropertyChanged += VM_PropertyChanged;
-                    RaisePropertyChanged(nameof(SalvageCombineViewModel));
+                    RaisePropertyChanged(nameof(SalvageCombineListViewModel));
                     RaisePropertyChanged(nameof(IsDirty));
                 }
             }
         }
 
-        public bool IsDirty => LootRuleListViewModel.IsDirty || SalvageCombineViewModel.IsDirty;
+        public bool IsDirty => LootRuleListViewModel.IsDirty || SalvageCombineListViewModel.IsDirty;
 
         public RelayCommand NewFileCommand { get; }
         public RelayCommand OpenFileCommand { get; }

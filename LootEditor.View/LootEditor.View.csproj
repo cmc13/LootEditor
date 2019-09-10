@@ -116,8 +116,8 @@
       <DependentUpon>LootRuleListEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="ObservableDictionary.cs" />
-    <Compile Include="SalvageCombineEditor.xaml.cs">
-      <DependentUpon>SalvageCombineEditor.xaml</DependentUpon>
+    <Compile Include="SalvageCombineListEditor.xaml.cs">
+      <DependentUpon>SalvageCombineListEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="ValidationRules\RegexValidationRule.cs" />
     <Compile Include="ViewModel\LootCriteriaViewModel.cs" />
@@ -125,6 +125,7 @@
     <Compile Include="ViewModel\LootRuleListViewModel.cs" />
     <Compile Include="ViewModel\LootRuleViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\SalvageCombineListViewModel.cs" />
     <Compile Include="ViewModel\SalvageCombineViewModel.cs" />
     <Page Include="LootCriteriaEditor.xaml">
       <SubType>Designer</SubType>
@@ -150,7 +151,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SalvageCombineEditor.xaml">
+    <Page Include="SalvageCombineListEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
