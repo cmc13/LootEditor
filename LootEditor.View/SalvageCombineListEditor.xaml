@@ -4,8 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor.View"
+             xmlns:cvt="clr-namespace:LootEditor.View.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -16,5 +20,9 @@
         <ListBox Grid.Column="0" ItemsSource="{Binding CombineRules}" MinWidth="200" SelectedItem="{Binding SelectedItem}" />
 
         <GridSplitter Grid.Column="1" Width="3" />
+
+        <Grid Grid.Column="2" Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
+            <local:SalvageCombineEditor Grid.Column="2" DataContext="{Binding SalvageCombineViewModel}" />
+        </Grid>
     </Grid>
 </UserControl>

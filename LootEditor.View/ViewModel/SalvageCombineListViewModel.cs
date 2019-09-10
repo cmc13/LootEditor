@@ -103,9 +103,12 @@ namespace LootEditor.View.ViewModel
                 {
                     selectedItem = value;
                     RaisePropertyChanged(nameof(SelectedItem));
+                    RaisePropertyChanged(nameof(SalvageCombineViewModel));
                 }
             }
         }
+
+        public SalvageCombineViewModel SalvageCombineViewModel => new SalvageCombineViewModel(SelectedItem.Key, SelectedItem.Value);
 
         private void Rule_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

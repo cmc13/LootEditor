@@ -29,7 +29,7 @@ namespace LootEditor.View.ViewModel
 
         public string CombineRange
         {
-            get => salvageObj.CombineRange;
+            get => salvageObj?.CombineRange;
             set
             {
                 if (salvageObj.CombineRange != value)
@@ -42,13 +42,28 @@ namespace LootEditor.View.ViewModel
 
         public int? CombineValue
         {
-            get => salvageObj.CombineValue;
+            get => salvageObj?.CombineValue;
             set
             {
                 if (salvageObj.CombineValue != value)
                 {
-                    salvageObj.CombineRange = value;
+                    salvageObj.CombineValue = value;
                     RaisePropertyChanged(nameof(CombineValue));
+                    RaisePropertyChanged(nameof(HasCombineValue));
+                }
+            }
+        }
+
+        public bool HasCombineValue
+        {
+            get => salvageObj?.HasCombineValue ?? false;
+            set
+            {
+                if (salvageObj.HasCombineValue != value)
+                {
+                    salvageObj.HasCombineValue = value;
+                    RaisePropertyChanged(nameof(CombineValue));
+                    RaisePropertyChanged(nameof(HasCombineValue));
                 }
             }
         }

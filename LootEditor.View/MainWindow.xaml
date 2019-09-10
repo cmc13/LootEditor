@@ -28,9 +28,9 @@
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenFileCommand}" />
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveFileCommand}" />
         <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="{Binding SaveAsCommand}" />
-        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
-        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyItemCommand}" />
-        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding PasteItemCommand}"/>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding LootRuleListViewModel.CutItemCommand}" />
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding LootRuleListViewModel.CopyItemCommand}" />
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding LootRuleListViewModel.PasteItemCommand}"/>
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top" Grid.ColumnSpan="3">

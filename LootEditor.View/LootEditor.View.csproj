@@ -116,6 +116,9 @@
       <DependentUpon>LootRuleListEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="ObservableDictionary.cs" />
+    <Compile Include="SalvageCombineEditor.xaml.cs">
+      <DependentUpon>SalvageCombineEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SalvageCombineListEditor.xaml.cs">
       <DependentUpon>SalvageCombineListEditor.xaml</DependentUpon>
     </Compile>
@@ -151,6 +154,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SalvageCombineEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SalvageCombineListEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
