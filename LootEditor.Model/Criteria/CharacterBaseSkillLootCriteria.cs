@@ -28,7 +28,7 @@ namespace LootEditor.Model
         public override async Task ReadAsync(TextReader reader, int version)
         {
             await base.ReadAsync(reader, version).ConfigureAwait(false);
-            SkillType = await ReadValue<Enums.SkillType>(reader).ConfigureAwait(false);
+            SkillType = (Enums.SkillType)Enum.ToObject(typeof(Enums.SkillType), await ReadValue<int>(reader).ConfigureAwait(false));
             MinSkillValue = await ReadValue<int>(reader).ConfigureAwait(false);
             MaxSkillValue = await ReadValue<int>(reader).ConfigureAwait(false);
         }

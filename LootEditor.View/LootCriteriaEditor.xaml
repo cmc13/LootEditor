@@ -56,27 +56,37 @@
                     <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
                          Visibility="{Binding Key, Converter={StaticResource LongValueKeyToVisibilityConverter}}" />
                     <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}"
-                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:Material}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Material}}"/>
                     <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:WeaponMasteryCategory}}"
-                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:WeaponMasteryCategory}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WeaponMasteryCategory}}" />
                     <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
-                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:SkillType}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.EquipSkill}}" />
                     <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
-                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:SkillType}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WieldReqAttribute}}" />
                     <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSet}}"
-                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}}"
+                          SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:ArmorSet}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.ArmorSetID}}" />
-                    <ListBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
-                         Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Slot}}"
+                    <ListBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:EquippableSlot}}"
+                         Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.EquippableSlots}}"
                          ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
                         <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
+                            <DataTemplate DataType="{x:Type modelEnums:EquippableSlot}">
                                 <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
-                                    EnumValue="{Binding Path=DataContext.Value, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:ArmorSlot}}" />
+                                    EnumValue="{Binding Path=DataContext.Value, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:EquippableSlot}}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <ListBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Coverage}}"
+                             Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Coverage}}"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type modelEnums:Coverage}">
+                                <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
+                                    EnumValue="{Binding Path=DataContext.Value, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:Coverage}}" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -291,15 +301,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <ListBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100" Margin="10">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
-                            <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
-                                    EnumValue="{Binding Path=DataContext.Slot, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Slot}" />
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette}" Margin="10" />
@@ -346,15 +348,7 @@
                 <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" Margin="10" />
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <ListBox Grid.Row="3" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ArmorSlot}}"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" Height="100" Margin="10">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type modelEnums:ArmorSlot}">
-                            <local:CheckBoxForEnumWithFlagAttribute Content="{Binding}" EnumFlag="{Binding}"
-                                    EnumValue="{Binding Path=DataContext.Slot, RelativeSource={RelativeSource AncestorType=ListBox}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Slot}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SimilarColorArmorTypeTemplate">

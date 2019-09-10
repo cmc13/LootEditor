@@ -81,12 +81,12 @@
             </MenuItem>
         </Menu>
 
-        <TabControl TabStripPlacement="Bottom" Margin="3">
+        <TabControl TabStripPlacement="Bottom" Margin="2">
             <TabItem Header="Rules">
                 <local:LootRuleListEditor DataContext="{Binding LootRuleListViewModel}" />
             </TabItem>
             <TabItem Header="Salvage Combine">
-                <local:SalvageCombineEditor DataContext="" />
+                <local:SalvageCombineEditor DataContext="{Binding SalvageCombineViewModel}" />
             </TabItem>
         </TabControl>
     </DockPanel>

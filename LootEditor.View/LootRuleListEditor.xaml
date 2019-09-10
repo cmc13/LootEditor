@@ -9,12 +9,15 @@
             xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
             xmlns:dd="urn:gong-wpf-dragdrop"
             xmlns:cvt="clr-namespace:LootEditor.View.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Loaded="LootEditorWindow_Loaded"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:NameToFontWeightConverter x:Key="NameToFontWeightConverter" />
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <cvt:GreaterThanConverter x:Key="GreaterThanConverter" />
+        <sys:Int32 x:Key="One">1</sys:Int32>
         <DataTemplate x:Key="LootRuleItemTemplate" DataType="{x:Type vm:LootRuleViewModel}">
             <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}">
                 <TextBlock.Style>
@@ -82,8 +85,10 @@
 
             <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding LootRules}"
                      ItemTemplate="{StaticResource LootRuleItemTemplate}" Margin="10"
-                 SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
+                     SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     dd:DragDrop.IsDragSource="{Binding LootRules.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource One}}"
+                     dd:DragDrop.IsDropTarget="{Binding LootRules.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource One}}"
+                     dd:DragDrop.DropHandler="{Binding}">
                 <ListBox.InputBindings>
                     <KeyBinding Key="Up" Modifiers="Shift" Command="{Binding MoveSelectedItemUpCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
                     <KeyBinding Key="Down" Modifiers="Shift" Command="{Binding MoveSelectedItemDownCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />

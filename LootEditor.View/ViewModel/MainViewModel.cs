@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using LootEditor.Model;
 using Microsoft.Win32;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace LootEditor.View.ViewModel
         private string saveFileName;
         private LootFile lootFile;
         private LootRuleListViewModel lootRuleListViewModel;
+        private SalvageCombineViewModel salvageCombineViewModel;
 
         public string SaveFileName
         {
@@ -38,6 +40,7 @@ namespace LootEditor.View.ViewModel
                     lootFile = value;
 
                     LootRuleListViewModel = new LootRuleListViewModel(lootFile);
+                    SalvageCombineViewModel = new SalvageCombineViewModel(LootFile);
                 }
             }
         }
@@ -50,17 +53,35 @@ namespace LootEditor.View.ViewModel
                 if (lootRuleListViewModel != value)
                 {
                     if (lootRuleListViewModel != null)
-                        lootRuleListViewModel.PropertyChanged -= LootRuleListViewModel_PropertyChanged;
+                        lootRuleListViewModel.PropertyChanged -= VM_PropertyChanged;
 
                     lootRuleListViewModel = value;
-                    lootRuleListViewModel.PropertyChanged += LootRuleListViewModel_PropertyChanged;
+                    lootRuleListViewModel.PropertyChanged += VM_PropertyChanged;
                     RaisePropertyChanged(nameof(LootRuleListViewModel));
                     RaisePropertyChanged(nameof(IsDirty));
                 }
             }
         }
 
-        public bool IsDirty => LootRuleListViewModel.IsDirty;
+        public SalvageCombineViewModel SalvageCombineViewModel
+        {
+            get => salvageCombineViewModel;
+            set
+            {
+                if (salvageCombineViewModel != value)
+                {
+                    if (salvageCombineViewModel != null)
+                        salvageCombineViewModel.PropertyChanged -= VM_PropertyChanged;
+
+                    salvageCombineViewModel = value;
+                    salvageCombineViewModel.PropertyChanged += VM_PropertyChanged;
+                    RaisePropertyChanged(nameof(SalvageCombineViewModel));
+                    RaisePropertyChanged(nameof(IsDirty));
+                }
+            }
+        }
+
+        public bool IsDirty => LootRuleListViewModel.IsDirty || SalvageCombineViewModel.IsDirty;
 
         public RelayCommand NewFileCommand { get; }
         public RelayCommand OpenFileCommand { get; }
@@ -72,7 +93,6 @@ namespace LootEditor.View.ViewModel
         public MainViewModel()
         {
             LootFile = new LootFile();
-            LootRuleListViewModel = new LootRuleListViewModel(LootFile);
 
             NewFileCommand = new RelayCommand(async () =>
             {
@@ -114,12 +134,19 @@ namespace LootEditor.View.ViewModel
                 var result = ofd.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
-                    using (var fs = File.OpenRead(ofd.FileName))
+                    try
                     {
-                        var lf = new LootFile();
-                        await lf.ReadFileAsync(fs);
-                        LootFile = lf;
-                        SaveFileName = ofd.FileName;
+                        using (var fs = File.OpenRead(ofd.FileName))
+                        {
+                            var lf = new LootFile();
+                            await lf.ReadFileAsync(fs);
+                            LootFile = lf;
+                            SaveFileName = ofd.FileName;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"There was an error loading the file. The message was: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             });
@@ -214,7 +241,7 @@ namespace LootEditor.View.ViewModel
             LootRuleListViewModel.Clean();
         }
 
-        private void LootRuleListViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsDirty")
                 RaisePropertyChanged(nameof(IsDirty));

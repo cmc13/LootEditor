@@ -26,76 +26,38 @@ namespace LootEditor.View.ViewModel
                 LootRules.Add(vm);
             }
 
-            AddRuleCommand = new RelayCommand(() =>
-            {
-                var rule = new LootRule()
-                {
-                    Name = "New Rule",
-                    Action = LootAction.Keep
-                };
+            AddRuleCommand = new RelayCommand(AddRule);
 
-                lootFile.AddRule(rule);
+            CloneRuleCommand = new RelayCommand(CloneRule, SelectedRule_CanExecute);
 
-                var vm = new LootRuleViewModel(rule);
-                LootRules.Add(vm);
-
-                SelectedRule = vm;
-                IsDirty = true;
-            });
-
-            CloneRuleCommand = new RelayCommand(() =>
-            {
-                var sel = SelectedRule;
-                if (sel != null)
-                {
-                    var newRule = sel.CloneRule();
-                    lootFile.AddRule(newRule);
-
-                    var vm = new LootRuleViewModel(newRule);
-                    LootRules.Add(vm);
-
-                    IsDirty = true;
-                    SelectedRule = vm;
-                }
-            }, () => SelectedRule != null);
-
-            DeleteRuleCommand = new RelayCommand(() =>
-            {
-                var sel = SelectedRule;
-                if (sel != null)
-                {
-                    LootRules.Remove(sel);
-                    lootFile.RemoveRule(sel.Rule);
-                    IsDirty = true;
-                }
-            }, () => SelectedRule != null);
+            DeleteRuleCommand = new RelayCommand(DeleteRule, SelectedRule_CanExecute);
 
             MoveSelectedItemDownCommand = new RelayCommand<int>(index =>
             {
                 LootRules.Move(index, index + 1);
                 lootFile.MoveRule(index, index + 1);
                 IsDirty = true;
-            }, _ => SelectedRule != null);
+            }, _ => SelectedRule_CanExecute());
 
             MoveSelectedItemUpCommand = new RelayCommand<int>(index =>
             {
                 LootRules.Move(index, index - 1);
                 lootFile.MoveRule(index, index - 1);
                 IsDirty = true;
-            }, _ => SelectedRule != null);
+            }, _ => SelectedRule_CanExecute());
 
             CutItemCommand = new RelayCommand(() =>
             {
                 Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
                 DeleteRuleCommand.Execute(null);
                 PasteItemCommand?.RaiseCanExecuteChanged();
-            }, () => SelectedRule != null);
+            }, SelectedRule_CanExecute);
 
             CopyItemCommand = new RelayCommand(() =>
             {
                 Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
                 PasteItemCommand?.RaiseCanExecuteChanged();
-            }, () => SelectedRule != null);
+            }, SelectedRule_CanExecute);
 
             PasteItemCommand = new RelayCommand(() =>
             {
@@ -159,6 +121,7 @@ namespace LootEditor.View.ViewModel
 
         public void Clean()
         {
+            IsDirty = false;
             foreach (var rule in LootRules.Where(r => r.IsDirty))
                 rule.Clean();
         }
@@ -185,6 +148,55 @@ namespace LootEditor.View.ViewModel
                 LootRules.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
             }
             IsDirty = true;
+        }
+
+        private void DeleteRule()
+        {
+            var sel = SelectedRule;
+            if (sel != null)
+            {
+                LootRules.Remove(sel);
+                lootFile.RemoveRule(sel.Rule);
+                IsDirty = true;
+            }
+        }
+
+        private void CloneRule()
+        {
+            var sel = SelectedRule;
+            if (sel != null)
+            {
+                var newRule = sel.CloneRule();
+                lootFile.AddRule(newRule);
+
+                var vm = new LootRuleViewModel(newRule);
+                LootRules.Add(vm);
+
+                IsDirty = true;
+                SelectedRule = vm;
+            }
+        }
+
+        private void AddRule()
+        {
+            var rule = new LootRule()
+            {
+                Name = "New Rule",
+                Action = LootAction.Keep
+            };
+
+            lootFile.AddRule(rule);
+
+            var vm = new LootRuleViewModel(rule);
+            LootRules.Add(vm);
+
+            SelectedRule = vm;
+            IsDirty = true;
+        }
+
+        private bool SelectedRule_CanExecute()
+        {
+            return SelectedRule != null;
         }
 
         private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

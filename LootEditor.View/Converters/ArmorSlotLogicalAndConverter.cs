@@ -9,8 +9,8 @@ namespace LootEditor.View.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var slotValue = (ArmorSlot)values[0];
-            var testValue = (ArmorSlot)values[1];
+            var slotValue = (EquippableSlot)values[0];
+            var testValue = (EquippableSlot)values[1];
             if ((slotValue & testValue) != 0)
                 return true;
             return false;

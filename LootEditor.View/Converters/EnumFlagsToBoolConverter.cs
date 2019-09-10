@@ -11,9 +11,9 @@ namespace LootEditor.View.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var slots = (ArmorSlot)value;
-            var checkedSlots = new List<ArmorSlot>();
-            foreach (ArmorSlot enumValue in Enum.GetValues(typeof(ArmorSlot)))
+            var slots = (EquippableSlot)value;
+            var checkedSlots = new List<EquippableSlot>();
+            foreach (EquippableSlot enumValue in Enum.GetValues(typeof(EquippableSlot)))
             {
                 if ((slots & enumValue) != 0)
                 {
@@ -28,8 +28,8 @@ namespace LootEditor.View.Converters
         {
             int combined = 0;
             var items = ((string)value).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => (ArmorSlot)Enum.Parse(typeof(ArmorSlot), s));
-            foreach (ArmorSlot slotValue in items)
+                .Select(s => (EquippableSlot)Enum.Parse(typeof(EquippableSlot), s));
+            foreach (EquippableSlot slotValue in items)
                 combined |= (int)slotValue;
             return combined;
         }

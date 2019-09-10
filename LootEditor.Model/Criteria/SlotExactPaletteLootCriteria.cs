@@ -10,7 +10,7 @@ namespace LootEditor.Model
     {
         public override Enums.LootCriteriaType Type => Enums.LootCriteriaType.SlotExactPalette;
 
-        public Enums.ArmorSlot Slot { get; set; }
+        public int Slot { get; set; }
         public int Palette { get; set; }
 
         public SlotExactPaletteLootCriteria()
@@ -19,14 +19,14 @@ namespace LootEditor.Model
 
         private SlotExactPaletteLootCriteria(SerializationInfo info, StreamingContext context)
         {
-            Slot = (Enums.ArmorSlot)info.GetValue(nameof(Slot), typeof(Enums.ArmorSlot));
+            Slot = info.GetInt32(nameof(Slot));
             Palette = info.GetInt32(nameof(Palette));
         }
 
         public override async Task ReadAsync(TextReader reader, int version)
         {
             await base.ReadAsync(reader, version).ConfigureAwait(false);
-            Slot = (Enums.ArmorSlot)Enum.ToObject(typeof(Enums.ArmorSlot), await ReadValue<int>(reader).ConfigureAwait(false));
+            Slot = await ReadValue<int>(reader).ConfigureAwait(false);
             Palette = await ReadValue<int>(reader).ConfigureAwait(false);
         }
 
@@ -39,7 +39,7 @@ namespace LootEditor.Model
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue(nameof(Slot), Slot, typeof(Enums.ArmorSlot));
+            info.AddValue(nameof(Slot), Slot, typeof(int));
             info.AddValue(nameof(Palette), Palette, typeof(int));
         }
     }

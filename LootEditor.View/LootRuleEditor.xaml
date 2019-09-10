@@ -8,11 +8,14 @@
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
              xmlns:dd="urn:gong-wpf-dragdrop"
+             xmlns:sys ="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:LootActionToVisibilityConverter x:Key="LootActionToVisibilityConverter" />
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <cvt:GreaterThanConverter x:Key="GreaterThanConverter" />
+        <sys:Int32 x:Key="One">1</sys:Int32>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -43,8 +46,9 @@
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Criteria:" HorizontalAlignment="Right" VerticalAlignment="Center" />
         <ListBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}" Margin="10"
-                 dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                 dd:DragDrop.IsDragSource="{Binding Criteria.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource One}}"
+                 dd:DragDrop.IsDropTarget="{Binding Criteria.Count, Converter={StaticResource GreaterThanConverter}, ConverterParameter={StaticResource One}}"
+                 dd:DragDrop.DropHandler="{Binding}" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.InputBindings>
                 <KeyBinding Key="Delete" Command="{Binding DeleteCriteriaCommand}" />
                 <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
@@ -110,7 +114,8 @@
             </Button>
         </Grid>
 
-        <local:LootCriteriaEditor Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding SelectedCriteria}"
-                                  Visibility="{Binding SelectedCriteria, Converter={StaticResource NullToVisibilityConverter}}" />
+        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding SelectedCriteria, Converter={StaticResource NullToVisibilityConverter}}">
+            <local:LootCriteriaEditor DataContext="{Binding SelectedCriteria}" />
+        </Grid>
     </Grid>
 </UserControl>

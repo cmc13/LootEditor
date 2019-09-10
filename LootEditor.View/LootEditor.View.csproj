@@ -97,6 +97,7 @@
     <Compile Include="Converters\EnumFlagsToBoolConverter.cs" />
     <Compile Include="Converters\EnumToIntConverter.cs" />
     <Compile Include="Converters\EqualityConverter.cs" />
+    <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\LongValueKeyToVisibilityConverter.cs" />
     <Compile Include="Converters\LootActionToVisibilityConverter.cs" />
     <Compile Include="Converters\NameToFontWeightConverter.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="LootRuleListEditor.xaml.cs">
       <DependentUpon>LootRuleListEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ObservableDictionary.cs" />
     <Compile Include="SalvageCombineEditor.xaml.cs">
       <DependentUpon>SalvageCombineEditor.xaml</DependentUpon>
     </Compile>
@@ -123,6 +125,7 @@
     <Compile Include="ViewModel\LootRuleListViewModel.cs" />
     <Compile Include="ViewModel\LootRuleViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\SalvageCombineViewModel.cs" />
     <Page Include="LootCriteriaEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

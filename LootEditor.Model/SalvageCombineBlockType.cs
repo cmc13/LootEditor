@@ -1,7 +1,7 @@
-﻿using System;
+﻿using LootEditor.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LootEditor.Model
@@ -11,8 +11,8 @@ namespace LootEditor.Model
         public string DefaultCombineString { get; set; }
         public int RuleCount { get; set; }
 
-        public Dictionary<int, string> Materials { get; set; }
-        public Dictionary<int, int> MaterialValues { get; set; }
+        public Dictionary<Material, string> Materials { get; set; }
+        public Dictionary<Material, int> MaterialValues { get; set; }
         public int MaterialValueCount { get; set; }
 
         public override async Task ReadAsync(TextReader reader)
@@ -32,13 +32,13 @@ namespace LootEditor.Model
 
             RuleCount = ruleCount;
 
-            Materials = new Dictionary<int, string>();
+            Materials = new Dictionary<Material, string>();
             for (int i = 0; i < RuleCount; ++i)
             {
                 var matString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
                 var combineString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
 
-                Materials.Add(int.Parse(matString), combineString);
+                Materials.Add((Material)Enum.ToObject(typeof(Material), int.Parse(matString)), combineString);
             }
 
             var materialValueCountString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
@@ -49,13 +49,13 @@ namespace LootEditor.Model
 
             MaterialValueCount = materialValueCount;
 
-            MaterialValues = new Dictionary<int, int>();
+            MaterialValues = new Dictionary<Material, int>();
             for (int i = 0; i < MaterialValueCount; ++i)
             {
                 var matString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
                 var valueString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
 
-                MaterialValues.Add(int.Parse(matString), int.Parse(valueString));
+                MaterialValues.Add((Material)Enum.ToObject(typeof(Material), int.Parse(matString)), int.Parse(valueString));
             }
         }
 
@@ -65,16 +65,16 @@ namespace LootEditor.Model
             {
                 await subWriter.WriteLineForRealAsync("1").ConfigureAwait(false);
                 await subWriter.WriteLineForRealAsync(DefaultCombineString).ConfigureAwait(false);
-                await subWriter.WriteLineForRealAsync(RuleCount.ToString()).ConfigureAwait(false);
+                await subWriter.WriteLineForRealAsync(Materials.Count.ToString()).ConfigureAwait(false);
                 foreach (var kvp in Materials)
                 {
-                    await subWriter.WriteLineForRealAsync(kvp.Key.ToString()).ConfigureAwait(false);
+                    await subWriter.WriteLineForRealAsync(((int)kvp.Key).ToString()).ConfigureAwait(false);
                     await subWriter.WriteLineForRealAsync(kvp.Value).ConfigureAwait(false);
                 }
-                await subWriter.WriteLineForRealAsync(MaterialValueCount.ToString()).ConfigureAwait(false);
+                await subWriter.WriteLineForRealAsync(MaterialValues.Count.ToString()).ConfigureAwait(false);
                 foreach (var kvp in MaterialValues)
                 {
-                    await subWriter.WriteLineForRealAsync(kvp.Key.ToString()).ConfigureAwait(false);
+                    await subWriter.WriteLineForRealAsync(((int)kvp.Key).ToString()).ConfigureAwait(false);
                     await subWriter.WriteLineForRealAsync(kvp.Value.ToString()).ConfigureAwait(false);
                 }
 

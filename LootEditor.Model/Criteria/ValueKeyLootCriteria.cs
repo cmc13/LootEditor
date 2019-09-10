@@ -82,13 +82,22 @@ namespace LootEditor.Model
                         sb.Append(" (").Append(mtd.ConvertToInvariantString(matValue)).Append(')');
                         break;
 
-                    case Enums.LongValueKey.Slot:
-                        var std = TypeDescriptor.GetConverter(typeof(Enums.ArmorSlot));
-                        var sValue = (Enums.ArmorSlot)Enum.ToObject(typeof(Enums.ArmorSlot), Convert.ToInt32(Value));
-                        var slots = Enum.GetValues(typeof(Enums.ArmorSlot)).Cast<Enums.ArmorSlot>()
+                    case Enums.LongValueKey.EquippableSlots:
+                        var std = TypeDescriptor.GetConverter(typeof(Enums.EquippableSlot));
+                        var sValue = (Enums.EquippableSlot)Enum.ToObject(typeof(Enums.EquippableSlot), Convert.ToInt32(Value));
+                        var slots = Enum.GetValues(typeof(Enums.EquippableSlot)).Cast<Enums.EquippableSlot>()
                             .Where(testValue => (sValue & testValue) != 0)
                             .Select(slot => std.ConvertToInvariantString(slot));
                         sb.Append(" (").Append(string.Join(", ", slots)).Append(')');
+                        break;
+
+                    case Enums.LongValueKey.Coverage:
+                        var ctd = TypeDescriptor.GetConverter(typeof(Enums.Coverage));
+                        var cValue = (Enums.Coverage)Enum.ToObject(typeof(Enums.Coverage), Convert.ToInt32(Value));
+                        var coverageSlots = Enum.GetValues(typeof(Enums.Coverage)).Cast<Enums.Coverage>()
+                            .Where(testValue => (cValue & testValue) != 0)
+                            .Select(slot => ctd.ConvertToInvariantString(slot));
+                        sb.Append(" (").Append(string.Join(", ", coverageSlots)).Append(')');
                         break;
 
                     case Enums.LongValueKey.WeaponMasteryCategory:
@@ -128,12 +137,20 @@ namespace LootEditor.Model
             var key = Enum.Parse(typeof(TKey), keyLine);
 
             Key = (TKey)key;
+
+            // breeches are funny
+            if (Key is Enums.LongValueKey l && l == Enums.LongValueKey.Coverage && Convert.ToInt32(Value) == 19)
+                Value = (TValue)Convert.ChangeType(18, typeof(TValue));
         }
 
         public override async Task WriteAsync(Stream stream)
         {
             await base.WriteAsync(stream).ConfigureAwait(false);
-            await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
+            // Handle weirdness of breeches
+            if (Key is Enums.LongValueKey l && l == Enums.LongValueKey.Coverage && Convert.ToInt32(Value) == 18)
+                await stream.WriteLineForRealAsync("19").ConfigureAwait(false);
+            else
+                await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(Convert.ToInt32(Key).ToString()).ConfigureAwait(false);
         }
 
