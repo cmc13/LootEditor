@@ -15,5 +15,6 @@
         <cvt:ArmorSlotLogicalAndConverter x:Key="ArmorSlotLogicalAndConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <cvt:ReverseBooleanToVisibilityConverter x:Key="ReverseBooleanToVisibilityConverter" />
+        <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     </Application.Resources>
 </Application>

@@ -7,12 +7,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         xmlns:local="clr-namespace:LootEditor.View"
-        xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
-        xmlns:cvt="clr-namespace:LootEditor.View.Converters"
-        xmlns:dd="urn:gong-wpf-dragdrop"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         DataContext="{StaticResource MainViewModel}"
-        Loaded="LootEditorWindow_Loaded"
         mc:Ignorable="d"
         Height="450" Width="800">
     <Window.Title>
@@ -27,23 +22,6 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
-        <cvt:NameToFontWeightConverter x:Key="NameToFontWeightConverter" />
-        <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-        <DataTemplate x:Key="LootRuleItemTemplate" DataType="{x:Type vm:LootRuleViewModel}">
-            <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsDisabled}" Value="True">
-                                <Setter Property="TextDecorations" Value="Strikethrough" />
-                                <Setter Property="FontStyle" Value="Italic" />
-                                <Setter Property="Opacity" Value="0.5" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-        </DataTemplate>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewFileCommand}" />
@@ -85,17 +63,17 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="Edit">
-                <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
+                <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding LootRuleListViewModel.CutItemCommand}">
                     <MenuItem.Icon>
                         <Image Source="Assets/Cut_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
+                <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding LootRuleListViewModel.CopyItemCommand}">
                     <MenuItem.Icon>
                         <Image Source="Assets/Copy_16x.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
+                <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding LootRuleListViewModel.PasteItemCommand}">
                     <MenuItem.Icon>
                         <Image Source="Assets/Paste_16x.png" />
                     </MenuItem.Icon>
@@ -103,96 +81,13 @@
             </MenuItem>
         </Menu>
 
-        <Grid DockPanel.Dock="Left">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}" Margin="10">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Assets/Add_16x.png" />
-                    <TextBlock>Add</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button Grid.Row="0" Grid.Column="1" Command="{Binding CloneRuleCommand}" Margin="10">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Assets/Clone_16x.png" />
-                    <TextBlock>Clone</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button Grid.Row="0" Grid.Column="2" Command="{Binding DeleteRuleCommand}" Margin="10">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Assets/Remove_16x.png" />
-                    <TextBlock>Delete</TextBlock>
-                </StackPanel>
-            </Button>
-
-            <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="txtFilter" TextChanged="TxtFilter_TextChanged" Margin="10">
-                <xctk:WatermarkTextBox.Watermark>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Assets/Filter_16x.png" />
-                        <TextBlock>Filter</TextBlock>
-                    </StackPanel>
-                </xctk:WatermarkTextBox.Watermark>
-            </xctk:WatermarkTextBox>
-
-            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding LootRules}"
-                     ItemTemplate="{StaticResource LootRuleItemTemplate}" Margin="10"
-                 SelectedItem="{Binding SelectedRule}" Width="300" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
-                <ListBox.InputBindings>
-                    <KeyBinding Key="Up" Modifiers="Shift" Command="{Binding MoveSelectedItemUpCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
-                    <KeyBinding Key="Down" Modifiers="Shift" Command="{Binding MoveSelectedItemDownCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
-                    <KeyBinding Key="Delete" Command="{Binding DeleteRuleCommand}" />
-                </ListBox.InputBindings>
-                <ListBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Cut_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Copy_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Paste_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem Header="Enable/Disable Rule" Command="{Binding ToggleDisabledCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Lock_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Delete Rule" Command="{Binding DeleteRuleCommand}" InputGestureText="Del">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/DeleteListItem_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </ContextMenu>
-                </ListBox.ContextMenu>
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                        <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
-        </Grid>
-
-        <ScrollViewer Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
-            <local:LootRuleEditor DataContext="{Binding SelectedRule}" />
-        </ScrollViewer>
+        <TabControl TabStripPlacement="Bottom" Margin="3">
+            <TabItem Header="Rules">
+                <local:LootRuleListEditor DataContext="{Binding LootRuleListViewModel}" />
+            </TabItem>
+            <TabItem Header="Salvage Combine">
+                <local:SalvageCombineEditor DataContext="" />
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>
