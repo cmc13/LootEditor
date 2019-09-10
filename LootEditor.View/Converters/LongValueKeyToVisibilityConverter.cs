@@ -1,10 +1,6 @@
 ﻿using LootEditor.Model.Enums;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -16,8 +12,11 @@ namespace LootEditor.View.Converters
         {
             if (value is LongValueKey key)
             {
-                if (key == LongValueKey.Material)
+                if (key == LongValueKey.Material || key == LongValueKey.Slot || key == LongValueKey.WeaponMasteryCategory ||
+                    key == LongValueKey.EquipSkill || key == LongValueKey.WieldReqAttribute || key == LongValueKey.ArmorSetID)
+                {
                     return Visibility.Collapsed;
+                }
             }
 
             return Visibility.Visible;

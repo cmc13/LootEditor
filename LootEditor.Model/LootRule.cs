@@ -2,21 +2,43 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace LootEditor.Model
 {
-    public class LootRule : ICloneable
+    [Serializable]
+    public class LootRule : ICloneable, ISerializable
     {
         private List<LootCriteria> criteria = new List<LootCriteria>();
 
         public string CustomExpression { get; set; } = "";
         public int Priority { get; set; } = 0;
-        public LootAction Action { get; set; } = LootAction.Keep;
+        public Enums.LootAction Action { get; set; } = Enums.LootAction.Keep;
 
         public int KeepUpToCount { get; set; } = 0;
         public string Name { get; set; }
         public IEnumerable<LootCriteria> Criteria => criteria.AsReadOnly();
+
+        public LootRule()
+        {
+        }
+
+        private LootRule(SerializationInfo info, StreamingContext context)
+        {
+            Name = info.GetString(nameof(Name));
+            Action = (Enums.LootAction)info.GetValue(nameof(Action), typeof(Enums.LootAction));
+            Priority = info.GetInt32(nameof(Priority));
+            CustomExpression = info.GetString(nameof(CustomExpression));
+            KeepUpToCount = info.GetInt32(nameof(KeepUpToCount));
+
+            var count = info.GetInt32($"{nameof(Criteria)}Count");
+            for (var i = 0; i < count; ++i)
+            {
+                var crit = (LootCriteria)info.GetValue($"{nameof(Criteria)}[{i}]", typeof(LootCriteria));
+                AddCriteria(crit);
+            }
+        }
 
         public static async Task<LootRule> ReadRuleAsync(int version, TextReader reader)
         {
@@ -43,9 +65,9 @@ namespace LootEditor.Model
                 throw new Exception();
             }
 
-            rule.Action = (LootAction)action;
+            rule.Action = (Enums.LootAction)action;
 
-            if (action == (int)LootAction.KeepUpTo)
+            if (action == (int)Enums.LootAction.KeepUpTo)
             {
                 var keepUpToCountLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
                 if (!int.TryParse(keepUpToCountLine, out var keepUpToCount))
@@ -86,7 +108,7 @@ namespace LootEditor.Model
 
             var bigLine = new List<int> { Priority, (int)Action };
             await stream.WriteLineForRealAsync(string.Join(";", bigLine.Concat(Criteria.Select(c => (int)c.Type))));
-            if (Action == LootAction.KeepUpTo)
+            if (Action == Enums.LootAction.KeepUpTo)
                 await stream.WriteLineForRealAsync(KeepUpToCount.ToString()).ConfigureAwait(false);
             foreach (var criteria in Criteria)
             {
@@ -116,6 +138,19 @@ namespace LootEditor.Model
             var item = criteria[sourceIndex];
             criteria.RemoveAt(sourceIndex);
             criteria.Insert(targetIndex, item);
+        }
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Name), Name, typeof(string));
+            info.AddValue(nameof(Action), Action, typeof(Enums.LootAction));
+            info.AddValue(nameof(Priority), Priority, typeof(int));
+            info.AddValue(nameof(CustomExpression), CustomExpression, typeof(string));
+            info.AddValue(nameof(KeepUpToCount), KeepUpToCount, typeof(int));
+
+            info.AddValue($"{nameof(Criteria)}Count", criteria.Count, typeof(int));
+            for (var i = 0; i < criteria.Count; ++i)
+                info.AddValue($"{nameof(Criteria)}[{i}]", criteria[i], typeof(LootCriteria));
         }
     }
 }

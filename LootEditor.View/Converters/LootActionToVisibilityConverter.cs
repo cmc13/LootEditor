@@ -1,4 +1,5 @@
 ﻿using LootEditor.Model;
+using LootEditor.Model.Enums;
 using System;
 using System.Globalization;
 using System.Windows;

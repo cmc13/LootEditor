@@ -1,23 +1,46 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace LootEditor.Model
 {
+    [Serializable]
     public class ValueLootCriteria<T> : LootCriteria
     {
-        private readonly string template;
-
-        public ValueLootCriteria(Enums.LootCriteriaType type, string template)
+        public ValueLootCriteria(Enums.LootCriteriaType type)
         {
             Type = type;
-            this.template = template;
         }
 
         public override Enums.LootCriteriaType Type { get; }
         public T Value { get; set; }
 
-        public override string ToString() => string.Format(template, Value);
+        private ValueLootCriteria(SerializationInfo info, StreamingContext context)
+        {
+            Type = (Enums.LootCriteriaType)info.GetValue(nameof(Type), typeof(Enums.LootCriteriaType));
+            Value = (T)info.GetValue(nameof(Value), typeof(T));
+        }
+
+        public override string ToString()
+        {
+            switch (Type)
+            {
+                case Enums.LootCriteriaType.SpellNameMatch:
+                    return $"Spell Name Matches: {Value}";
+
+                case Enums.LootCriteriaType.ObjectClass:
+                    var octd = TypeDescriptor.GetConverter(typeof(Enums.ObjectClass));
+                    return $"Object Class: {octd.ConvertToInvariantString(Value)}";
+
+                case Enums.LootCriteriaType.DisabledRule:
+                    return "Rule is " + (Convert.ToBoolean(Value) ? "Disabled" : "Enabled");
+            }
+
+            var td = TypeDescriptor.GetConverter(typeof(Enums.LootCriteriaType));
+            return $"{td.ConvertToInvariantString(Type)} {Value}";
+        }
 
         public override async Task ReadAsync(TextReader reader, int version)
         {
@@ -48,6 +71,12 @@ namespace LootEditor.Model
             {
                 await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
             }
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Type), Type, typeof(Enums.LootCriteriaType));
+            info.AddValue(nameof(Value), Value, typeof(T));
         }
     }
 }

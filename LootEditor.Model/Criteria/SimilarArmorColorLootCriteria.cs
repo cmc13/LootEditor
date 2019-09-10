@@ -1,13 +1,21 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace LootEditor.Model
 {
-    public class SimilarArmorColorLootCriteria : ColorLootCriteria
+    [Serializable]
+    public class SimilarArmorColorLootCriteria : ColorLootCriteria, ISerializable
     {
         public SimilarArmorColorLootCriteria() : base(Enums.LootCriteriaType.SimilarColorArmorType)
         {
+        }
+
+        private SimilarArmorColorLootCriteria(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            ArmorGroup = info.GetString(nameof(ArmorGroup));
         }
 
         public string ArmorGroup { get; set; }
@@ -24,6 +32,12 @@ namespace LootEditor.Model
         {
             await base.WriteAsync(stream).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(ArmorGroup).ConfigureAwait(false);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(ArmorGroup), ArmorGroup, typeof(string));
         }
     }
 }

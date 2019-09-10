@@ -1,25 +1,119 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LootEditor.Model
 {
+    [Serializable]
     public class ValueKeyLootCriteria<TKey, TValue> : LootCriteria where TKey : Enum
     {
-        private readonly string template;
-
         public override Enums.LootCriteriaType Type { get; }
 
-        public ValueKeyLootCriteria(Enums.LootCriteriaType type, string template)
+        public ValueKeyLootCriteria(Enums.LootCriteriaType type)
         {
             Type = type;
-            this.template = template;
+        }
+
+        private ValueKeyLootCriteria(SerializationInfo info, StreamingContext context)
+        {
+            Type = (Enums.LootCriteriaType)info.GetValue(nameof(Type), typeof(Enums.LootCriteriaType));
+            Key = (TKey)info.GetValue(nameof(Key), typeof(TKey));
+            Value = (TValue)info.GetValue(nameof(Value), typeof(TValue));
         }
 
         public TValue Value { get; set; }
         public TKey Key { get; set; }
 
-        public override string ToString() => string.Format(template, Key, Value);
+        public override string ToString()
+        {
+            var keyTd = TypeDescriptor.GetConverter(typeof(TKey));
+
+            var sb = new StringBuilder();
+            if (Type == Enums.LootCriteriaType.BuffedDoubleValKeyGE || Type == Enums.LootCriteriaType.BuffedLongValKeyGE)
+                sb.Append("Buffed ");
+
+            sb.Append(keyTd.ConvertToInvariantString(Key));
+
+            switch (Type)
+            {
+                case Enums.LootCriteriaType.StringValueMatch:
+                    sb.Append(" Matches ");
+                    break;
+
+                case Enums.LootCriteriaType.BuffedDoubleValKeyGE:
+                case Enums.LootCriteriaType.BuffedLongValKeyGE:
+                case Enums.LootCriteriaType.CharacterSkillGE:
+                case Enums.LootCriteriaType.DoubleValKeyGE:
+                case Enums.LootCriteriaType.LongValKeyGE:
+                    sb.Append(" >= ");
+                    break;
+
+                case Enums.LootCriteriaType.DoubleValKeyLE:
+                case Enums.LootCriteriaType.LongValKeyLE:
+                    sb.Append(" <= ");
+                    break;
+
+                case Enums.LootCriteriaType.LongValKeyE:
+                    sb.Append(" == ");
+                    break;
+
+                case Enums.LootCriteriaType.LongValKeyNE:
+                    sb.Append(" != ");
+                    break;
+            }
+
+            sb.Append(Value);
+
+            if (Type == Enums.LootCriteriaType.LongValKeyFlagExists)
+            {
+                sb.Append(" (0x").Append(Convert.ToInt32(Value).ToString("X")).Append(')');
+            }
+            else if (Key is Enums.LongValueKey longKey)
+            {
+                switch (longKey)
+                {
+                    case Enums.LongValueKey.Material:
+                        var mtd = TypeDescriptor.GetConverter(typeof(Enums.Material));
+                        var matValue = (Enums.Material)Enum.ToObject(typeof(Enums.Material), Convert.ToInt32(Value));
+                        sb.Append(" (").Append(mtd.ConvertToInvariantString(matValue)).Append(')');
+                        break;
+
+                    case Enums.LongValueKey.Slot:
+                        var std = TypeDescriptor.GetConverter(typeof(Enums.ArmorSlot));
+                        var sValue = (Enums.ArmorSlot)Enum.ToObject(typeof(Enums.ArmorSlot), Convert.ToInt32(Value));
+                        var slots = Enum.GetValues(typeof(Enums.ArmorSlot)).Cast<Enums.ArmorSlot>()
+                            .Where(testValue => (sValue & testValue) != 0)
+                            .Select(slot => std.ConvertToInvariantString(slot));
+                        sb.Append(" (").Append(string.Join(", ", slots)).Append(')');
+                        break;
+
+                    case Enums.LongValueKey.WeaponMasteryCategory:
+                        var wmctd = TypeDescriptor.GetConverter(typeof(Enums.WeaponMasteryCategory));
+                        var wmcValue = (Enums.WeaponMasteryCategory)Enum.ToObject(typeof(Enums.WeaponMasteryCategory), Convert.ToInt32(Value));
+                        sb.Append(" (").Append(wmctd.ConvertToInvariantString(wmcValue)).Append(')');
+                        break;
+
+                    case Enums.LongValueKey.EquipSkill:
+                    case Enums.LongValueKey.WieldReqAttribute:
+                        var sttd = TypeDescriptor.GetConverter(typeof(Enums.SkillType));
+                        var stValue = (Enums.SkillType)Enum.ToObject(typeof(Enums.SkillType), Convert.ToInt32(Value));
+                        sb.Append(" (").Append(sttd.ConvertToInvariantString(stValue)).Append(')');
+                        break;
+
+                    case Enums.LongValueKey.ArmorSetID:
+                        var astd = TypeDescriptor.GetConverter(typeof(Enums.ArmorSet));
+                        var asValue = (Enums.ArmorSet)Enum.ToObject(typeof(Enums.ArmorSet), Convert.ToInt32(Value));
+                        sb.Append(" (").Append(astd.ConvertToInvariantString(asValue)).Append(')');
+                        break;
+                }
+            }
+
+            return sb.ToString();
+        }
 
         public override async Task ReadAsync(TextReader reader, int version)
         {
@@ -41,6 +135,13 @@ namespace LootEditor.Model
             await base.WriteAsync(stream).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(Convert.ToInt32(Key).ToString()).ConfigureAwait(false);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Type), Type, typeof(Enums.LootCriteriaType));
+            info.AddValue(nameof(Key), Key, typeof(TKey));
+            info.AddValue(nameof(Value), Value, typeof(TValue));
         }
     }
 }

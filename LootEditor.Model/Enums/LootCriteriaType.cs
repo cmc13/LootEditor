@@ -40,7 +40,7 @@ namespace LootEditor.Model.Enums
         [Description("Buffed Double Value Key >=")] BuffedDoubleValKeyGE = 2005,
         [Description("Calc'd Buffed Tinked Damage >=")] CalcdBuffedTinkedDamageGE = 2006,
         [Description("Total Ratings >=")] TotalRatingsGE = 2007,
-        [Description("Calced Buffed Tinked Target Melee >=")] CalcedBuffedTinkedTargetMeleeGE = 2008,
+        [Description("Calc'd Buffed Tinked Target Melee >=")] CalcedBuffedTinkedTargetMeleeGE = 2008,
 
         [Description("Enable/Disable")] DisabledRule = 9999,
 

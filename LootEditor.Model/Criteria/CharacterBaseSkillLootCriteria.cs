@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace LootEditor.Model
 {
+    [Serializable]
     public class CharacterBaseSkillLootCriteria : LootCriteria
     {
         public override Enums.LootCriteriaType Type => Enums.LootCriteriaType.CharacterBaseSkill;
@@ -11,6 +13,15 @@ namespace LootEditor.Model
         public Enums.SkillType SkillType { get; set; }
         public int MinSkillValue { get; set; } = 0;
         public int MaxSkillValue { get; set; } = 999;
+
+        public CharacterBaseSkillLootCriteria() { }
+
+        private CharacterBaseSkillLootCriteria(SerializationInfo info, StreamingContext context)
+        {
+            SkillType = (Enums.SkillType)info.GetValue(nameof(SkillType), typeof(Enums.SkillType));
+            MinSkillValue = info.GetInt32(nameof(MinSkillValue));
+            MaxSkillValue = info.GetInt32(nameof(MaxSkillValue));
+        }
 
         public override string ToString() => $"{MinSkillValue} <= {SkillType} <= {MaxSkillValue}";
 
@@ -28,6 +39,13 @@ namespace LootEditor.Model
             await stream.WriteLineForRealAsync(((int)SkillType).ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(MinSkillValue.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(MaxSkillValue.ToString()).ConfigureAwait(false);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(SkillType), SkillType, typeof(Enums.SkillType));
+            info.AddValue(nameof(MinSkillValue), MinSkillValue, typeof(int));
+            info.AddValue(nameof(MaxSkillValue), MaxSkillValue, typeof(int));
         }
     }
 }

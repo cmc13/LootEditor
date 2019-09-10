@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:model="clr-namespace:LootEditor.Model;assembly=LootEditor.Model"
+             xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
              xmlns:cvt="clr-namespace:LootEditor.View.Converters"
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
@@ -12,13 +12,12 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:LootActionToVisibilityConverter x:Key="LootActionToVisibilityConverter" />
-        <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="*" MinHeight="100" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -28,22 +27,23 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Action:" />
-        <Grid Grid.Row="1" Grid.Column="1">
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Action:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <Grid Grid.Row="1" Grid.Column="1" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0" ItemsSource="{local:EnumBindingSource EnumType={x:Type model:LootAction}}" SelectedItem="{Binding Action}" />
-            <TextBox Grid.Column="1" Text="{Binding KeepUpToCount}" Width="100" Visibility="{Binding Action, Converter={StaticResource LootActionToVisibilityConverter}}" />
+            <ComboBox Grid.Column="0" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LootAction}}" SelectedItem="{Binding Action}" />
+            <TextBox Grid.Column="1" Text="{Binding KeepUpToCount}" Width="100" Visibility="{Binding Action, Converter={StaticResource LootActionToVisibilityConverter}}" Margin="5,0,0,0" />
         </Grid>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Criteria:" />
-        <ListBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}"
-                 dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Criteria:" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <ListBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}" Margin="10"
+                 dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.InputBindings>
                 <KeyBinding Key="Delete" Command="{Binding DeleteCriteriaCommand}" />
                 <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
@@ -82,16 +82,31 @@
             </ListBox.ContextMenu>
         </ListBox>
 
-        <Grid Grid.Row="3" Grid.Column="1">
+        <Grid Grid.Row="3" Grid.Column="1" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}">Add</Button>
-            <Button Grid.Column="1" Command="{Binding CloneCriteriaCommand}">Clone</Button>
-            <Button Grid.Column="2" Command="{Binding DeleteCriteriaCommand}">Delete</Button>
+            <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/Add_16x.png" />
+                    <TextBlock>Add</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="1" Command="{Binding CloneCriteriaCommand}" Margin="10,0">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/Clone_16x.png" />
+                    <TextBlock>Clone</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="2" Command="{Binding DeleteCriteriaCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/Remove_16x.png" />
+                    <TextBlock>Delete</TextBlock>
+                </StackPanel>
+            </Button>
         </Grid>
 
         <local:LootCriteriaEditor Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding SelectedCriteria}" />

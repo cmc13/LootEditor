@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
+using LootEditor.Model.Enums;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
@@ -302,24 +303,21 @@ namespace LootEditor.View.ViewModel
 
             CutItemCommand = new RelayCommand(() =>
             {
-                var data = JsonConvert.SerializeObject(SelectedRule.Rule);
-                Clipboard.SetText(data);
+                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
                 DeleteRuleCommand.Execute(null);
                 PasteItemCommand?.RaiseCanExecuteChanged();
             }, () => SelectedRule != null);
 
             CopyItemCommand = new RelayCommand(() =>
             {
-                var data = JsonConvert.SerializeObject(SelectedRule.Rule);
-                Clipboard.SetText(data);
+                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
                 PasteItemCommand?.RaiseCanExecuteChanged();
             }, () => SelectedRule != null);
 
             PasteItemCommand = new RelayCommand(() =>
             {
-                var data = Clipboard.GetText();
+                var newRule = (LootRule)Clipboard.GetData(typeof(LootRule).Name);
 
-                var newRule = JsonConvert.DeserializeObject<LootRule>(data, new LootRuleConverter());
                 LootFile.AddRule(newRule);
 
                 var vm = new LootRuleViewModel(newRule);
@@ -327,7 +325,7 @@ namespace LootEditor.View.ViewModel
 
                 IsDirty = true;
                 SelectedRule = vm;
-            }, () => Clipboard.ContainsText());
+            }, () => Clipboard.ContainsData(typeof(LootRule).Name));
 
             ExitCommand = new RelayCommand<Window>(w => w.Close());
 

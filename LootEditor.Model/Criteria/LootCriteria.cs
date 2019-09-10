@@ -2,11 +2,13 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace LootEditor.Model
 {
-    public abstract class LootCriteria : ICloneable
+    [Serializable]
+    public abstract class LootCriteria : ICloneable, ISerializable
     {
         public abstract LootCriteriaType Type { get; }
         public int RequirementLength { get; set; }
@@ -20,36 +22,36 @@ namespace LootEditor.Model
                     throw new Exception($"Unknown rule type: {type}");
 
                 case LootCriteriaType.AnySimilarColor: return new ColorLootCriteria(type);
-                case LootCriteriaType.BuffedDoubleValKeyGE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type, "{0} >= {1}");
-                case LootCriteriaType.BuffedLongValKeyGE: return new ValueKeyLootCriteria<LongValueKey, int>(type, "Buffed {0} >= {1}");
-                case LootCriteriaType.BuffedMedianDamageGE: return new ValueLootCriteria<double>(type, "Buffed Median Dmg >= {0}");
-                case LootCriteriaType.BuffedMissileDamageGE: return new ValueLootCriteria<double>(type, "Buffed Missile Dmg >= {0}");
-                case LootCriteriaType.CalcdBuffedTinkedDamageGE: return new ValueLootCriteria<double>(type, "Calc'd Buffed/Tinked Dmg >= {0}");
+                case LootCriteriaType.BuffedDoubleValKeyGE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type);
+                case LootCriteriaType.BuffedLongValKeyGE: return new ValueKeyLootCriteria<LongValueKey, int>(type);
+                case LootCriteriaType.BuffedMedianDamageGE: return new ValueLootCriteria<double>(type);
+                case LootCriteriaType.BuffedMissileDamageGE: return new ValueLootCriteria<double>(type);
+                case LootCriteriaType.CalcdBuffedTinkedDamageGE: return new ValueLootCriteria<double>(type);
                 case LootCriteriaType.CalcedBuffedTinkedTargetMeleeGE: return new CalculatedBuffedTinkedTargetMeleeGELootCriteria();
                 case LootCriteriaType.CharacterBaseSkill: return new CharacterBaseSkillLootCriteria();
-                case LootCriteriaType.CharacterLevelGE: return new ValueLootCriteria<int>(type, "Character Level >= {0}");
-                case LootCriteriaType.CharacterLevelLE: return new ValueLootCriteria<int>(type, "Character Level <= {0}");
-                case LootCriteriaType.CharacterMainPackEmptySlotsGE: return new ValueLootCriteria<int>(type, "Empty Pack Slots >= {0}");
-                case LootCriteriaType.CharacterSkillGE: return new ValueKeyLootCriteria<SkillType, int>(type, "{0} >= {1}");
-                case LootCriteriaType.DamagePercentGE: return new ValueLootCriteria<double>(type, "Damage % >= {0}");
-                case LootCriteriaType.DisabledRule: return new ValueLootCriteria<bool>(type, "Disabled: {0}");
-                case LootCriteriaType.DoubleValKeyGE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type, "{0} >= {1}");
-                case LootCriteriaType.DoubleValKeyLE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type, "{0} <= ");
-                case LootCriteriaType.LongValKeyE: return new ValueKeyLootCriteria<LongValueKey, int>(type, "{0} == {1}");
-                case LootCriteriaType.LongValKeyFlagExists: return new ValueKeyLootCriteria<LongValueKey, int>(type, "{0} has flags {1} (0x{1:X})");
-                case LootCriteriaType.LongValKeyGE: return new ValueKeyLootCriteria<LongValueKey, int>(type, "{0} >= {1}");
-                case LootCriteriaType.LongValKeyLE: return new ValueKeyLootCriteria<LongValueKey, int>(type, "{0} <= {1}");
-                case LootCriteriaType.LongValKeyNE: return new ValueKeyLootCriteria<LongValueKey, int>(type, "{0} != {1}");
-                case LootCriteriaType.MinDamageGE: return new ValueLootCriteria<double>(type, "Min Damage >= {0}");
-                case LootCriteriaType.ObjectClass: return new ValueLootCriteria<ObjectClass>(type, "Object Class == {0}");
+                case LootCriteriaType.CharacterLevelGE: return new ValueLootCriteria<int>(type);
+                case LootCriteriaType.CharacterLevelLE: return new ValueLootCriteria<int>(type);
+                case LootCriteriaType.CharacterMainPackEmptySlotsGE: return new ValueLootCriteria<int>(type);
+                case LootCriteriaType.CharacterSkillGE: return new ValueKeyLootCriteria<SkillType, int>(type);
+                case LootCriteriaType.DamagePercentGE: return new ValueLootCriteria<double>(type);
+                case LootCriteriaType.DisabledRule: return new ValueLootCriteria<bool>(type);
+                case LootCriteriaType.DoubleValKeyGE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type);
+                case LootCriteriaType.DoubleValKeyLE: return new ValueKeyLootCriteria<DoubleValueKey, double>(type);
+                case LootCriteriaType.LongValKeyE: return new ValueKeyLootCriteria<LongValueKey, int>(type);
+                case LootCriteriaType.LongValKeyFlagExists: return new ValueKeyLootCriteria<LongValueKey, int>(type);
+                case LootCriteriaType.LongValKeyGE: return new ValueKeyLootCriteria<LongValueKey, int>(type);
+                case LootCriteriaType.LongValKeyLE: return new ValueKeyLootCriteria<LongValueKey, int>(type);
+                case LootCriteriaType.LongValKeyNE: return new ValueKeyLootCriteria<LongValueKey, int>(type);
+                case LootCriteriaType.MinDamageGE: return new ValueLootCriteria<double>(type);
+                case LootCriteriaType.ObjectClass: return new ValueLootCriteria<ObjectClass>(type);
                 case LootCriteriaType.SimilarColorArmorType: return new SimilarArmorColorLootCriteria();
                 case LootCriteriaType.SlotExactPalette: return new SlotExactPaletteLootCriteria();
                 case LootCriteriaType.SlotSimilarColor: return new SlotSimilarColorLootCriteria();
-                case LootCriteriaType.SpellCountGE: return new ValueLootCriteria<int>(type, "Spell Counts >= {0}");
+                case LootCriteriaType.SpellCountGE: return new ValueLootCriteria<int>(type);
                 case LootCriteriaType.SpellMatch: return new SpellMatchLootCriteria();
-                case LootCriteriaType.SpellNameMatch: return new ValueLootCriteria<string>(type, "Spell Name Matches: {0}");
-                case LootCriteriaType.StringValueMatch: return new ValueKeyLootCriteria<StringValueKey, string>(type, "{0} == {1}");
-                case LootCriteriaType.TotalRatingsGE: return new ValueLootCriteria<double>(type, "Total Ratings >= {0}");
+                case LootCriteriaType.SpellNameMatch: return new ValueLootCriteria<string>(type);
+                case LootCriteriaType.StringValueMatch: return new ValueKeyLootCriteria<StringValueKey, string>(type);
+                case LootCriteriaType.TotalRatingsGE: return new ValueLootCriteria<double>(type);
             }
         }
 
@@ -67,6 +69,8 @@ namespace LootEditor.Model
 
             return criteria;
         }
+
+        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
         public virtual async Task ReadAsync(TextReader reader, int version)
         {

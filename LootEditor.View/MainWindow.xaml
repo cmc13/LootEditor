@@ -10,6 +10,7 @@
         xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
         xmlns:cvt="clr-namespace:LootEditor.View.Converters"
         xmlns:dd="urn:gong-wpf-dragdrop"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         DataContext="{StaticResource MainViewModel}"
         Loaded="LootEditorWindow_Loaded"
         mc:Ignorable="d"
@@ -115,28 +116,36 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}">
+            <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}" Margin="10">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Assets/Add_16x.png" />
                     <TextBlock>Add</TextBlock>
                 </StackPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="1" Command="{Binding CloneRuleCommand}">
+            <Button Grid.Row="0" Grid.Column="1" Command="{Binding CloneRuleCommand}" Margin="10">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Assets/Clone_16x.png" />
                     <TextBlock>Clone</TextBlock>
                 </StackPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="2" Command="{Binding DeleteRuleCommand}">
+            <Button Grid.Row="0" Grid.Column="2" Command="{Binding DeleteRuleCommand}" Margin="10">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Assets/Remove_16x.png" />
                     <TextBlock>Delete</TextBlock>
                 </StackPanel>
             </Button>
 
-            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="txtFilter" TextChanged="TxtFilter_TextChanged" />
+            <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="txtFilter" TextChanged="TxtFilter_TextChanged" Margin="10">
+                <xctk:WatermarkTextBox.Watermark>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Assets/Filter_16x.png" />
+                        <TextBlock>Filter</TextBlock>
+                    </StackPanel>
+                </xctk:WatermarkTextBox.Watermark>
+            </xctk:WatermarkTextBox>
 
-            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding LootRules}" ItemTemplate="{StaticResource LootRuleItemTemplate}"
+            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding LootRules}"
+                     ItemTemplate="{StaticResource LootRuleItemTemplate}" Margin="10"
                  SelectedItem="{Binding SelectedRule}" Width="300" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
                 <ListBox.InputBindings>
@@ -182,8 +191,8 @@
             </ListBox>
         </Grid>
 
-        <Grid Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}">
+        <ScrollViewer Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
             <local:LootRuleEditor DataContext="{Binding SelectedRule}" />
-        </Grid>
+        </ScrollViewer>
     </DockPanel>
 </Window>

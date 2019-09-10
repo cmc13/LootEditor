@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace LootEditor.Model
 {
+    [Serializable]
     public class ColorLootCriteria : LootCriteria
     {
         public byte R { get; set; }
@@ -29,6 +30,15 @@ namespace LootEditor.Model
         public ColorLootCriteria(Enums.LootCriteriaType type)
         {
             Type = type;
+        }
+
+        protected ColorLootCriteria(SerializationInfo info, StreamingContext context)
+        {
+            Type = (Enums.LootCriteriaType)info.GetValue(nameof(Type), typeof(Enums.LootCriteriaType));
+            var hexString = info.GetString(nameof(Color));
+            Color = System.Windows.Media.Color.FromRgb(Convert.ToByte(hexString.Substring(1, 2), 16), Convert.ToByte(hexString.Substring(3, 2), 16), Convert.ToByte(hexString.Substring(5, 2), 16));
+            HDiff = info.GetDouble(nameof(HDiff));
+            SVDiff = info.GetDecimal(nameof(SVDiff));
         }
 
         public override string ToString()
@@ -74,6 +84,14 @@ namespace LootEditor.Model
             await stream.WriteLineForRealAsync(B.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(HDiff.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(SVDiff.ToString()).ConfigureAwait(false);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue(nameof(Type), Type, typeof(Enums.LootCriteriaType));
+            info.AddValue(nameof(Color), $"#{Color.R:X2}{Color.G:X2}{Color.B:X2}", typeof(string));
+            info.AddValue(nameof(HDiff), HDiff, typeof(double));
+            info.AddValue(nameof(SVDiff), SVDiff, typeof(decimal));
         }
     }
 }

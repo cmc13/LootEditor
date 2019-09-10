@@ -1,4 +1,4 @@
-﻿namespace LootEditor.Model
+﻿namespace LootEditor.Model.Enums
 {
     public enum LootAction
     {

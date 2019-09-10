@@ -201,5 +201,8 @@
   <ItemGroup>
     <Resource Include="Assets\Clone_16x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Filter_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

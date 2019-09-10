@@ -1,11 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Threading;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using LootEditor.Model.Enums;
-using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 
@@ -114,52 +113,62 @@ namespace LootEditor.View.ViewModel
                 Criteria.Add(vm);
             }
 
-            AddCriteriaCommand = new RelayCommand(() =>
-            {
-                var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.AnySimilarColor);
-                rule.AddCriteria(newCriteria);
+            AddCriteriaCommand = new RelayCommand(AddCriteria);
 
-                var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
-                vm.PropertyChanged += Vm_PropertyChanged;
-                Criteria.Add(vm);
+            CloneCriteriaCommand = new RelayCommand(CloneCriteria, SelectedCriteria_CanExecute);
 
-                IsDirty = true;
-                SelectedCriteria = vm;
-            });
+            DeleteCriteriaCommand = new RelayCommand(RemoveCriteria, SelectedCriteria_CanExecute);
 
-            CloneCriteriaCommand = new RelayCommand(CloneCriteria, CanExecute);
+            CutItemCommand = new RelayCommand(CutItem, SelectedCriteria_CanExecute);
 
-            DeleteCriteriaCommand = new RelayCommand(RemoveCriteria, CanExecute);
+            CopyItemCommand = new RelayCommand(CopyItem, SelectedCriteria_CanExecute);
 
-            CutItemCommand = new RelayCommand(() =>
-            {
-                Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
-                DeleteCriteriaCommand.Execute(null);
-                PasteItemCommand?.RaiseCanExecuteChanged();
-            }, () => SelectedCriteria != null);
-
-            CopyItemCommand = new RelayCommand(() =>
-            {
-                Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
-                PasteItemCommand?.RaiseCanExecuteChanged();
-            }, () => SelectedCriteria != null);
-
-            PasteItemCommand = new RelayCommand(() =>
-            {
-                var data = Clipboard.GetData(typeof(LootCriteria).Name) as LootCriteria;
-
-                var newCriteria = data.Clone() as LootCriteria;
-                rule.AddCriteria(newCriteria);
-
-                var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
-                vm.PropertyChanged += Vm_PropertyChanged;
-                Criteria.Add(vm);
-
-                IsDirty = true;
-                SelectedCriteria = vm;
-            }, () => Clipboard.ContainsData(typeof(LootCriteria).Name));
+            PasteItemCommand = new RelayCommand(PasteItem, CanPaste);
 
             ToggleDisabledCommand = new RelayCommand(ToggleDisabled);
+        }
+
+        private bool CanPaste() => Clipboard.ContainsData(typeof(LootCriteria).Name);
+
+        private void PasteItem()
+        {
+            var data = Clipboard.GetData(typeof(LootCriteria).Name) as LootCriteria;
+
+            var newCriteria = data.Clone() as LootCriteria;
+            this.Rule.AddCriteria(newCriteria);
+
+            var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
+            vm.PropertyChanged += Vm_PropertyChanged;
+            Criteria.Add(vm);
+
+            IsDirty = true;
+            SelectedCriteria = vm;
+        }
+
+        private void CopyItem()
+        {
+            Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
+            PasteItemCommand?.RaiseCanExecuteChanged();
+        }
+
+        private void CutItem()
+        {
+            Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
+            DeleteCriteriaCommand.Execute(null);
+            PasteItemCommand?.RaiseCanExecuteChanged();
+        }
+
+        private void AddCriteria()
+        {
+            var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.AnySimilarColor);
+            this.Rule.AddCriteria(newCriteria);
+
+            var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
+            vm.PropertyChanged += Vm_PropertyChanged;
+            Criteria.Add(vm);
+
+            IsDirty = true;
+            SelectedCriteria = vm;
         }
 
         private void ToggleDisabled()
@@ -216,10 +225,7 @@ namespace LootEditor.View.ViewModel
             RaisePropertyChanged(nameof(IsDirty));
         }
 
-        private bool CanExecute()
-        {
-            return SelectedCriteria != null;
-        }
+        private bool SelectedCriteria_CanExecute() => SelectedCriteria != null;
 
         private void CloneCriteria()
         {
