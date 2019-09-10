@@ -402,7 +402,7 @@
 
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     </UserControl.Resources>
-    <GroupBox Header="Criteria" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}" Margin="5">
+    <GroupBox Header="Criteria" Margin="5">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

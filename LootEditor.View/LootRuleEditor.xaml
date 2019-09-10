@@ -109,6 +109,7 @@
             </Button>
         </Grid>
 
-        <local:LootCriteriaEditor Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding SelectedCriteria}" />
+        <local:LootCriteriaEditor Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{Binding SelectedCriteria}"
+                                  Visibility="{Binding SelectedCriteria, Converter={StaticResource NullToVisibilityConverter}}" />
     </Grid>
 </UserControl>
