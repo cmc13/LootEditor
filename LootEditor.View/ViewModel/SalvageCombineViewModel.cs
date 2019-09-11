@@ -1,9 +1,11 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Threading;
 using LootEditor.Model.Enums;
 
 namespace LootEditor.View.ViewModel
 {
-    public class SalvageCombineViewModel : ViewModelBase
+    public class SalvageCombineViewModel : ViewModelBase, IAcceptPendingChange
     {
         private Material material;
         private SalvageCombineListViewModel.SalvageObj salvageObj;
@@ -21,10 +23,24 @@ namespace LootEditor.View.ViewModel
             {
                 if (material != value)
                 {
-                    material = value;
+                    if (this.RaiseAcceptPendingChange(nameof(Material), material, value))
+                        material = value;
+                    else
+                    {
+                        DispatcherHelper.RunAsync(() => RaisePropertyChanged(nameof(Material)));
+                        return;
+                    }
+
                     RaisePropertyChanged(nameof(Material));
                 }
             }
+        }
+
+        private bool RaiseAcceptPendingChange(string propertyName, object oldValue, object newValue)
+        {
+            var e = new AcceptPendingChangeEventArgs(propertyName, oldValue, newValue);
+            AcceptPendingChange?.Invoke(this, e);
+            return !e.Cancel;
         }
 
         public string CombineRange
@@ -67,5 +83,7 @@ namespace LootEditor.View.ViewModel
                 }
             }
         }
+
+        public event EventHandler<AcceptPendingChangeEventArgs> AcceptPendingChange;
     }
 }

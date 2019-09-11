@@ -277,17 +277,20 @@ namespace LootEditor.View.ViewModel
 
         void IDropTarget.Drop(IDropInfo dropInfo)
         {
-            if (dropInfo.InsertIndex > dropInfo.DragInfo.SourceIndex)
+            if (dropInfo.InsertIndex != dropInfo.DragInfo.SourceIndex)
             {
-                Rule.MoveCriteria(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
-                Criteria.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                if (dropInfo.InsertIndex > dropInfo.DragInfo.SourceIndex)
+                {
+                    Rule.MoveCriteria(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                    Criteria.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                }
+                else
+                {
+                    Rule.MoveCriteria(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+                    Criteria.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+                }
+                IsDirty = true;
             }
-            else
-            {
-                Rule.MoveCriteria(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
-                Criteria.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
-            }
-            IsDirty = true;
         }
     }
 }

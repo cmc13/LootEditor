@@ -121,9 +121,9 @@ namespace LootEditor.View.ViewModel
 
         public void Clean()
         {
-            IsDirty = false;
             foreach (var rule in LootRules.Where(r => r.IsDirty))
                 rule.Clean();
+            IsDirty = false;
         }
 
         public void DragOver(IDropInfo dropInfo)
@@ -137,17 +137,20 @@ namespace LootEditor.View.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            if (dropInfo.InsertIndex > dropInfo.DragInfo.SourceIndex)
+            if (dropInfo.InsertIndex != dropInfo.DragInfo.SourceIndex)
             {
-                lootFile.MoveRule(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
-                LootRules.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                if (dropInfo.InsertIndex > dropInfo.DragInfo.SourceIndex)
+                {
+                    lootFile.MoveRule(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                    LootRules.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex - 1);
+                }
+                else
+                {
+                    lootFile.MoveRule(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+                    LootRules.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
+                }
+                IsDirty = true;
             }
-            else
-            {
-                lootFile.MoveRule(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
-                LootRules.Move(dropInfo.DragInfo.SourceIndex, dropInfo.InsertIndex);
-            }
-            IsDirty = true;
         }
 
         private void DeleteRule()

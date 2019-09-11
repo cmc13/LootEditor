@@ -97,9 +97,7 @@
     <Compile Include="Converters\EnumFlagsToBoolConverter.cs" />
     <Compile Include="Converters\EnumToIntConverter.cs" />
     <Compile Include="Converters\EqualityConverter.cs" />
-    <Compile Include="Converters\GreaterThanConverter.cs" />
     <Compile Include="Converters\LongValueKeyToVisibilityConverter.cs" />
-    <Compile Include="Converters\LootActionToVisibilityConverter.cs" />
     <Compile Include="Converters\NameToFontWeightConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ReverseBooleanToVisibilityConverter.cs" />
@@ -123,6 +121,7 @@
       <DependentUpon>SalvageCombineListEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="ValidationRules\RegexValidationRule.cs" />
+    <Compile Include="ViewModel\IAcceptPendingChange.cs" />
     <Compile Include="ViewModel\LootCriteriaViewModel.cs" />
     <Compile Include="ViewModel\LootCriteriaViewModelFactory.cs" />
     <Compile Include="ViewModel\LootRuleListViewModel.cs" />

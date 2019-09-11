@@ -12,7 +12,7 @@ namespace LootEditor.Model.Enums
         [Description("Value")] Value = 19,
         [Description("Total Value")] TotalValue = 20,
         [Description("Skill Credits Available")] SkillCreditsAvail = 24,
-        [Description("CreatureLevel")] CreatureLevel = 25,
+        [Description("Creature Level")] CreatureLevel = 25,
         [Description("Restricted To Throne of Destiny")] RestrictedToToD = 26,
         [Description("Armor Level")] ArmorLevel = 28,
         [Description("Rank")] Rank = 30,

@@ -108,6 +108,7 @@ namespace LootEditor.View.ViewModel
                 }
 
                 LootFile = new LootFile();
+                SaveFileName = null;
             });
 
             OpenFileCommand = new RelayCommand(async () =>
@@ -134,20 +135,7 @@ namespace LootEditor.View.ViewModel
                 var result = ofd.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
-                    try
-                    {
-                        using (var fs = File.OpenRead(ofd.FileName))
-                        {
-                            var lf = new LootFile();
-                            await lf.ReadFileAsync(fs);
-                            LootFile = lf;
-                            SaveFileName = ofd.FileName;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"There was an error loading the file. The message was: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    await OpenFileAsync(ofd.FileName).ConfigureAwait(false);
                 }
             });
 
@@ -158,7 +146,7 @@ namespace LootEditor.View.ViewModel
                     var sfd = new SaveFileDialog()
                     {
                         CheckPathExists = true,
-                        FileName = "Loot Files|*.utl",
+                        Filter = "Loot Files|*.utl",
                         OverwritePrompt = true
                     };
 
@@ -229,6 +217,24 @@ namespace LootEditor.View.ViewModel
             ExitCommand = new RelayCommand<Window>(w => w.Close());
         }
 
+        public async Task OpenFileAsync(string fileName)
+        {
+            try
+            {
+                using (var fs = File.OpenRead(fileName))
+                {
+                    var lf = new LootFile();
+                    await lf.ReadFileAsync(fs).ConfigureAwait(false);
+                    LootFile = lf;
+                    SaveFileName = fileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There was an error loading the file. The message was: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private async Task SaveFileAsync(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -239,6 +245,7 @@ namespace LootEditor.View.ViewModel
             }
 
             LootRuleListViewModel.Clean();
+            SalvageCombineListViewModel.Clean();
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)

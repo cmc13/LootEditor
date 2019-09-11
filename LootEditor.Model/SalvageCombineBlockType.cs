@@ -42,20 +42,23 @@ namespace LootEditor.Model
             }
 
             var materialValueCountString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
-            if (!int.TryParse(materialValueCountString, out var materialValueCount))
+            if (materialValueCountString != null)
             {
-                throw new Exception();
-            }
+                if (!int.TryParse(materialValueCountString, out var materialValueCount))
+                {
+                    throw new Exception();
+                }
 
-            MaterialValueCount = materialValueCount;
+                MaterialValueCount = materialValueCount;
 
-            MaterialValues = new Dictionary<Material, int>();
-            for (int i = 0; i < MaterialValueCount; ++i)
-            {
-                var matString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
-                var valueString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
+                MaterialValues = new Dictionary<Material, int>();
+                for (int i = 0; i < MaterialValueCount; ++i)
+                {
+                    var matString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
+                    var valueString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
 
-                MaterialValues.Add((Material)Enum.ToObject(typeof(Material), int.Parse(matString)), int.Parse(valueString));
+                    MaterialValues.Add((Material)Enum.ToObject(typeof(Material), int.Parse(matString)), int.Parse(valueString));
+                }
             }
         }
 

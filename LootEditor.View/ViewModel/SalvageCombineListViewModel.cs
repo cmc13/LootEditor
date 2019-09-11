@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using LootEditor.Model;
 using LootEditor.Model.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -57,6 +58,7 @@ namespace LootEditor.View.ViewModel
         private readonly SalvageCombineBlockType salvageCombineBlock;
         private bool isDirty = false;
         private KeyValuePair<Material, SalvageObj> selectedItem;
+        private SalvageCombineViewModel currentSalvageCombineViewModel;
 
         public SalvageCombineListViewModel(LootFile lootFile)
         {
@@ -70,24 +72,23 @@ namespace LootEditor.View.ViewModel
                     {
                         salvageObj = new SalvageObj();
                         CombineRules.Add(item.Key, salvageObj);
-
-                        salvageObj.PropertyChanged += Rule_PropertyChanged;
                     }
 
                     salvageObj.CombineRange = item.Value;
                 }
 
-                foreach (var item in salvageCombineBlock.MaterialValues)
+                if (salvageCombineBlock.MaterialValues != null)
                 {
-                    if (!CombineRules.TryGetValue(item.Key, out var salvageObj))
+                    foreach (var item in salvageCombineBlock.MaterialValues)
                     {
-                        salvageObj = new SalvageObj();
-                        CombineRules.Add(item.Key, salvageObj);
+                        if (!CombineRules.TryGetValue(item.Key, out var salvageObj))
+                        {
+                            salvageObj = new SalvageObj();
+                            CombineRules.Add(item.Key, salvageObj);
+                        }
 
-                        salvageObj.PropertyChanged += Rule_PropertyChanged;
+                        salvageObj.CombineValue = item.Value;
                     }
-
-                    salvageObj.CombineValue = item.Value;
                 }
             }
 
@@ -103,16 +104,68 @@ namespace LootEditor.View.ViewModel
                 {
                     selectedItem = value;
                     RaisePropertyChanged(nameof(SelectedItem));
+
+                    SalvageCombineViewModel = new SalvageCombineViewModel(selectedItem.Key, selectedItem.Value);
+                }
+            }
+        }
+
+        public SalvageCombineViewModel SalvageCombineViewModel
+        {
+            get => currentSalvageCombineViewModel;
+            set
+            {
+                if (currentSalvageCombineViewModel != value)
+                {
+                    if (currentSalvageCombineViewModel != null)
+                    {
+                        currentSalvageCombineViewModel.PropertyChanged -= Vm_PropertyChanged;
+                        currentSalvageCombineViewModel.AcceptPendingChange -= Vm_AcceptPendingChange;
+                    }
+
+                    currentSalvageCombineViewModel = value;
+                    currentSalvageCombineViewModel.PropertyChanged += Vm_PropertyChanged;
+                    currentSalvageCombineViewModel.AcceptPendingChange += Vm_AcceptPendingChange;
+
                     RaisePropertyChanged(nameof(SalvageCombineViewModel));
                 }
             }
         }
 
-        public SalvageCombineViewModel SalvageCombineViewModel => new SalvageCombineViewModel(SelectedItem.Key, SelectedItem.Value);
-
-        private void Rule_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Vm_AcceptPendingChange(object sender, AcceptPendingChangeEventArgs e)
         {
-            RaisePropertyChanged(nameof(IsDirty));
+            if (e.PropertyName == nameof(SalvageCombineViewModel.Material))
+            {
+                if (salvageCombineBlock.Materials.ContainsKey((Material)e.NewValue) || salvageCombineBlock.MaterialValues.ContainsKey((Material)e.NewValue))
+                    e.Cancel = true;
+                else
+                {
+                    salvageCombineBlock.Materials[(Material)e.NewValue] = salvageCombineBlock.Materials[(Material)e.OldValue];
+                    salvageCombineBlock.Materials.Remove((Material)e.OldValue);
+
+                    salvageCombineBlock.MaterialValues[(Material)e.NewValue] = salvageCombineBlock.MaterialValues[(Material)e.OldValue];
+                    salvageCombineBlock.MaterialValues.Remove((Material)e.OldValue);
+                }
+            }
+        }
+
+        private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            var vm = sender as SalvageCombineViewModel;
+            if (e.PropertyName == nameof(SalvageCombineViewModel.CombineRange))
+            {
+                if (string.IsNullOrEmpty(vm.CombineRange) || vm.CombineRange == salvageCombineBlock.DefaultCombineString)
+                    salvageCombineBlock.Materials.Remove(vm.Material);
+                else
+                    salvageCombineBlock.Materials[vm.Material] = vm.CombineRange;
+            }
+            else if (e.PropertyName == nameof(SalvageCombineViewModel.CombineValue))
+            {
+                if (vm.CombineValue == null)
+                    salvageCombineBlock.MaterialValues.Remove(vm.Material);
+                else
+                    salvageCombineBlock.MaterialValues[vm.Material] = vm.CombineValue.Value;
+            }
         }
 
         private void CombineRules_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -180,5 +233,10 @@ namespace LootEditor.View.ViewModel
         }
 
         public ObservableDictionary<Material, SalvageObj> CombineRules { get; } = new ObservableDictionary<Material, SalvageObj>();
+
+        public void Clean()
+        {
+            IsDirty = false;
+        }
     }
 }

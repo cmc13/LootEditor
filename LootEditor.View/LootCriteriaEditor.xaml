@@ -53,7 +53,7 @@
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <Grid Grid.Row="1" Grid.Column="1" Margin="10">
-                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding Value}"
                          Visibility="{Binding Key, Converter={StaticResource LongValueKeyToVisibilityConverter}}" />
                     <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:Material}}"
