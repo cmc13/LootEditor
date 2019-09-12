@@ -8,8 +8,6 @@
             xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
             xmlns:dd="urn:gong-wpf-dragdrop"
             xmlns:cvt="clr-namespace:LootEditor.View.Converters"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Loaded="LootEditorWindow_Loaded"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -30,6 +28,7 @@
                 </TextBlock.Style>
             </TextBlock>
         </DataTemplate>
+        <CollectionViewSource x:Key="LootRules" Source="{Binding LootRules}" Filter="CollectionViewSource_Filter"></CollectionViewSource>
     </UserControl.Resources>
     
     <Grid>
@@ -71,7 +70,8 @@
                 </StackPanel>
             </Button>
 
-            <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="txtFilter" TextChanged="TxtFilter_TextChanged" Margin="10">
+            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="10"
+                                   TextChanged="TxtFilter_TextChanged">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Assets/Filter_16x.png" />
@@ -80,7 +80,7 @@
                 </xctk:WatermarkTextBox.Watermark>
             </xctk:WatermarkTextBox>
 
-            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding LootRules}"
+            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding Source={StaticResource LootRules}}"
                      ItemTemplate="{StaticResource LootRuleItemTemplate}" Margin="10"
                      SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">

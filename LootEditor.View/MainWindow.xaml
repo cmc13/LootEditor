@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
+        xmlns:cvt="clr-namespace:LootEditor.View.Converters"
         xmlns:local="clr-namespace:LootEditor.View"
         DataContext="{StaticResource MainViewModel}"
         mc:Ignorable="d"
@@ -22,6 +23,8 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
+        <cvt:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+        <cvt:IndexingConverter x:Key="IndexingConverter" />
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewFileCommand}" />
@@ -56,6 +59,25 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
+                <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}" IsEnabled="{Binding RecentFiles.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Key}" />
+                                            <TextBlock Text="{Binding Value}" Margin="3,0,0,0" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=Menu}, Path=DataContext.OpenRecentFileCommand}" />
+                            <Setter Property="CommandParameter" Value="{Binding Value}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <Separator />
                 <MenuItem Header="Exit" Command="{Binding ExitCommand}" CommandParameter="{Binding ElementName=LootEditorWindow}" InputGestureText="Alt+F4">
                     <MenuItem.Icon>
                         <Image Source="Assets/Close_16x.png" />
@@ -79,9 +101,18 @@
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
+            <MenuItem Header="View" ItemsSource="{Binding ElementName=tabMain, Path=Items}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding Header}" />
+                        <Setter Property="IsCheckable" Value="True" />
+                        <Setter Property="IsChecked" Value="{Binding IsSelected}" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
         </Menu>
 
-        <TabControl TabStripPlacement="Bottom" Margin="2">
+        <TabControl TabStripPlacement="Bottom" Margin="2" x:Name="tabMain">
             <TabItem Header="Rules">
                 <local:LootRuleListEditor DataContext="{Binding LootRuleListViewModel}" />
             </TabItem>

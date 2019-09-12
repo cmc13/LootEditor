@@ -2,7 +2,10 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using LootEditor.Model;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,6 +15,8 @@ namespace LootEditor.View.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        private static readonly string RECENT_FILE_NAME = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Loot Editor", "RecentFiles.json");
+        private const int RECENT_FILE_COUNT = 10;
         private string saveFileName;
         private LootFile lootFile;
         private LootRuleListViewModel lootRuleListViewModel;
@@ -81,6 +86,8 @@ namespace LootEditor.View.ViewModel
             }
         }
 
+        public List<string> RecentFiles { get; } = new List<string>();
+
         public bool IsDirty => LootRuleListViewModel.IsDirty || SalvageCombineListViewModel.IsDirty;
 
         public RelayCommand NewFileCommand { get; }
@@ -89,10 +96,22 @@ namespace LootEditor.View.ViewModel
         public RelayCommand SaveAsCommand { get; }
         public RelayCommand<CancelEventArgs> ClosingCommand { get; }
         public RelayCommand<Window> ExitCommand { get; }
+        public RelayCommand<string> OpenRecentFileCommand { get; }
 
         public MainViewModel()
         {
             LootFile = new LootFile();
+
+            if (File.Exists(RECENT_FILE_NAME))
+            {
+                var json = File.ReadAllText(RECENT_FILE_NAME);
+                var files = JsonConvert.DeserializeObject<IEnumerable<string>>(json);
+                RecentFiles.AddRange(files);
+                while (RecentFiles.Count > RECENT_FILE_COUNT)
+                    RecentFiles.RemoveAt(RecentFiles.Count - 1);
+                RaisePropertyChanged(nameof(RecentFiles));
+            }
+            else
 
             NewFileCommand = new RelayCommand(async () =>
             {
@@ -215,6 +234,18 @@ namespace LootEditor.View.ViewModel
             });
 
             ExitCommand = new RelayCommand<Window>(w => w.Close());
+
+            OpenRecentFileCommand = new RelayCommand<string>(async fileName =>
+            {
+                if (File.Exists(fileName))
+                    await OpenFileAsync(fileName).ConfigureAwait(false);
+                else
+                {
+                    RecentFiles.RemoveAll(f => fileName.Equals(f, StringComparison.OrdinalIgnoreCase));
+                    MessageBox.Show($"The file {fileName} is no longer on disk. Removing from recent files list.",
+                        "File Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            });
         }
 
         public async Task OpenFileAsync(string fileName)
@@ -233,6 +264,23 @@ namespace LootEditor.View.ViewModel
             {
                 MessageBox.Show($"There was an error loading the file. The message was: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            AddRecentFile(fileName);
+        }
+
+        private void AddRecentFile(string fileName)
+        {
+            RecentFiles.RemoveAll(f => fileName.Equals(f, StringComparison.OrdinalIgnoreCase));
+            RecentFiles.Insert(0, fileName);
+            while (RecentFiles.Count > RECENT_FILE_COUNT)
+                RecentFiles.RemoveAt(RecentFiles.Count - 1);
+
+            RaisePropertyChanged(nameof(RecentFiles));
+
+            var json = JsonConvert.SerializeObject(RecentFiles);
+            if (!Directory.Exists(Path.GetDirectoryName(RECENT_FILE_NAME)))
+                Directory.CreateDirectory(Path.GetDirectoryName(RECENT_FILE_NAME));
+            File.WriteAllText(RECENT_FILE_NAME, json);
         }
 
         private async Task SaveFileAsync(string fileName)
@@ -246,6 +294,8 @@ namespace LootEditor.View.ViewModel
 
             LootRuleListViewModel.Clean();
             SalvageCombineListViewModel.Clean();
+
+            AddRecentFile(fileName);
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
