@@ -23,12 +23,35 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <Button Margin="10">Add</Button>
-                <Button Margin="10">Delete</Button>
-            </StackPanel>
-            
-            <ListBox Grid.Row="1" ItemsSource="{Binding CombineRules}" MinWidth="200" SelectedItem="{Binding SelectedItem}" />
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="0" Margin="10" FontSize="14" Padding="3">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Assets/Add_16x.png" />
+                        <TextBlock>Add</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="1" Margin="10" FontSize="14" Padding="3">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Assets/Remove_16x.png" />
+                        <TextBlock>Delete</TextBlock>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <ListView Grid.Row="1" ItemsSource="{Binding CombineRules}" Width="300" SelectedItem="{Binding SelectedItem}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="Material" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineRange}" Header="Combine Range" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineValue}" Header="Combine Up To" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </Grid>
 
         <GridSplitter Grid.Column="1" Width="3" />
