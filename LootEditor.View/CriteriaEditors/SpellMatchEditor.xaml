@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="LootEditor.View.CriteriaEditors.SpellMatchEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vr="clr-namespace:LootEditor.View.ValidationRules"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Matches:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="10">
+            <TextBox.Text>
+                <Binding Path="Match"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <vr:IsValidRegexValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                            <Setter Property="Background" Value="Salmon" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="BorderBrush" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Does NOT Match:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="10">
+            <TextBox.Text>
+                <Binding Path="NoMatch"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <vr:IsValidRegexValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                            <Setter Property="Background" Value="Salmon" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="BorderBrush" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Matching Spell Count:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+        <xctk:IntegerUpDown Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" Margin="10" Minimum="0" />
+    </Grid>
+</UserControl>
