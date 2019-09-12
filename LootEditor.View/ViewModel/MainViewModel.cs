@@ -21,6 +21,8 @@ namespace LootEditor.View.ViewModel
         private LootFile lootFile;
         private LootRuleListViewModel lootRuleListViewModel;
         private SalvageCombineListViewModel salvageCombineViewModel;
+        private bool isBusy = false;
+        private string busyStatus;
 
         public string SaveFileName
         {
@@ -82,6 +84,32 @@ namespace LootEditor.View.ViewModel
                     salvageCombineViewModel.PropertyChanged += VM_PropertyChanged;
                     RaisePropertyChanged(nameof(SalvageCombineListViewModel));
                     RaisePropertyChanged(nameof(IsDirty));
+                }
+            }
+        }
+
+        public bool IsBusy
+        {
+            get => isBusy;
+            set
+            {
+                if (isBusy != value)
+                {
+                    isBusy = value;
+                    RaisePropertyChanged(nameof(IsBusy));
+                }
+            }
+        }
+
+        public string BusyStatus
+        {
+            get => busyStatus;
+            set
+            {
+                if (busyStatus != value)
+                {
+                    busyStatus = value;
+                    RaisePropertyChanged(nameof(BusyStatus));
                 }
             }
         }
@@ -250,6 +278,8 @@ namespace LootEditor.View.ViewModel
 
         public async Task OpenFileAsync(string fileName)
         {
+            BusyStatus = "Opening file...";
+            IsBusy = true;
             try
             {
                 using (var fs = File.OpenRead(fileName))
@@ -264,8 +294,32 @@ namespace LootEditor.View.ViewModel
             {
                 MessageBox.Show($"There was an error loading the file. The message was: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
 
-            AddRecentFile(fileName);
+        private async Task SaveFileAsync(string fileName)
+        {
+            BusyStatus = "Saving file...";
+            IsBusy = true;
+            try
+            {
+                using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    await LootFile.WriteFileAsync(fs).ConfigureAwait(false);
+                    await fs.FlushAsync();
+                    fs.Close();
+                }
+
+                LootRuleListViewModel.Clean();
+                SalvageCombineListViewModel.Clean();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private void AddRecentFile(string fileName)
@@ -281,21 +335,6 @@ namespace LootEditor.View.ViewModel
             if (!Directory.Exists(Path.GetDirectoryName(RECENT_FILE_NAME)))
                 Directory.CreateDirectory(Path.GetDirectoryName(RECENT_FILE_NAME));
             File.WriteAllText(RECENT_FILE_NAME, json);
-        }
-
-        private async Task SaveFileAsync(string fileName)
-        {
-            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                await LootFile.WriteFileAsync(fs).ConfigureAwait(false);
-                await fs.FlushAsync();
-                fs.Close();
-            }
-
-            LootRuleListViewModel.Clean();
-            SalvageCombineListViewModel.Clean();
-
-            AddRecentFile(fileName);
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)

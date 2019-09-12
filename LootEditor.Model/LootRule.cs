@@ -55,14 +55,14 @@ namespace LootEditor.Model
 
             if (!int.TryParse(lineItems[0], out var priority))
             {
-                throw new Exception();
+                throw new Exception($"Failed to parse priority for loot rule ({rule.Name})");
             }
 
             rule.Priority = priority;
 
             if (!int.TryParse(lineItems[1], out var action))
             {
-                throw new Exception();
+                throw new Exception($"Failed to parse action for loot rule ({rule.Name})");
             }
 
             rule.Action = (Enums.LootAction)action;
@@ -72,17 +72,17 @@ namespace LootEditor.Model
                 var keepUpToCountLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
                 if (!int.TryParse(keepUpToCountLine, out var keepUpToCount))
                 {
-                    throw new Exception();
+                    throw new Exception($"Failed to parse keep count for loot rule ({rule.Name})");
                 }
 
                 rule.KeepUpToCount = keepUpToCount;
             }
 
-            for (int i = 0; i < lineItems.Length - 2; ++i)
+            for (int i = 2; i < lineItems.Length; ++i)
             {
-                if (!int.TryParse(lineItems[i + 2], out var rt))
+                if (!int.TryParse(lineItems[i], out var rt))
                 {
-                    throw new Exception();
+                    throw new Exception($"Failed to parse criteria type for loot rule ({rule.Name})");
                 }
 
                 var ruleType = (Enums.LootCriteriaType)rt;

@@ -27,7 +27,7 @@ namespace LootEditor.Model
             var ruleCountString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
             if (!int.TryParse(ruleCountString, out var ruleCount))
             {
-                throw new Exception();
+                throw new Exception($"Failed to parse material combine rule count for salvage block");
             }
 
             RuleCount = ruleCount;
@@ -46,7 +46,7 @@ namespace LootEditor.Model
             {
                 if (!int.TryParse(materialValueCountString, out var materialValueCount))
                 {
-                    throw new Exception();
+                    throw new Exception($"Failed to parse material value count for salvage block");
                 }
 
                 MaterialValueCount = materialValueCount;

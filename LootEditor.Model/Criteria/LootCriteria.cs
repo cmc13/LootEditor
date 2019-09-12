@@ -79,7 +79,7 @@ namespace LootEditor.Model
                 var length = await reader.ReadLineForRealAsync().ConfigureAwait(false);
                 if (!int.TryParse(length, out var requirementLength))
                 {
-                    throw new Exception();
+                    throw new Exception("Failed to parse requirement length for loot criteria");
                 }
 
                 RequirementLength = requirementLength;

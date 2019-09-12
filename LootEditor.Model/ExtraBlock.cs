@@ -35,7 +35,7 @@ namespace LootEditor.Model
             var lengthLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
             if (!long.TryParse(lengthLine, out var length))
             {
-                throw new Exception();
+                throw new Exception("Failed to parse length for extra block");
             }
 
             Length = length;
