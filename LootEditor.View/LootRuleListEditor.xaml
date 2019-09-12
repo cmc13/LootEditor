@@ -33,12 +33,11 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <Grid Grid.Column="0" MinWidth="300">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -127,9 +126,9 @@
             </ListBox>
         </Grid>
 
-        <GridSplitter Width="3" Grid.Column="1" />
+        <GridSplitter Width="3" Grid.Column="0" />
 
-        <ScrollViewer Grid.Column="2" Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="1" Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
             <local:LootRuleEditor DataContext="{Binding SelectedRule}" />
         </ScrollViewer>
     </Grid>

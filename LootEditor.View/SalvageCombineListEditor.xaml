@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:cvt="clr-namespace:LootEditor.View.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -12,8 +13,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" MinWidth="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -43,20 +43,26 @@
                 </Button>
             </Grid>
 
-            <ListView Grid.Row="1" ItemsSource="{Binding CombineRules}" Width="300" SelectedItem="{Binding SelectedItem}">
+            <ListView Grid.Row="1" ItemsSource="{Binding CombineRules}" SelectedItem="{Binding SelectedItem}" Margin="10">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="Material" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineRange}" Header="Combine Range" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineValue}" Header="Combine Up To" />
+                        <GridView.ColumnHeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="IsHitTestVisible" Value="False" />
+                            </Style>
+                        </GridView.ColumnHeaderContainerStyle>
+                        
+                        <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="Material" Width="Auto"  />
+                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineRange}" Header="Combine Range" Width="{x:Static sys:Double.NaN}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineValue}" Header="Combine Up To" Width="Auto" />
                     </GridView>
                 </ListView.View>
             </ListView>
         </Grid>
 
-        <GridSplitter Grid.Column="1" Width="3" />
+        <GridSplitter Grid.Column="0" Width="3" />
 
-        <Grid Grid.Column="2" Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
+        <Grid Grid.Column="1" Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
             <local:SalvageCombineEditor Grid.Column="2" DataContext="{Binding SalvageCombineViewModel}" />
         </Grid>
     </Grid>
