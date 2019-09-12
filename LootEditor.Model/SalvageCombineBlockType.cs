@@ -11,8 +11,8 @@ namespace LootEditor.Model
         public string DefaultCombineString { get; set; }
         public int RuleCount { get; set; }
 
-        public Dictionary<Material, string> Materials { get; set; }
-        public Dictionary<Material, int> MaterialValues { get; set; }
+        public Dictionary<Material, string> Materials { get; } = new Dictionary<Material, string>();
+        public Dictionary<Material, int> MaterialValues { get; } = new Dictionary<Material, int>();
         public int MaterialValueCount { get; set; }
 
         public override async Task ReadAsync(TextReader reader)
@@ -32,7 +32,6 @@ namespace LootEditor.Model
 
             RuleCount = ruleCount;
 
-            Materials = new Dictionary<Material, string>();
             for (int i = 0; i < RuleCount; ++i)
             {
                 var matString = await reader.ReadLineForRealAsync().ConfigureAwait(false);
@@ -51,7 +50,6 @@ namespace LootEditor.Model
 
                 MaterialValueCount = materialValueCount;
 
-                MaterialValues = new Dictionary<Material, int>();
                 for (int i = 0; i < MaterialValueCount; ++i)
                 {
                     var matString = await reader.ReadLineForRealAsync().ConfigureAwait(false);

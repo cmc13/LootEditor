@@ -1,5 +1,8 @@
-﻿namespace LootEditor.Model.Enums
+﻿using System.ComponentModel;
+
+namespace LootEditor.Model.Enums
 {
+    [TypeConverter(typeof(EnumConverter))]
     public enum LootAction
     {
         NoLoot = 0,
@@ -12,6 +15,6 @@
         User3 = 7,
         User4 = 8,
         User5 = 9,
-        KeepUpTo = 10,
+        [Description("Keep Up To")]KeepUpTo = 10,
     }
 }

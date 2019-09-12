@@ -6,64 +6,105 @@
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:cvt="clr-namespace:LootEditor.View.Converters"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:vr="clr-namespace:LootEditor.View.ValidationRules"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="300" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0">DefaultCombine Range:</TextBlock>
+            <TextBox Grid.Column="1">
+                <TextBox.Text>
+                    <Binding Path="DefaultCombineRange"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <vr:RegexValidationRule Regex="^\s*\d+(\.\d+)?\s*(-\s*\d+(\.\d+)?)?(\s*[,;]\s*\d+(\.\d+)?\s*(-\s*\d+(\.\d+)?)?)*$" ValidatesOnTargetUpdated="True" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                                <Setter Property="Background" Value="Salmon" />
+                                <Setter Property="BorderThickness" Value="2" />
+                                <Setter Property="BorderBrush" Value="Red" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                
-                <Button Grid.Column="0" Margin="10" FontSize="14" Padding="3">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Assets/Add_16x.png" />
-                        <TextBlock>Add</TextBlock>
-                    </StackPanel>
-                </Button>
-                <Button Grid.Column="1" Margin="10" FontSize="14" Padding="3">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Assets/Remove_16x.png" />
-                        <TextBlock>Delete</TextBlock>
-                    </StackPanel>
-                </Button>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Margin="10" FontSize="14" Padding="3">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/Add_16x.png" />
+                            <TextBlock>Add</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Column="1" Margin="10" FontSize="14" Padding="3">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/Remove_16x.png" />
+                            <TextBlock>Delete</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <ListView Grid.Row="1" ItemsSource="{Binding CombineRules}" SelectedItem="{Binding SelectedItem}" Margin="10">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="IsHitTestVisible" Value="False" />
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+
+                            <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="Material" Width="Auto"  />
+                            <GridViewColumn DisplayMemberBinding="{Binding Value.CombineRange}" Header="Combine Range" Width="{x:Static sys:Double.NaN}" />
+                            <GridViewColumn DisplayMemberBinding="{Binding Value.CombineValue}" Header="Combine Up To" Width="Auto" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
 
-            <ListView Grid.Row="1" ItemsSource="{Binding CombineRules}" SelectedItem="{Binding SelectedItem}" Margin="10">
-                <ListView.View>
-                    <GridView>
-                        <GridView.ColumnHeaderContainerStyle>
-                            <Style TargetType="GridViewColumnHeader">
-                                <Setter Property="IsHitTestVisible" Value="False" />
-                            </Style>
-                        </GridView.ColumnHeaderContainerStyle>
-                        
-                        <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="Material" Width="Auto"  />
-                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineRange}" Header="Combine Range" Width="{x:Static sys:Double.NaN}" />
-                        <GridViewColumn DisplayMemberBinding="{Binding Value.CombineValue}" Header="Combine Up To" Width="Auto" />
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
+            <GridSplitter Grid.Column="0" Width="3" />
 
-        <GridSplitter Grid.Column="0" Width="3" />
-
-        <Grid Grid.Column="1" Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
-            <local:SalvageCombineEditor Grid.Column="2" DataContext="{Binding SalvageCombineViewModel}" />
+            <Grid Grid.Column="1" Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
+                <local:SalvageCombineEditor Grid.Column="2" DataContext="{Binding SalvageCombineViewModel}" />
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

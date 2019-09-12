@@ -1,22 +1,20 @@
-﻿using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Globalization;
 using System.Windows.Controls;
 
 namespace LootEditor.View.ValidationRules
 {
     public class RegexValidationRule : ValidationRule
     {
+        public string Regex { get; set; }
+
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            var strValue = (string)value;
-            try
+            if (value is string s && !string.IsNullOrEmpty(s))
             {
-                Regex.Match("", strValue);
-            }
-            catch (ArgumentException)
-            {
-                return new ValidationResult(false, $"Input is not a valid regular expression");
+                if (!System.Text.RegularExpressions.Regex.IsMatch(s, Regex))
+                {
+                    return new ValidationResult(false, "Input is invalid");
+                }
             }
 
             return ValidationResult.ValidResult;

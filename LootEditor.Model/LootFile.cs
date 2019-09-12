@@ -17,7 +17,7 @@ namespace LootEditor.Model
         public int RuleCount { get; set; }
 
         public IEnumerable<LootRule> Rules => lootRules.AsReadOnly();
-        public IEnumerable<ExtraBlock> ExtraBlocks { get; set; } = Enumerable.Empty<ExtraBlock>();
+        public IEnumerable<ExtraBlock> ExtraBlocks { get; set; } = new[] { new SalvageCombineBlockType() };
 
         public async Task ReadFileAsync(Stream stream)
         {

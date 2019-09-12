@@ -94,10 +94,12 @@
     <Compile Include="CheckBoxForEnumsWithFlagAttribute.cs" />
     <Compile Include="Converters\ArmorSlotLogicalAndConverter.cs" />
     <Compile Include="Converters\BoolToAsteriskConverter.cs" />
+    <Compile Include="Converters\EnumDescriptionConverter.cs" />
     <Compile Include="Converters\EnumFlagsToBoolConverter.cs" />
     <Compile Include="Converters\EnumToIntConverter.cs" />
     <Compile Include="Converters\EqualityConverter.cs" />
     <Compile Include="Converters\GreaterThanZeroConverter.cs" />
+    <Compile Include="Converters\HasNonDisabledTypeCriteriaConverter.cs" />
     <Compile Include="Converters\IndexingConverter.cs" />
     <Compile Include="Converters\LongValueKeyToVisibilityConverter.cs" />
     <Compile Include="Converters\NameToFontWeightConverter.cs" />
@@ -123,6 +125,7 @@
       <DependentUpon>SalvageCombineListEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="ValidationRules\IsValidRegexValidationRule.cs" />
     <Compile Include="ValidationRules\RegexValidationRule.cs" />
     <Compile Include="ViewModel\IAcceptPendingChange.cs" />
     <Compile Include="ViewModel\LootCriteriaViewModel.cs" />

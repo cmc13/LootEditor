@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
+             xmlns:vr="clr-namespace:LootEditor.View.ValidationRules"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -24,7 +25,30 @@
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}" SelectedItem="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Combine Range:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CombineRange}" Margin="10" />
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="10">
+            <TextBox.Text>
+                <Binding Path="CombineRange"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <vr:RegexValidationRule Regex="^\s*\d+(\.\d+)?\s*(-\s*\d+(\.\d+)?)?(\s*[,;]\s*\d+(\.\d+)?\s*(-\s*\d+(\.\d+)?)?)*$" ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
+                            <Setter Property="Background" Value="Salmon" />
+                            <Setter Property="BorderThickness" Value="2" />
+                            <Setter Property="BorderBrush" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
 
         <CheckBox Grid.Row="2" Grid.Column="0" Content="Combine Values up to:" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding HasCombineValue}" />
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CombineValue}" IsEnabled="{Binding HasCombineValue}" Margin="10">

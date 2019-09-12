@@ -18,9 +18,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" MinHeight="100" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -44,7 +45,7 @@
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Criteria:" HorizontalAlignment="Right" VerticalAlignment="Center" />
         <ListBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}" Margin="10" Height="100"
                  dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.InputBindings>
                 <KeyBinding Key="Delete" Command="{Binding DeleteCriteriaCommand}" />
                 <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
@@ -53,7 +54,9 @@
             </ListBox.InputBindings>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:LootCriteriaViewModel}">
-                    <TextBlock Text="{Binding DisplayValue}" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayValue}" />
+                    <Grid>
+                        <TextBlock Text="{Binding DisplayValue}" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayValue}" />
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>

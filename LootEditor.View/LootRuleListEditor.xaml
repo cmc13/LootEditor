@@ -8,25 +8,48 @@
             xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
             xmlns:dd="urn:gong-wpf-dragdrop"
             xmlns:cvt="clr-namespace:LootEditor.View.Converters"
+             xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:NameToFontWeightConverter x:Key="NameToFontWeightConverter" />
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <cvt:HasNonDisabledTypeCriteriaConverter x:Key="HasNonDisabledTypeCriteriaConverter" />
+        <cvt:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
         <DataTemplate x:Key="LootRuleItemTemplate" DataType="{x:Type vm:LootRuleViewModel}">
-            <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsDisabled}" Value="True">
-                                <Setter Property="TextDecorations" Value="Strikethrough" />
-                                <Setter Property="FontStyle" Value="Italic" />
-                                <Setter Property="Opacity" Value="0.5" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+            <Grid ToolTip="{Binding Name}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                
+                <TextBlock Grid.Row="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}" FontSize="14">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDisabled}" Value="True">
+                                    <Setter Property="TextDecorations" Value="Strikethrough" />
+                                    <Setter Property="FontStyle" Value="Italic" />
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                
+                <Grid Grid.Row="1" Opacity="0.5" Visibility="{Binding Criteria, Converter={StaticResource HasNonDisabledTypeCriteriaConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                        <TextBlock Text="{Binding Action, Converter={StaticResource EnumDescriptionConverter}}" FontSize="8" />
+                        <TextBlock Visibility="{Binding Action, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LootAction.KeepUpTo}}" Text="{Binding KeepUpToCount}" FontSize="8" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="2" Text="{Binding Criteria.Count, StringFormat=({0})}" FontSize="8" />
+                </Grid>
+            </Grid>
         </DataTemplate>
         <CollectionViewSource x:Key="LootRules" Source="{Binding LootRules}" Filter="CollectionViewSource_Filter"></CollectionViewSource>
     </UserControl.Resources>
@@ -80,7 +103,7 @@
             </xctk:WatermarkTextBox>
 
             <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding Source={StaticResource LootRules}}"
-                     ItemTemplate="{StaticResource LootRuleItemTemplate}" Margin="10"
+                     ItemTemplate="{StaticResource LootRuleItemTemplate}" Margin="10" HorizontalContentAlignment="Stretch"
                      SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
                 <ListBox.InputBindings>
