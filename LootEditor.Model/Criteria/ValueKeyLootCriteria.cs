@@ -9,23 +9,19 @@ using System.Threading.Tasks;
 namespace LootEditor.Model
 {
     [Serializable]
-    public class ValueKeyLootCriteria<TKey, TValue> : LootCriteria where TKey : Enum
+    public class ValueKeyLootCriteria<TKey, TValue> : ValueLootCriteria<TValue> where TKey : Enum
     {
-        public override Enums.LootCriteriaType Type { get; }
-
         public ValueKeyLootCriteria(Enums.LootCriteriaType type)
+            : base(type)
         {
-            Type = type;
         }
 
         private ValueKeyLootCriteria(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
-            Type = (Enums.LootCriteriaType)info.GetValue(nameof(Type), typeof(Enums.LootCriteriaType));
             Key = (TKey)info.GetValue(nameof(Key), typeof(TKey));
-            Value = (TValue)info.GetValue(nameof(Value), typeof(TValue));
         }
 
-        public TValue Value { get; set; }
         public TKey Key { get; set; }
 
         public override string ToString()
@@ -128,11 +124,6 @@ namespace LootEditor.Model
         {
             await base.ReadAsync(reader, version).ConfigureAwait(false);
 
-            var valueLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
-            var value = Convert.ChangeType(valueLine, typeof(TValue));
-
-            Value = (TValue)value;
-
             var keyLine = await reader.ReadLineForRealAsync().ConfigureAwait(false);
             var key = Enum.Parse(typeof(TKey), keyLine);
 
@@ -143,22 +134,20 @@ namespace LootEditor.Model
                 Value = (TValue)Convert.ChangeType(18, typeof(TValue));
         }
 
-        public override async Task WriteAsync(Stream stream)
+        public override async Task WriteInternalAsync(Stream stream)
         {
-            await base.WriteAsync(stream).ConfigureAwait(false);
             // Handle weirdness of breeches
             if (Key is Enums.LongValueKey l && l == Enums.LongValueKey.Coverage && Convert.ToInt32(Value) == 18)
                 await stream.WriteLineForRealAsync("19").ConfigureAwait(false);
             else
-                await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
+                await base.WriteInternalAsync(stream).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(Convert.ToInt32(Key).ToString()).ConfigureAwait(false);
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue(nameof(Type), Type, typeof(Enums.LootCriteriaType));
+            base.GetObjectData(info, context);
             info.AddValue(nameof(Key), Key, typeof(TKey));
-            info.AddValue(nameof(Value), Value, typeof(TValue));
         }
     }
 }

@@ -113,6 +113,8 @@ namespace LootEditor.View.ViewModel
                 Criteria.Add(vm);
             }
 
+            Criteria.CollectionChanged += Criteria_CollectionChanged;
+
             AddCriteriaCommand = new RelayCommand(AddCriteria);
 
             CloneCriteriaCommand = new RelayCommand(CloneCriteria, SelectedCriteria_CanExecute);
@@ -126,6 +128,11 @@ namespace LootEditor.View.ViewModel
             PasteItemCommand = new RelayCommand(PasteItem, CanPaste);
 
             ToggleDisabledCommand = new RelayCommand(ToggleDisabled);
+        }
+
+        private void Criteria_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(Criteria));
         }
 
         private bool CanPaste() => Clipboard.ContainsData(typeof(LootCriteria).Name);

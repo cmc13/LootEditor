@@ -17,7 +17,7 @@ namespace LootEditor.Model
         public override Enums.LootCriteriaType Type { get; }
         public T Value { get; set; }
 
-        private ValueLootCriteria(SerializationInfo info, StreamingContext context)
+        protected ValueLootCriteria(SerializationInfo info, StreamingContext context)
         {
             Type = (Enums.LootCriteriaType)info.GetValue(nameof(Type), typeof(Enums.LootCriteriaType));
             Value = (T)info.GetValue(nameof(Value), typeof(T));
@@ -56,9 +56,8 @@ namespace LootEditor.Model
             }
         }
 
-        public override async Task WriteAsync(Stream stream)
+        public override async Task WriteInternalAsync(Stream stream)
         {
-            await base.WriteAsync(stream).ConfigureAwait(false);
             if (typeof(T) == typeof(bool))
             {
                 await stream.WriteLineForRealAsync(Value.ToString().ToLower()).ConfigureAwait(false);

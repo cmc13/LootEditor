@@ -316,6 +316,10 @@ namespace LootEditor.View.ViewModel
                 LootRuleListViewModel.Clean();
                 SalvageCombineListViewModel.Clean();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"There was an error saving the file. The message was: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             finally
             {
                 IsBusy = false;

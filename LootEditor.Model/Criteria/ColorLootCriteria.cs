@@ -76,9 +76,8 @@ namespace LootEditor.Model
             SVDiff = svDiff;
         }
 
-        public override async Task WriteAsync(Stream stream)
+        public override async Task WriteInternalAsync(Stream stream)
         {
-            await base.WriteAsync(stream).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(R.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(G.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(B.ToString()).ConfigureAwait(false);

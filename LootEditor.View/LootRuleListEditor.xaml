@@ -68,31 +68,33 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <xctk:IconButton Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" Content="Add">
-                <xctk:IconButton.Icon>
-                    <Image Source="Assets/Add_16x.png" />
-                </xctk:IconButton.Icon>
-            </xctk:IconButton>
-            <xctk:IconButton Grid.Row="0" Grid.Column="2" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" Content="Clone">
-                <xctk:IconButton.Icon>
-                    <Image Source="Assets/Clone_16x.png" />
-                </xctk:IconButton.Icon>
-            </xctk:IconButton>
-            <xctk:IconButton Grid.Row="0" Grid.Column="4" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" Content="Delete">
-                <xctk:IconButton.Icon>
-                    <Image Source="Assets/Remove_16x.png" />
-                </xctk:IconButton.Icon>
-            </xctk:IconButton>
+                <xctk:IconButton Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" Content="Add">
+                    <xctk:IconButton.Icon>
+                        <Image Source="Assets/Add_16x.png" />
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+                <xctk:IconButton Grid.Row="0" Grid.Column="2" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" Content="Clone">
+                    <xctk:IconButton.Icon>
+                        <Image Source="Assets/Clone_16x.png" />
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+                <xctk:IconButton Grid.Row="0" Grid.Column="4" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" Content="Delete">
+                    <xctk:IconButton.Icon>
+                        <Image Source="Assets/Remove_16x.png" />
+                    </xctk:IconButton.Icon>
+                </xctk:IconButton>
+            </Grid>
 
-            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,5"
+            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Margin="0,5"
                                    TextChanged="TxtFilter_TextChanged">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
@@ -102,9 +104,9 @@
                 </xctk:WatermarkTextBox.Watermark>
             </xctk:WatermarkTextBox>
 
-            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" ItemsSource="{Binding Source={StaticResource LootRules}}"
-                     ItemTemplate="{StaticResource LootRuleItemTemplate}" HorizontalContentAlignment="Stretch"
-                     SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            <ListBox Grid.Row="2" ItemsSource="{Binding Source={StaticResource LootRules}}"
+                     ItemTemplate="{StaticResource LootRuleItemTemplate}" Width="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ActualWidth}"
+                     SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
                      dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
                 <i:Interaction.Behaviors>
                     <local:ScrollIntoViewBehavior />

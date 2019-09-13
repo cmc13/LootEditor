@@ -30,10 +30,9 @@ namespace LootEditor.Model
             Palette = await ReadValue<int>(reader).ConfigureAwait(false);
         }
 
-        public override async Task WriteAsync(Stream stream)
+        public override async Task WriteInternalAsync(Stream stream)
         {
-            await base.WriteAsync(stream).ConfigureAwait(false);
-            await stream.WriteLineForRealAsync(((int)Slot).ToString()).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Slot.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(Palette.ToString()).ConfigureAwait(false);
         }
 

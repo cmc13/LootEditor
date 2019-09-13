@@ -33,9 +33,8 @@ namespace LootEditor.Model
             MaxSkillValue = await ReadValue<int>(reader).ConfigureAwait(false);
         }
 
-        public override async Task WriteAsync(Stream stream)
+        public override async Task WriteInternalAsync(Stream stream)
         {
-            await base.WriteAsync(stream).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(((int)SkillType).ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(MinSkillValue.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(MaxSkillValue.ToString()).ConfigureAwait(false);

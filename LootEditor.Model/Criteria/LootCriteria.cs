@@ -86,10 +86,20 @@ namespace LootEditor.Model
             }
         }
 
-        public virtual async Task WriteAsync(Stream stream)
+        public async Task WriteAsync(Stream stream)
         {
-            await stream.WriteLineForRealAsync(RequirementLength.ToString()).ConfigureAwait(false);
+            using (var internalStream = new MemoryStream())
+            {
+                await WriteInternalAsync(internalStream).ConfigureAwait(false);
+
+                await stream.WriteLineForRealAsync(internalStream.Length.ToString()).ConfigureAwait(false);
+
+                internalStream.Position = 0;
+                await internalStream.CopyToAsync(stream).ConfigureAwait(false);
+            }
         }
+
+        public abstract Task WriteInternalAsync(Stream stream);
 
         protected async Task<TValue> ReadValue<TValue>(TextReader reader)
         {

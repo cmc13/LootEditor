@@ -66,6 +66,7 @@ namespace LootEditor.View.ViewModel
                 lootFile.AddRule(newRule);
 
                 var vm = new LootRuleViewModel(newRule);
+                vm.PropertyChanged += Vm_PropertyChanged;
                 LootRules.Add(vm);
 
                 IsDirty = true;
@@ -158,6 +159,7 @@ namespace LootEditor.View.ViewModel
             var sel = SelectedRule;
             if (sel != null)
             {
+                sel.PropertyChanged -= Vm_PropertyChanged;
                 LootRules.Remove(sel);
                 lootFile.RemoveRule(sel.Rule);
                 IsDirty = true;
@@ -173,6 +175,7 @@ namespace LootEditor.View.ViewModel
                 lootFile.AddRule(newRule);
 
                 var vm = new LootRuleViewModel(newRule);
+                vm.PropertyChanged += Vm_PropertyChanged;
                 LootRules.Add(vm);
 
                 IsDirty = true;
@@ -191,6 +194,7 @@ namespace LootEditor.View.ViewModel
             lootFile.AddRule(rule);
 
             var vm = new LootRuleViewModel(rule);
+            vm.PropertyChanged += Vm_PropertyChanged;
             LootRules.Add(vm);
 
             SelectedRule = vm;

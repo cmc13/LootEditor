@@ -6,7 +6,7 @@ namespace LootEditor.Model
 {
     public abstract class ExtraBlock
     {
-        public string Name { get; set; }
+        public string Name { get; protected set; }
         public long Length { get; set; }
 
         public static async Task<ExtraBlock> ReadBlockAsync(TextReader reader)

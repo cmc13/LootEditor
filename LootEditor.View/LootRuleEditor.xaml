@@ -9,6 +9,7 @@
              xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
              xmlns:dd="urn:gong-wpf-dragdrop"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignWidth="800">
     <UserControl.Resources>
@@ -40,7 +41,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <ComboBox Grid.Column="0" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LootAction}}" SelectedItem="{Binding Action}" />
-            <TextBox Grid.Column="1" Text="{Binding KeepUpToCount}" Width="100" Visibility="{Binding Action, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LootAction.KeepUpTo}}" Margin="5,0,0,0" />
+            <xctk:IntegerUpDown Grid.Column="1" Value="{Binding KeepUpToCount}" Width="100" Visibility="{Binding Action, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LootAction.KeepUpTo}}" Margin="5,0,0,0" Minimum="0" />
         </Grid>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Criteria:" HorizontalAlignment="Right" VerticalAlignment="Center" />

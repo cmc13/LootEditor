@@ -22,10 +22,10 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Material:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}" SelectedItem="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" />
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}" SelectedItem="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Combine Range:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="10">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5">
             <TextBox.Text>
                 <Binding Path="CombineRange"
                                  Mode="TwoWay"
@@ -51,7 +51,7 @@
         </TextBox>
 
         <CheckBox Grid.Row="2" Grid.Column="0" Content="Combine Values up to:" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding HasCombineValue}" />
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CombineValue}" IsEnabled="{Binding HasCombineValue}" Margin="10">
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CombineValue}" IsEnabled="{Binding HasCombineValue}" Margin="5">
             <TextBox.Style>
                 <Style TargetType="TextBox">
                     <Style.Triggers>

@@ -31,9 +31,8 @@ namespace LootEditor.Model
             BuffedAttackBonus = await ReadValue<double>(reader).ConfigureAwait(false);
         }
 
-        public override async Task WriteAsync(Stream stream)
+        public override async Task WriteInternalAsync(Stream stream)
         {
-            await base.WriteAsync(stream).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(CalculatedBuffedTinkedDamageOverTime.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(BuffedMeleeDefenseBonus.ToString()).ConfigureAwait(false);
             await stream.WriteLineForRealAsync(BuffedAttackBonus.ToString()).ConfigureAwait(false);

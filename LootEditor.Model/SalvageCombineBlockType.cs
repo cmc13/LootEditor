@@ -15,6 +15,11 @@ namespace LootEditor.Model
         public Dictionary<Material, int> MaterialValues { get; } = new Dictionary<Material, int>();
         public int MaterialValueCount { get; set; }
 
+        public SalvageCombineBlockType()
+        {
+            Name = "SalvageCombine";
+        }
+
         public override async Task ReadAsync(TextReader reader)
         {
             await base.ReadAsync(reader).ConfigureAwait(false);
@@ -65,7 +70,7 @@ namespace LootEditor.Model
             using (var subWriter = new MemoryStream())
             {
                 await subWriter.WriteLineForRealAsync("1").ConfigureAwait(false);
-                await subWriter.WriteLineForRealAsync(DefaultCombineString).ConfigureAwait(false);
+                await subWriter.WriteLineForRealAsync(DefaultCombineString ?? "").ConfigureAwait(false);
                 await subWriter.WriteLineForRealAsync(Materials.Count.ToString()).ConfigureAwait(false);
                 foreach (var kvp in Materials)
                 {
