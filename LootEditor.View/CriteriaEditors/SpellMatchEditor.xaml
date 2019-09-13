@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vr="clr-namespace:LootEditor.View.ValidationRules"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -19,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Matches:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="10">
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5">
             <TextBox.Text>
                 <Binding Path="Match"
                                  Mode="TwoWay"
@@ -45,7 +44,7 @@
         </TextBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Does NOT Match:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="10">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5">
             <TextBox.Text>
                 <Binding Path="NoMatch"
                                  Mode="TwoWay"
@@ -71,6 +70,6 @@
         </TextBox>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Matching Spell Count:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:IntegerUpDown Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" Margin="10" Minimum="0" />
+        <xctk:IntegerUpDown Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" Margin="5" Minimum="0" />
     </Grid>
 </UserControl>

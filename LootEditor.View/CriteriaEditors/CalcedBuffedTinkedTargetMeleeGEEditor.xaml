@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor.View.CriteriaEditors"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -18,12 +17,12 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Calc'd Buffed/Tinked Damage over Time:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CalculatedBuffedTinkedDamageOverTime}" Margin="10" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CalculatedBuffedTinkedDamageOverTime}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Buffed Melee D Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BuffedMeleeDefenseBonus}" Margin="10" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BuffedMeleeDefenseBonus}" Margin="5" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Buffed Attack Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BuffedAttackBonus}" Margin="10" />
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BuffedAttackBonus}" Margin="5" />
     </Grid>
 </UserControl>

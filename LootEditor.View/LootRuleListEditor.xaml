@@ -61,7 +61,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <Grid Grid.Column="0" Margin="10">
+        <Grid Grid.Column="0" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -92,7 +92,7 @@
                 </xctk:IconButton.Icon>
             </xctk:IconButton>
 
-            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,10"
+            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,5"
                                    TextChanged="TxtFilter_TextChanged">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">

@@ -6,8 +6,7 @@
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:vr="clr-namespace:LootEditor.View.ValidationRules"
              xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -19,10 +18,10 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" Margin="10" />
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="10">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5">
             <TextBox.Text>
                 <Binding Path="Value"
                                  Mode="TwoWay"

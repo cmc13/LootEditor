@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -18,12 +17,12 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Color:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" Margin="10" />
+        <xctk:ColorPicker Grid.Row="0" Grid.Column="1" SelectedColor="{Binding Color}" DisplayColorAndName="True" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Hue Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" Margin="10" />
+        <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding HDiff}" Minimum="0" Maximum="255" Increment="1" Margin="5" />
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Max S/V Diff:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" Margin="10" />
+        <xctk:DecimalUpDown Grid.Row="2" Grid.Column="1" Value="{Binding SVDiff}" Minimum="0" Maximum="1" Increment="0.01" Margin="5" />
     </Grid>
 </UserControl>
