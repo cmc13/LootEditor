@@ -157,6 +157,7 @@
     <Compile Include="SalvageCombineListEditor.xaml.cs">
       <DependentUpon>SalvageCombineListEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ScrollIntoViewBehavior.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="ValidationRules\IsValidRegexValidationRule.cs" />
     <Compile Include="ValidationRules\RegexValidationRule.cs" />

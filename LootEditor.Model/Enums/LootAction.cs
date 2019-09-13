@@ -2,7 +2,7 @@
 
 namespace LootEditor.Model.Enums
 {
-    [TypeConverter(typeof(EnumConverter))]
+    [TypeConverter(typeof(EnumDescriptionConverter))]
     public enum LootAction
     {
         NoLoot = 0,

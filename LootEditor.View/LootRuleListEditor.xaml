@@ -9,6 +9,7 @@
             xmlns:dd="urn:gong-wpf-dragdrop"
             xmlns:cvt="clr-namespace:LootEditor.View.Converters"
              xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -60,7 +61,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -69,30 +70,29 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}" Margin="10" Padding="5" FontSize="14">
-                <StackPanel Orientation="Horizontal">
+            <xctk:IconButton Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" Content="Add">
+                <xctk:IconButton.Icon>
                     <Image Source="Assets/Add_16x.png" />
-                    <TextBlock>Add</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button Grid.Row="0" Grid.Column="1" Command="{Binding CloneRuleCommand}" Margin="10" Padding="5" FontSize="14">
-                <StackPanel Orientation="Horizontal">
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+            <xctk:IconButton Grid.Row="0" Grid.Column="2" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" Content="Clone">
+                <xctk:IconButton.Icon>
                     <Image Source="Assets/Clone_16x.png" />
-                    <TextBlock>Clone</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button Grid.Row="0" Grid.Column="2" Command="{Binding DeleteRuleCommand}" Margin="10" Padding="5" FontSize="14">
-                <StackPanel Orientation="Horizontal">
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+            <xctk:IconButton Grid.Row="0" Grid.Column="4" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" Content="Delete">
+                <xctk:IconButton.Icon>
                     <Image Source="Assets/Remove_16x.png" />
-                    <TextBlock>Delete</TextBlock>
-                </StackPanel>
-            </Button>
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
 
-            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="10"
+            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Margin="0,10"
                                    TextChanged="TxtFilter_TextChanged">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
@@ -102,10 +102,13 @@
                 </xctk:WatermarkTextBox.Watermark>
             </xctk:WatermarkTextBox>
 
-            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding Source={StaticResource LootRules}}"
-                     ItemTemplate="{StaticResource LootRuleItemTemplate}" Margin="10" HorizontalContentAlignment="Stretch"
+            <ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" ItemsSource="{Binding Source={StaticResource LootRules}}"
+                     ItemTemplate="{StaticResource LootRuleItemTemplate}" HorizontalContentAlignment="Stretch"
                      SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
+                <i:Interaction.Behaviors>
+                    <local:ScrollIntoViewBehavior />
+                </i:Interaction.Behaviors>
                 <ListBox.InputBindings>
                     <KeyBinding Key="Up" Modifiers="Shift" Command="{Binding MoveSelectedItemUpCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
                     <KeyBinding Key="Down" Modifiers="Shift" Command="{Binding MoveSelectedItemDownCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
