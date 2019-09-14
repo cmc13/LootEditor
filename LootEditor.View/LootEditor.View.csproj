@@ -106,6 +106,7 @@
     <Compile Include="Converters\NameToFontWeightConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ReverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\SalvageGroupToMaterialListConverter.cs" />
     <Compile Include="CriteriaEditors\CalcedBuffedTinkedTargetMeleeGEEditor.xaml.cs">
       <DependentUpon>CalcedBuffedTinkedTargetMeleeGEEditor.xaml</DependentUpon>
     </Compile>

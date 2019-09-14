@@ -6,11 +6,10 @@
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:const="clr-namespace:LootEditor.Model.Constants;assembly=LootEditor.Model"
              xmlns:cvt="clr-namespace:LootEditor.View.Converters"
              mc:Ignorable="d" d:DesignWidth="800">
     <UserControl.Resources>
-        <sys:Int32 x:Key="UnenchantableValue">9999</sys:Int32>
         <cvt:IsEqualConverter x:Key="IsEqualConverter" />
     </UserControl.Resources>
     <Grid>
@@ -70,7 +69,7 @@
                 <Slider Value="{Binding Value}" Minimum="1" Maximum="10" TickFrequency="1" TickPlacement="BottomRight" />
             </DockPanel>
             <CheckBox Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Unenchantable}}"
-                      IsChecked="{Binding Value, Converter={StaticResource IsEqualConverter}, ConverterParameter={StaticResource UnenchantableValue}}">Unenchantable?</CheckBox>
+                      IsChecked="{Binding Value, Converter={StaticResource IsEqualConverter}, ConverterParameter={x:Static const:Constants.UNENCHANTABLE}}">Unenchantable?</CheckBox>
         </Grid>
     </Grid>
 </UserControl>

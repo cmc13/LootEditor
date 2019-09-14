@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using LootEditor.Model;
+using LootEditor.Model.Enums;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
@@ -33,6 +34,9 @@ namespace LootEditor.View.ViewModel
                 {
                     saveFileName = value;
                     RaisePropertyChanged(nameof(SaveFileName));
+
+                    if (!string.IsNullOrEmpty(saveFileName))
+                        AddRecentFile(saveFileName);
                 }
             }
         }
@@ -125,7 +129,7 @@ namespace LootEditor.View.ViewModel
         public RelayCommand<CancelEventArgs> ClosingCommand { get; }
         public RelayCommand<Window> ExitCommand { get; }
         public RelayCommand<string> OpenRecentFileCommand { get; }
-        public RelayCommand AddUpdateSalvageRulesCommand { get; }
+        public RelayCommand<Model.Enums.SalvageGroup> AddUpdateSalvageRulesCommand { get; }
 
         public MainViewModel()
         {
@@ -149,7 +153,7 @@ namespace LootEditor.View.ViewModel
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
-                        await SaveFileAsync(saveFileName).ConfigureAwait(false);
+                        await SaveFileAsync(SaveFileName).ConfigureAwait(false);
                     }
                     else if (mbResult == MessageBoxResult.Cancel)
                         return;
@@ -166,7 +170,7 @@ namespace LootEditor.View.ViewModel
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
-                        await SaveFileAsync(saveFileName).ConfigureAwait(false);
+                        SaveAsCommand.Execute(null);
                     }
                     else if (mbResult == MessageBoxResult.Cancel)
                         return;
@@ -191,23 +195,9 @@ namespace LootEditor.View.ViewModel
             {
                 if (string.IsNullOrEmpty(saveFileName))
                 {
-                    var sfd = new SaveFileDialog()
-                    {
-                        CheckPathExists = true,
-                        Filter = "Loot Files|*.utl",
-                        OverwritePrompt = true
-                    };
-
-                    var result = sfd.ShowDialog();
-                    if (result.HasValue && result.Value)
-                    {
-                        SaveFileName = sfd.FileName;
-                    }
-                    else
-                        return;
+                    SaveAsCommand.Execute(null);
                 }
-
-                if (!string.IsNullOrEmpty(saveFileName))
+                else
                     await SaveFileAsync(saveFileName).ConfigureAwait(false);
             });
 
@@ -230,7 +220,7 @@ namespace LootEditor.View.ViewModel
                 }
             });
 
-            ClosingCommand = new RelayCommand<CancelEventArgs>(async e =>
+            ClosingCommand = new RelayCommand<CancelEventArgs>(e =>
             {
                 if (IsDirty)
                 {
@@ -239,25 +229,7 @@ namespace LootEditor.View.ViewModel
                         e.Cancel = true;
                     else if (mbResult == MessageBoxResult.Yes)
                     {
-                        if (string.IsNullOrEmpty(saveFileName))
-                        {
-                            var sfd = new SaveFileDialog()
-                            {
-                                CheckPathExists = true,
-                                FileName = "Loot Files|*.utl",
-                                OverwritePrompt = true
-                            };
-
-                            var result = sfd.ShowDialog();
-                            if (result.HasValue && result.Value)
-                            {
-                                SaveFileName = sfd.FileName;
-                            }
-                            else if (!result.HasValue)
-                                e.Cancel = true;
-                        }
-                        if (!string.IsNullOrEmpty(saveFileName))
-                            await SaveFileAsync(saveFileName).ConfigureAwait(false);
+                        SaveAsCommand.Execute(null);
                     }
                 }
             });
@@ -276,9 +248,13 @@ namespace LootEditor.View.ViewModel
                 }
             });
 
-            AddUpdateSalvageRulesCommand = new RelayCommand(() =>
+            AddUpdateSalvageRulesCommand = new RelayCommand<Model.Enums.SalvageGroup>(group =>
             {
+                var materials = group.GetMaterials();
+                foreach (var m in materials)
+                {
 
+                }
             });
         }
 
@@ -293,8 +269,9 @@ namespace LootEditor.View.ViewModel
                     var lf = new LootFile();
                     await lf.ReadFileAsync(fs).ConfigureAwait(false);
                     LootFile = lf;
-                    SaveFileName = fileName;
                 }
+
+                SaveFileName = fileName;
             }
             catch (Exception ex)
             {
@@ -318,6 +295,8 @@ namespace LootEditor.View.ViewModel
                     await fs.FlushAsync();
                     fs.Close();
                 }
+
+                SaveFileName = fileName;
 
                 LootRuleListViewModel.Clean();
                 SalvageCombineListViewModel.Clean();

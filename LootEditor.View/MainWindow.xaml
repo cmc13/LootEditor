@@ -27,6 +27,7 @@
     <Window.Resources>
         <cvt:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
         <cvt:IndexingConverter x:Key="IndexingConverter" />
+        <cvt:SalvageGroupToMaterialListConverter x:Key="SalvageGroupToMaterialListConverter" />
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewFileCommand}" />
@@ -114,7 +115,15 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
                 <MenuItem Header="Rule">
-                    <MenuItem Header="Add/Update Salvage Rules" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SalvageGroup}}" />
+                    <MenuItem Header="Add/Update Salvage Rules" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SalvageGroup}}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=Menu}, Path=DataContext.AddUpdateSalvageRulesCommand}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                                <Setter Property="ToolTip" Value="{Binding Converter={StaticResource SalvageGroupToMaterialListConverter}}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
 

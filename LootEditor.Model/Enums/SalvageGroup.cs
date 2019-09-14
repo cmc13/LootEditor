@@ -1,4 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 
 namespace LootEditor.Model.Enums
 {
@@ -16,5 +20,15 @@ namespace LootEditor.Model.Enums
         [Description("RG/BG/Jet")] RGBGJet,
         [Description("Weapon Imbues")] WeaponImbues,
         [Description("Weapon Tinkering")] WeaponTinkering
+    }
+
+    public static class SalvageGroupExtensions
+    {
+        public static IEnumerable<Material> GetMaterials(this SalvageGroup salvageGroup)
+        {
+            return Enum.GetValues(typeof(Material)).Cast<Material>()
+                .Where(m => typeof(Material).GetMember(m.ToString()).Single()
+                .GetCustomAttributes<SalvageGroupAttribute>().Any(g => g.SalvageGroup == salvageGroup));
+        }
     }
 }
