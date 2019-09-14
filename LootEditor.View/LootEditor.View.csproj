@@ -97,10 +97,11 @@
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
     <Compile Include="Converters\EnumFlagsToBoolConverter.cs" />
     <Compile Include="Converters\EnumToIntConverter.cs" />
-    <Compile Include="Converters\EqualityConverter.cs" />
+    <Compile Include="Converters\EqualityToVisibilityConverter.cs" />
     <Compile Include="Converters\GreaterThanZeroConverter.cs" />
     <Compile Include="Converters\HasNonDisabledTypeCriteriaConverter.cs" />
     <Compile Include="Converters\IndexingConverter.cs" />
+    <Compile Include="Converters\IsEqualConverter.cs" />
     <Compile Include="Converters\LongValueKeyToVisibilityConverter.cs" />
     <Compile Include="Converters\NameToFontWeightConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
@@ -138,6 +139,11 @@
     <Compile Include="CriteriaEditors\StringValueKeyEditor.xaml.cs">
       <DependentUpon>StringValueKeyEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\DialogBase.xaml.cs">
+      <DependentUpon>DialogBase.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\DialogService.cs" />
+    <Compile Include="Dialogs\DialogViewModel.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="LootCriteriaDataTemplateSelector.cs" />
     <Compile Include="LootCriteriaEditor.xaml.cs">
@@ -210,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CriteriaEditors\StringValueKeyEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\DialogBase.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

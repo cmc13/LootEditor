@@ -11,6 +11,8 @@ namespace LootEditor.Model
     [Serializable]
     public class ValueKeyLootCriteria<TKey, TValue> : ValueLootCriteria<TValue> where TKey : Enum
     {
+        public const int UNENCHANTABLE = 9999;
+
         public ValueKeyLootCriteria(Enums.LootCriteriaType type)
             : base(type)
         {

@@ -9,6 +9,7 @@
         xmlns:cvt="clr-namespace:LootEditor.View.Converters"
         xmlns:local="clr-namespace:LootEditor.View"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:modelEnums="clr-namespace:LootEditor.Model.Enums;assembly=LootEditor.Model"
         DataContext="{StaticResource MainViewModel}"
         mc:Ignorable="d"
         Height="450" Width="800">
@@ -111,6 +112,9 @@
                             <Setter Property="IsChecked" Value="{Binding IsSelected}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="Rule">
+                    <MenuItem Header="Add/Update Salvage Rules" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SalvageGroup}}" />
                 </MenuItem>
             </Menu>
 

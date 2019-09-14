@@ -125,6 +125,7 @@ namespace LootEditor.View.ViewModel
         public RelayCommand<CancelEventArgs> ClosingCommand { get; }
         public RelayCommand<Window> ExitCommand { get; }
         public RelayCommand<string> OpenRecentFileCommand { get; }
+        public RelayCommand AddUpdateSalvageRulesCommand { get; }
 
         public MainViewModel()
         {
@@ -273,6 +274,11 @@ namespace LootEditor.View.ViewModel
                     MessageBox.Show($"The file {fileName} is no longer on disk. Removing from recent files list.",
                         "File Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+            });
+
+            AddUpdateSalvageRulesCommand = new RelayCommand(() =>
+            {
+
             });
         }
 

@@ -62,6 +62,8 @@
     <Compile Include="Enums\LootCriteriaType.cs" />
     <Compile Include="Enums\Material.cs" />
     <Compile Include="Enums\ObjectClass.cs" />
+    <Compile Include="Enums\SalvageGroup.cs" />
+    <Compile Include="Enums\SalvageGroupAttribute.cs" />
     <Compile Include="Enums\SkillType.cs" />
     <Compile Include="Enums\StringValueKey.cs" />
     <Compile Include="Enums\WeaponMasteryCategory.cs" />

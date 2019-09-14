@@ -13,7 +13,7 @@
              mc:Ignorable="d" 
              d:DesignWidth="800">
     <UserControl.Resources>
-        <cvt:EqualityConverter x:Key="EqualityConverter" />
+        <cvt:EqualityToVisibilityConverter x:Key="EqualityConverter" />
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     </UserControl.Resources>
     <Grid Margin="10">

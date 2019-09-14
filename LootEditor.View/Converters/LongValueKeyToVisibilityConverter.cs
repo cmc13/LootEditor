@@ -13,7 +13,8 @@ namespace LootEditor.View.Converters
             if (value is LongValueKey key)
             {
                 if (key == LongValueKey.Material || key == LongValueKey.Slot || key == LongValueKey.WeaponMasteryCategory ||
-                    key == LongValueKey.EquipSkill || key == LongValueKey.WieldReqAttribute || key == LongValueKey.ArmorSetID)
+                    key == LongValueKey.EquipSkill || key == LongValueKey.WieldReqAttribute || key == LongValueKey.ArmorSetID ||
+                    key == LongValueKey.Workmanship || key == LongValueKey.Unenchantable)
                 {
                     return Visibility.Collapsed;
                 }
