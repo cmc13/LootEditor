@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using LootEditor.Model.Enums;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -142,14 +143,7 @@ namespace LootEditor.View.ViewModel
             var data = Clipboard.GetData(typeof(LootCriteria).Name) as LootCriteria;
 
             var newCriteria = data.Clone() as LootCriteria;
-            this.Rule.AddCriteria(newCriteria);
-
-            var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
-            vm.PropertyChanged += Vm_PropertyChanged;
-            Criteria.Add(vm);
-
-            IsDirty = true;
-            SelectedCriteria = vm;
+            AddCriteria(newCriteria);
         }
 
         private void CopyItem()
@@ -168,14 +162,7 @@ namespace LootEditor.View.ViewModel
         private void AddCriteria()
         {
             var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.AnySimilarColor);
-            this.Rule.AddCriteria(newCriteria);
-
-            var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
-            vm.PropertyChanged += Vm_PropertyChanged;
-            Criteria.Add(vm);
-
-            IsDirty = true;
-            SelectedCriteria = vm;
+            AddCriteria(newCriteria);
         }
 
         private void ToggleDisabled()
@@ -240,12 +227,7 @@ namespace LootEditor.View.ViewModel
             if (sel != null)
             {
                 var newCriteria = sel.Criteria.Clone() as LootCriteria;
-
-                Rule.AddCriteria(newCriteria);
-                var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
-                vm.PropertyChanged += Vm_PropertyChanged;
-                Criteria.Add(vm);
-                IsDirty = true;
+                AddCriteria(newCriteria);
             }
         }
 
@@ -298,6 +280,18 @@ namespace LootEditor.View.ViewModel
                 }
                 IsDirty = true;
             }
+        }
+
+        public void AddCriteria(LootCriteria newCriteria)
+        {
+            Rule.AddCriteria(newCriteria);
+
+            var vm = LootCriteriaViewModelFactory.CreateViewModel(newCriteria);
+            vm.PropertyChanged += Vm_PropertyChanged;
+            Criteria.Add(vm);
+
+            IsDirty = true;
+            SelectedCriteria = vm;
         }
     }
 }

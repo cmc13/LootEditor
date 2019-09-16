@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -253,7 +254,47 @@ namespace LootEditor.View.ViewModel
                 var materials = group.GetMaterials();
                 foreach (var m in materials)
                 {
+                    var td = TypeDescriptor.GetConverter(typeof(Material));
+                    var ruleName = $"S: {td.ConvertToInvariantString(m)}";
 
+                    var vm = LootRuleListViewModel.LootRules.FirstOrDefault(r => r.Name.Equals(ruleName));
+                    if (vm != null)
+                    {
+                        dynamic criteria = vm.Criteria.FirstOrDefault(c => c.Type == LootCriteriaType.DoubleValKeyGE &&
+                            ((ValueKeyLootCriteria<DoubleValueKey, double>)c.Criteria).Key == DoubleValueKey.SalvageWorkmanship);
+                        if (criteria != null)
+                        {
+                            criteria.Value = 0;
+                        }
+                        else
+                        {
+                            var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.DoubleValKeyGE);
+                            ((ValueKeyLootCriteria<DoubleValueKey, double>)newCriteria).Key = DoubleValueKey.SalvageWorkmanship;
+                            ((ValueKeyLootCriteria<DoubleValueKey, double>)newCriteria).Value = 0;
+                            vm.AddCriteria(newCriteria);
+                        }
+                    }
+                    else
+                    {
+                        var newRule = new LootRule()
+                        {
+                            Name = ruleName,
+                            Action = LootAction.Salvage
+                        };
+
+                        // Add criteria for workmanship
+                        var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.DoubleValKeyGE);
+                        ((ValueKeyLootCriteria<DoubleValueKey, double>)newCriteria).Key = DoubleValueKey.SalvageWorkmanship;
+                        ((ValueKeyLootCriteria<DoubleValueKey, double>)newCriteria).Value = 0;
+                        newRule.AddCriteria(newCriteria);
+
+                        newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.LongValKeyE);
+                        ((ValueKeyLootCriteria<LongValueKey, int>)newCriteria).Key = LongValueKey.Material;
+                        ((ValueKeyLootCriteria<LongValueKey, int>)newCriteria).Value = (int)m;
+                        newRule.AddCriteria(newCriteria);
+
+                        LootRuleListViewModel.AddRule(newRule);
+                    }
                 }
             });
         }

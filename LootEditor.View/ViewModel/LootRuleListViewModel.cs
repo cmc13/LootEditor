@@ -26,53 +26,6 @@ namespace LootEditor.View.ViewModel
                 LootRules.Add(vm);
             }
 
-            AddRuleCommand = new RelayCommand(AddRule);
-
-            CloneRuleCommand = new RelayCommand(CloneRule, SelectedRule_CanExecute);
-
-            DeleteRuleCommand = new RelayCommand(DeleteRule, SelectedRule_CanExecute);
-
-            MoveSelectedItemDownCommand = new RelayCommand<int>(index =>
-            {
-                LootRules.Move(index, index + 1);
-                lootFile.MoveRule(index, index + 1);
-                IsDirty = true;
-            }, _ => SelectedRule_CanExecute());
-
-            MoveSelectedItemUpCommand = new RelayCommand<int>(index =>
-            {
-                LootRules.Move(index, index - 1);
-                lootFile.MoveRule(index, index - 1);
-                IsDirty = true;
-            }, _ => SelectedRule_CanExecute());
-
-            CutItemCommand = new RelayCommand(() =>
-            {
-                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
-                DeleteRuleCommand.Execute(null);
-                PasteItemCommand?.RaiseCanExecuteChanged();
-            }, SelectedRule_CanExecute);
-
-            CopyItemCommand = new RelayCommand(() =>
-            {
-                Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
-                PasteItemCommand?.RaiseCanExecuteChanged();
-            }, SelectedRule_CanExecute);
-
-            PasteItemCommand = new RelayCommand(() =>
-            {
-                var newRule = (LootRule)Clipboard.GetData(typeof(LootRule).Name);
-
-                lootFile.AddRule(newRule);
-
-                var vm = new LootRuleViewModel(newRule);
-                vm.PropertyChanged += Vm_PropertyChanged;
-                LootRules.Add(vm);
-
-                IsDirty = true;
-                SelectedRule = vm;
-            }, () => Clipboard.ContainsData(typeof(LootRule).Name));
-
             ToggleDisabledCommand = new RelayCommand(() => SelectedRule.ToggleDisabledCommand.Execute(null), () => SelectedRule != null);
         }
 
@@ -110,15 +63,27 @@ namespace LootEditor.View.ViewModel
             }
         }
 
-        public RelayCommand AddRuleCommand { get; }
-        public RelayCommand CloneRuleCommand { get; }
-        public RelayCommand DeleteRuleCommand { get; }
-        public RelayCommand<int> MoveSelectedItemDownCommand { get; }
-        public RelayCommand<int> MoveSelectedItemUpCommand { get; }
-        public RelayCommand CutItemCommand { get; }
-        public RelayCommand CopyItemCommand { get; }
-        public RelayCommand PasteItemCommand { get; }
+        public RelayCommand AddRuleCommand => new RelayCommand(AddRule);
+        public RelayCommand CloneRuleCommand => new RelayCommand(CloneRule, SelectedRule_CanExecute);
+        public RelayCommand DeleteRuleCommand => new RelayCommand(DeleteRule, SelectedRule_CanExecute);
+        public RelayCommand<int> MoveSelectedItemDownCommand => new RelayCommand<int>(MoveSelectedItemDown, SelectedRule_CanExecute);
+        public RelayCommand<int> MoveSelectedItemUpCommand => new RelayCommand<int>(MoveSelectedItemUp, SelectedRule_CanExecute);
+        public RelayCommand CutItemCommand => new RelayCommand(CutRule, SelectedRule_CanExecute);
+        public RelayCommand CopyItemCommand => new RelayCommand(CopyRule, SelectedRule_CanExecute);
+        public RelayCommand PasteItemCommand => new RelayCommand(PasteRule, () => Clipboard.ContainsData(typeof(LootRule).Name));
         public RelayCommand ToggleDisabledCommand { get; }
+
+        public void AddRule(LootRule rule)
+        {
+            lootFile.AddRule(rule);
+
+            var vm = new LootRuleViewModel(rule);
+            vm.PropertyChanged += Vm_PropertyChanged;
+            LootRules.Add(vm);
+
+            SelectedRule = vm;
+            IsDirty = true;
+        }
 
         public void Clean()
         {
@@ -152,6 +117,38 @@ namespace LootEditor.View.ViewModel
                 }
                 IsDirty = true;
             }
+        }
+
+        private void CutRule()
+        {
+            CopyRule();
+            DeleteRule();
+        }
+
+        private void CopyRule()
+        {
+            Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
+            PasteItemCommand?.RaiseCanExecuteChanged();
+        }
+
+        private void PasteRule()
+        {
+            var newRule = (LootRule)Clipboard.GetData(typeof(LootRule).Name);
+            AddRule(newRule);
+        }
+
+        private void MoveSelectedItemUp(int index)
+        {
+            LootRules.Move(index, index - 1);
+            lootFile.MoveRule(index, index - 1);
+            IsDirty = true;
+        }
+
+        private void MoveSelectedItemDown(int index)
+        {
+            LootRules.Move(index, index + 1);
+            lootFile.MoveRule(index, index + 1);
+            IsDirty = true;
         }
 
         private void DeleteRule()
@@ -191,15 +188,10 @@ namespace LootEditor.View.ViewModel
                 Action = LootAction.Keep
             };
 
-            lootFile.AddRule(rule);
-
-            var vm = new LootRuleViewModel(rule);
-            vm.PropertyChanged += Vm_PropertyChanged;
-            LootRules.Add(vm);
-
-            SelectedRule = vm;
-            IsDirty = true;
+            AddRule(rule);
         }
+
+        private bool SelectedRule_CanExecute<T>(T _) => SelectedRule_CanExecute();
 
         private bool SelectedRule_CanExecute()
         {
