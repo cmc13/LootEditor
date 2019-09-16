@@ -6,7 +6,6 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -251,6 +250,14 @@ namespace LootEditor.View.ViewModel
 
             AddUpdateSalvageRulesCommand = new RelayCommand<Model.Enums.SalvageGroup>(group =>
             {
+                var dlg = new Dialogs.DialogService();
+                var wk = new Dialogs.SalvageGroupWorkmanshipViewModel(group);
+                var result = dlg.ShowDialog("Select Workmanship", wk);
+                if (!result.HasValue || result.Value == false)
+                {
+                    return;
+                }
+
                 var materials = group.GetMaterials();
                 foreach (var m in materials)
                 {
@@ -264,7 +271,7 @@ namespace LootEditor.View.ViewModel
                             ((ValueKeyLootCriteria<DoubleValueKey, double>)c.Criteria).Key == DoubleValueKey.SalvageWorkmanship);
                         if (criteria != null)
                         {
-                            criteria.Value = 0;
+                            criteria.Value = wk.Workmanship;
                         }
                         else
                         {
@@ -285,7 +292,7 @@ namespace LootEditor.View.ViewModel
                         // Add criteria for workmanship
                         var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.DoubleValKeyGE);
                         ((ValueKeyLootCriteria<DoubleValueKey, double>)newCriteria).Key = DoubleValueKey.SalvageWorkmanship;
-                        ((ValueKeyLootCriteria<DoubleValueKey, double>)newCriteria).Value = 0;
+                        ((ValueKeyLootCriteria<DoubleValueKey, double>)newCriteria).Value = wk.Workmanship;
                         newRule.AddCriteria(newCriteria);
 
                         newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.LongValKeyE);

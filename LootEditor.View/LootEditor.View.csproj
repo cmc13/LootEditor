@@ -145,6 +145,10 @@
     </Compile>
     <Compile Include="Dialogs\DialogService.cs" />
     <Compile Include="Dialogs\DialogViewModel.cs" />
+    <Compile Include="Dialogs\SalvageGroupWorkmanshipView.xaml.cs">
+      <DependentUpon>SalvageGroupWorkmanshipView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SalvageGroupWorkmanshipViewModel.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="LootCriteriaDataTemplateSelector.cs" />
     <Compile Include="LootCriteriaEditor.xaml.cs">
@@ -221,6 +225,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\DialogBase.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SalvageGroupWorkmanshipView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

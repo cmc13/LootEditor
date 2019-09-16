@@ -4,18 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LootEditor.View.Dialogs"
-        mc:Ignorable="d" WindowStyle="ToolWindow" DialogResult="{Binding DialogResult}"
-        Title="{Binding Title}" Height="450" Width="800">
+        mc:Ignorable="d" WindowStyle="ToolWindow"
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+        Title="{Binding Title}" d:DesignHeight="450" d:DesignWidth="800">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:SalvageGroupWorkmanshipViewModel}">
+            <local:SalvageGroupWorkmanshipView />
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ContentPresenter Content="{Binding ChildViewModel}" />
+        <ContentControl Content="{Binding ChildViewModel}" Margin="5" />
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
-            <Button IsDefault="True" Width="75" Margin="0,0,5,0">OK</Button>
+            <Button IsDefault="True" Width="75" Margin="0,0,5,0" Click="Button_Click">OK</Button>
             <Button IsCancel="True" Width="75">Cancel</Button>
         </StackPanel>
     </Grid>
