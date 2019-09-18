@@ -51,7 +51,7 @@
         </TextBox>
 
         <CheckBox Grid.Row="2" Grid.Column="0" Content="Combine Values up to:" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding HasCombineValue}" />
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CombineValue}" IsEnabled="{Binding HasCombineValue}" Margin="5">
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CombineValue, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding HasCombineValue}" Margin="5">
             <TextBox.Style>
                 <Style TargetType="TextBox">
                     <Style.Triggers>

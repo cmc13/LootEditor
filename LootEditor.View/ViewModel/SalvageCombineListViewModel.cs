@@ -145,6 +145,7 @@ namespace LootEditor.View.ViewModel
 
                     salvageCombineBlock.MaterialValues[(Material)e.NewValue] = salvageCombineBlock.MaterialValues[(Material)e.OldValue];
                     salvageCombineBlock.MaterialValues.Remove((Material)e.OldValue);
+                    IsDirty = true;
                 }
             }
         }
@@ -166,6 +167,7 @@ namespace LootEditor.View.ViewModel
                 else
                     salvageCombineBlock.MaterialValues[vm.Material] = vm.CombineValue.Value;
             }
+            IsDirty = true;
         }
 
         private void CombineRules_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
