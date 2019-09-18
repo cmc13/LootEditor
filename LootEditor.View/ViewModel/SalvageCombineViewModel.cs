@@ -8,7 +8,7 @@ namespace LootEditor.View.ViewModel
     public class SalvageCombineViewModel : ViewModelBase, IAcceptPendingChange
     {
         private Material material;
-        private SalvageCombineListViewModel.SalvageObj salvageObj;
+        private readonly SalvageCombineListViewModel.SalvageObj salvageObj;
 
         public SalvageCombineViewModel(Material material, SalvageCombineListViewModel.SalvageObj salvageObj)
         {

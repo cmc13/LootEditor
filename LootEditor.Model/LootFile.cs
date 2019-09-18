@@ -9,7 +9,7 @@ namespace LootEditor.Model
 {
     public class LootFile
     {
-        private List<LootRule> lootRules = new List<LootRule>();
+        private readonly List<LootRule> lootRules = new List<LootRule>();
 
         public int Version { get; set; }
 

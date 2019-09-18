@@ -10,7 +10,7 @@ namespace LootEditor.Model
     [Serializable]
     public class LootRule : ICloneable, ISerializable
     {
-        private List<LootCriteria> criteria = new List<LootCriteria>();
+        private readonly List<LootCriteria> criteria = new List<LootCriteria>();
 
         public string CustomExpression { get; set; } = "";
         public int Priority { get; set; } = 0;

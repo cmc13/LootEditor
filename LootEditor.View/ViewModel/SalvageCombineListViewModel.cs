@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 using LootEditor.Model;
 using LootEditor.Model.Enums;
 using System;
@@ -54,10 +55,9 @@ namespace LootEditor.View.ViewModel
             }
         }
 
-
         private readonly SalvageCombineBlockType salvageCombineBlock;
         private bool isDirty = false;
-        private KeyValuePair<Material, SalvageObj> selectedItem;
+        private KeyValuePair<Material, SalvageObj>? selectedItem;
         private SalvageCombineViewModel currentSalvageCombineViewModel;
 
         public SalvageCombineListViewModel(LootFile lootFile)
@@ -95,7 +95,21 @@ namespace LootEditor.View.ViewModel
             CombineRules.CollectionChanged += CombineRules_CollectionChanged;
         }
 
-        public KeyValuePair<Material, SalvageObj> SelectedItem
+        public RelayCommand AddSalvageCommand => new RelayCommand(() =>
+        {
+            var first = new KeyValuePair<Material, SalvageObj>(
+                Enum.GetValues(typeof(Material)).Cast<Material>().FirstOrDefault(m => !CombineRules.ContainsKey(m)),
+                new SalvageObj() { CombineRange = null, CombineValue = null });
+            CombineRules.Add(first);
+            SelectedItem = first;
+        }, () => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m)));
+
+        public RelayCommand DeleteSalvageCommand => new RelayCommand(() =>
+        {
+            CombineRules.Remove(SelectedItem.Value.Key);
+        }, () => SelectedItem.HasValue);
+
+        public KeyValuePair<Material, SalvageObj>? SelectedItem
         {
             get => selectedItem;
             set
@@ -105,7 +119,10 @@ namespace LootEditor.View.ViewModel
                     selectedItem = value;
                     RaisePropertyChanged(nameof(SelectedItem));
 
-                    SalvageCombineViewModel = new SalvageCombineViewModel(selectedItem.Key, selectedItem.Value);
+                    if (selectedItem.HasValue)
+                        SalvageCombineViewModel = new SalvageCombineViewModel(selectedItem.Value.Key, selectedItem.Value.Value);
+                    else
+                        SalvageCombineViewModel = null;
                 }
             }
         }
@@ -124,12 +141,50 @@ namespace LootEditor.View.ViewModel
                     }
 
                     currentSalvageCombineViewModel = value;
-                    currentSalvageCombineViewModel.PropertyChanged += Vm_PropertyChanged;
-                    currentSalvageCombineViewModel.AcceptPendingChange += Vm_AcceptPendingChange;
+
+                    if (currentSalvageCombineViewModel != null)
+                    {
+                        currentSalvageCombineViewModel.PropertyChanged += Vm_PropertyChanged;
+                        currentSalvageCombineViewModel.AcceptPendingChange += Vm_AcceptPendingChange;
+                    }
 
                     RaisePropertyChanged(nameof(SalvageCombineViewModel));
                 }
             }
+        }
+
+        public bool IsDirty
+        {
+            get => isDirty;
+            set
+            {
+                if (isDirty != value)
+                {
+                    isDirty = value;
+                    RaisePropertyChanged(nameof(IsDirty));
+                }
+            }
+        }
+
+        public string DefaultCombineRange
+        {
+            get => salvageCombineBlock?.DefaultCombineString;
+            set
+            {
+                if (salvageCombineBlock.DefaultCombineString != value)
+                {
+                    salvageCombineBlock.DefaultCombineString = value;
+                    RaisePropertyChanged(nameof(DefaultCombineRange));
+                    IsDirty = true;
+                }
+            }
+        }
+
+        public ObservableDictionary<Material, SalvageObj> CombineRules { get; } = new ObservableDictionary<Material, SalvageObj>();
+
+        public void Clean()
+        {
+            IsDirty = false;
         }
 
         private void Vm_AcceptPendingChange(object sender, AcceptPendingChangeEventArgs e)
@@ -140,11 +195,22 @@ namespace LootEditor.View.ViewModel
                     e.Cancel = true;
                 else
                 {
-                    salvageCombineBlock.Materials[(Material)e.NewValue] = salvageCombineBlock.Materials[(Material)e.OldValue];
-                    salvageCombineBlock.Materials.Remove((Material)e.OldValue);
+                    SelectedItem = null;
+                    CombineRules.Add((Material)e.NewValue, CombineRules[(Material)e.OldValue]);
+                    CombineRules.Remove((Material)e.OldValue);
 
-                    salvageCombineBlock.MaterialValues[(Material)e.NewValue] = salvageCombineBlock.MaterialValues[(Material)e.OldValue];
-                    salvageCombineBlock.MaterialValues.Remove((Material)e.OldValue);
+                    if (salvageCombineBlock.Materials.ContainsKey((Material)e.OldValue))
+                    {
+                        salvageCombineBlock.Materials[(Material)e.NewValue] = salvageCombineBlock.Materials[(Material)e.OldValue];
+                        salvageCombineBlock.Materials.Remove((Material)e.OldValue);
+                    }
+
+                    if (salvageCombineBlock.MaterialValues.ContainsKey((Material)e.OldValue))
+                    {
+                        salvageCombineBlock.MaterialValues[(Material)e.NewValue] = salvageCombineBlock.MaterialValues[(Material)e.OldValue];
+                        salvageCombineBlock.MaterialValues.Remove((Material)e.OldValue);
+                    }
+
                     IsDirty = true;
                 }
             }
@@ -181,22 +247,20 @@ namespace LootEditor.View.ViewModel
                     if (item.Value.HasCombineValue)
                         salvageCombineBlock.MaterialValues.Add(item.Key, item.Value.CombineValue.Value);
                 }
+
+                AddSalvageCommand?.RaiseCanExecuteChanged();
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
                 foreach (KeyValuePair<Material, SalvageObj> item in e.OldItems)
                 {
                     if (item.Value.CombineRange != null)
-                        salvageCombineBlock.Materials.Add(item.Key, item.Value.CombineRange);
+                        salvageCombineBlock.Materials.Remove(item.Key);
                     if (item.Value.HasCombineValue)
-                        salvageCombineBlock.MaterialValues.Add(item.Key, item.Value.CombineValue.Value);
+                        salvageCombineBlock.MaterialValues.Remove(item.Key);
                 }
-            }
-            else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Replace)
-            {
-                for (var i = 0; i < e.NewItems.Count; ++i)
-                {
-                }
+
+                AddSalvageCommand?.RaiseCanExecuteChanged();
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
             {
@@ -205,40 +269,6 @@ namespace LootEditor.View.ViewModel
             }
 
             IsDirty = true;
-        }
-
-        public bool IsDirty
-        {
-            get => isDirty;
-            set
-            {
-                if (isDirty != value)
-                {
-                    isDirty = value;
-                    RaisePropertyChanged(nameof(IsDirty));
-                }
-            }
-        }
-
-        public string DefaultCombineRange
-        {
-            get => salvageCombineBlock?.DefaultCombineString;
-            set
-            {
-                if (salvageCombineBlock.DefaultCombineString != value)
-                {
-                    salvageCombineBlock.DefaultCombineString = value;
-                    RaisePropertyChanged(nameof(DefaultCombineRange));
-                    IsDirty = true;
-                }
-            }
-        }
-
-        public ObservableDictionary<Material, SalvageObj> CombineRules { get; } = new ObservableDictionary<Material, SalvageObj>();
-
-        public void Clean()
-        {
-            IsDirty = false;
         }
     }
 }

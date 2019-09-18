@@ -88,12 +88,12 @@
                     </ListView>
 
                     <UniformGrid Grid.Row="1" Columns="2">
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" Content="Add">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" Content="Add" Command="{Binding AddSalvageCommand}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Add_16x.png" />
                             </xctk:IconButton.Icon>
                         </xctk:IconButton>
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" Content="Delete">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" Content="Delete" Command="{Binding DeleteSalvageCommand}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Remove_16x.png" />
                             </xctk:IconButton.Icon>

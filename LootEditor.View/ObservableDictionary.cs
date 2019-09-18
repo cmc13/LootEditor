@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace LootEditor.View
@@ -91,7 +92,8 @@ namespace LootEditor.View
             (backingDictionary as ICollection<KeyValuePair<TKey, TValue>>).Add(item);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, new[] { item }));
+            var idx = GetIndex(item.Key);
+            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, idx.Value));
         }
 
         public void Add(object key, object value) => Add(new KeyValuePair<TKey, TValue>((TKey)key, (TValue)value));
@@ -109,7 +111,7 @@ namespace LootEditor.View
 
         public bool Contains(object key) => ContainsKey((TKey)key);
 
-        public bool ContainsKey(TKey key) => ContainsKey(key);
+        public bool ContainsKey(TKey key) => backingDictionary.ContainsKey(key);
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => (backingDictionary as ICollection<KeyValuePair<TKey, TValue>>).CopyTo(array, arrayIndex);
 
@@ -130,12 +132,13 @@ namespace LootEditor.View
         {
             if (TryGetValue(key, out var value))
             {
+                var idx = GetIndex(key);
                 var result = backingDictionary.Remove(key);
                 if (result)
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
-                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new[] { new KeyValuePair<TKey, TValue>(key, value) }));
+                    CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new KeyValuePair<TKey, TValue>(key, value), idx.Value));
                 }
                 return result;
             }
@@ -145,11 +148,12 @@ namespace LootEditor.View
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
+            var idx = GetIndex(item.Key);
             var result = (backingDictionary as ICollection<KeyValuePair<TKey, TValue>>).Remove(item);
             if (result)
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new[] { item }));
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, idx.Value));
             }
             return result;
         }
@@ -163,6 +167,11 @@ namespace LootEditor.View
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         IDictionaryEnumerator IDictionary.GetEnumerator() => new DictionaryEnumerator(backingDictionary.GetEnumerator());
+
+        private int? GetIndex(TKey key) => (backingDictionary as ICollection<KeyValuePair<TKey, TValue>>)
+                .Select((c, i) => new { key = c.Key, index = i })
+                .FirstOrDefault(c => c.key.Equals(key))?
+                .index;
 
         private class DictionaryEnumerator : IDictionaryEnumerator
         {
