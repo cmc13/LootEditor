@@ -22,7 +22,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -45,82 +44,83 @@
         </Grid>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Criteria:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <ListBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}" Margin="5" Height="100"
-                 dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <i:Interaction.Behaviors>
-                <local:ScrollIntoViewBehavior />
-            </i:Interaction.Behaviors>
-            <ListBox.InputBindings>
-                <KeyBinding Key="Delete" Command="{Binding DeleteCriteriaCommand}" />
-                <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
-                <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyItemCommand}" />
-                <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding PasteItemCommand}" />
-            </ListBox.InputBindings>
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:LootCriteriaViewModel}">
-                    <Grid>
-                        <TextBlock Text="{Binding DisplayValue}" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayValue}" />
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="Assets/Cut_16x.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="Assets/Copy_16x.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="Assets/Paste_16x.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <Separator />
-                    <MenuItem Header="Delete Criteria" Command="{Binding DeleteCriteriaCommand}" InputGestureText="Del">
-                        <MenuItem.Icon>
-                            <Image Source="Assets/DeleteListItem_16x.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </ContextMenu>
-            </ListBox.ContextMenu>
-        </ListBox>
+        <Border Grid.Row="2" Grid.Column="1" BorderThickness="1" BorderBrush="DarkGray" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-        <Grid Grid.Row="3" Grid.Column="1" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+                <ListBox Grid.Row="0" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}" Height="100"
+                         dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" BorderThickness="0"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <i:Interaction.Behaviors>
+                        <local:ScrollIntoViewBehavior />
+                    </i:Interaction.Behaviors>
+                    <ListBox.InputBindings>
+                        <KeyBinding Key="Delete" Command="{Binding DeleteCriteriaCommand}" />
+                        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
+                        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyItemCommand}" />
+                        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding PasteItemCommand}" />
+                    </ListBox.InputBindings>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:LootCriteriaViewModel}">
+                            <Grid>
+                                <TextBlock Text="{Binding DisplayValue}" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayValue}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
+                                <MenuItem.Icon>
+                                    <Image Source="Assets/Cut_16x.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
+                                <MenuItem.Icon>
+                                    <Image Source="Assets/Copy_16x.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
+                                <MenuItem.Icon>
+                                    <Image Source="Assets/Paste_16x.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator />
+                            <MenuItem Header="Delete Criteria" Command="{Binding DeleteCriteriaCommand}" InputGestureText="Del">
+                                <MenuItem.Icon>
+                                    <Image Source="Assets/DeleteListItem_16x.png" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
 
-            <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" FontSize="14">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Assets/Add_16x.png" />
-                    <TextBlock>Add</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" FontSize="14">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Assets/Clone_16x.png" />
-                    <TextBlock>Clone</TextBlock>
-                </StackPanel>
-            </Button>
-            <Button Grid.Column="4" Command="{Binding DeleteCriteriaCommand}" Padding="5" FontSize="14">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="Assets/Remove_16x.png" />
-                    <TextBlock>Delete</TextBlock>
-                </StackPanel>
-            </Button>
-        </Grid>
+                <UniformGrid Grid.Row="1" Columns="3">
+                    <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/Add_16x.png" />
+                            <TextBlock>Add</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/Clone_16x.png" />
+                            <TextBlock>Clone</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding DeleteCriteriaCommand}" Padding="5" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/Remove_16x.png" />
+                            <TextBlock>Delete</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </UniformGrid>
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding SelectedCriteria, Converter={StaticResource NullToVisibilityConverter}}">
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding SelectedCriteria, Converter={StaticResource NullToVisibilityConverter}}">
             <local:LootCriteriaEditor DataContext="{Binding SelectedCriteria}" />
         </Grid>
     </Grid>

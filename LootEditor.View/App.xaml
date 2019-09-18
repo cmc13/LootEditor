@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:LootEditor.View"
              xmlns:vm="clr-namespace:LootEditor.View.ViewModel"
         xmlns:cvt="clr-namespace:LootEditor.View.Converters"
-             StartupUri="MainWindow.xaml"
+             StartupUri="MainWindow.xaml" ShutdownMode="OnMainWindowClose"
              Startup="Application_Startup">
     <Application.Resources>
         <vm:MainViewModel x:Key="MainViewModel" />

@@ -64,37 +64,10 @@
         <Grid Grid.Column="0" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <xctk:IconButton Grid.Row="0" Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" Content="Add">
-                    <xctk:IconButton.Icon>
-                        <Image Source="Assets/Add_16x.png" />
-                    </xctk:IconButton.Icon>
-                </xctk:IconButton>
-                <xctk:IconButton Grid.Row="0" Grid.Column="2" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" Content="Clone">
-                    <xctk:IconButton.Icon>
-                        <Image Source="Assets/Clone_16x.png" />
-                    </xctk:IconButton.Icon>
-                </xctk:IconButton>
-                <xctk:IconButton Grid.Row="0" Grid.Column="4" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" Content="Delete">
-                    <xctk:IconButton.Icon>
-                        <Image Source="Assets/Remove_16x.png" />
-                    </xctk:IconButton.Icon>
-                </xctk:IconButton>
-            </Grid>
-
-            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="1" Margin="0,5"
+            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="0" Margin="0,5"
                                    TextChanged="TxtFilter_TextChanged">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
@@ -104,65 +77,91 @@
                 </xctk:WatermarkTextBox.Watermark>
             </xctk:WatermarkTextBox>
 
-            <ListBox Grid.Row="2" ItemsSource="{Binding Source={StaticResource LootRules}}"
-                     ItemTemplate="{StaticResource LootRuleItemTemplate}" Width="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=ActualWidth}"
+            <Border Grid.Row="1" BorderThickness="1" BorderBrush="DarkGray">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ListBox Grid.Row="0" ItemsSource="{Binding Source={StaticResource LootRules}}" BorderThickness="0"
+                     ItemTemplate="{StaticResource LootRuleItemTemplate}"
                      SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
                      dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
-                <i:Interaction.Behaviors>
-                    <local:ScrollIntoViewBehavior />
-                </i:Interaction.Behaviors>
-                <ListBox.InputBindings>
-                    <KeyBinding Key="Up" Modifiers="Shift" Command="{Binding MoveSelectedItemUpCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
-                    <KeyBinding Key="Down" Modifiers="Shift" Command="{Binding MoveSelectedItemDownCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
-                    <KeyBinding Key="Delete" Command="{Binding DeleteRuleCommand}" />
-                </ListBox.InputBindings>
-                <ListBox.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Cut_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Copy_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Paste_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem Header="Enable/Disable Rule" Command="{Binding ToggleDisabledCommand}">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/Lock_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator />
-                        <MenuItem Header="Add Rule" Command="{Binding AddRuleCommand}">
-                            <MenuItem.Icon>
+                        <i:Interaction.Behaviors>
+                            <local:ScrollIntoViewBehavior />
+                        </i:Interaction.Behaviors>
+                        <ListBox.InputBindings>
+                            <KeyBinding Key="Up" Modifiers="Shift" Command="{Binding MoveSelectedItemUpCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
+                            <KeyBinding Key="Down" Modifiers="Shift" Command="{Binding MoveSelectedItemDownCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=SelectedIndex}" />
+                            <KeyBinding Key="Delete" Command="{Binding DeleteRuleCommand}" />
+                        </ListBox.InputBindings>
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Cut_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Copy_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Paste_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Enable/Disable Rule" Command="{Binding ToggleDisabledCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Lock_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Add Rule" Command="{Binding AddRuleCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Add_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Clone Rule" Command="{Binding CloneRuleCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Clone_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Delete Rule" Command="{Binding DeleteRuleCommand}" InputGestureText="Del">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/DeleteListItem_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+
+                    <UniformGrid Grid.Row="1" Columns="3">
+                        <xctk:IconButton Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" Content="Add" BorderThickness="0">
+                            <xctk:IconButton.Icon>
                                 <Image Source="Assets/Add_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Clone Rule" Command="{Binding CloneRuleCommand}">
-                            <MenuItem.Icon>
+                            </xctk:IconButton.Icon>
+                        </xctk:IconButton>
+                        <xctk:IconButton Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" Content="Clone" BorderThickness="0">
+                            <xctk:IconButton.Icon>
                                 <Image Source="Assets/Clone_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem Header="Delete Rule" Command="{Binding DeleteRuleCommand}" InputGestureText="Del">
-                            <MenuItem.Icon>
-                                <Image Source="Assets/DeleteListItem_16x.png" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </ContextMenu>
-                </ListBox.ContextMenu>
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                        <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
+                            </xctk:IconButton.Icon>
+                        </xctk:IconButton>
+                        <xctk:IconButton Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" Content="Delete" BorderThickness="0">
+                            <xctk:IconButton.Icon>
+                                <Image Source="Assets/Remove_16x.png" />
+                            </xctk:IconButton.Icon>
+                        </xctk:IconButton>
+                    </UniformGrid>
+                </Grid>
+            </Border>
         </Grid>
 
         <GridSplitter Width="3" Grid.Column="0" />
