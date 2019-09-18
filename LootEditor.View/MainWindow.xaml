@@ -124,8 +124,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Header="Update Workmanship Requirements" />
-                    <MenuItem Header="Add Packslot Requirements" />
+                    <MenuItem Header="Bulk Add" />
                 </MenuItem>
             </Menu>
 

@@ -11,19 +11,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace LootEditor.View.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
         private static readonly string RECENT_FILE_NAME = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Loot Editor", "RecentFiles.json");
+        private static readonly string BACKUP_FILE_NAME = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Loot Editor", "backup.utl");
         private const int RECENT_FILE_COUNT = 10;
-        private string saveFileName;
-        private LootFile lootFile;
-        private LootRuleListViewModel lootRuleListViewModel;
-        private SalvageCombineListViewModel salvageCombineViewModel;
+        private string saveFileName = null;
+        private LootFile lootFile = null;
+        private LootRuleListViewModel lootRuleListViewModel = null;
+        private SalvageCombineListViewModel salvageCombineViewModel = null;
         private bool isBusy = false;
         private string busyStatus;
+        private readonly DispatcherTimer backupTimer;
 
         public string SaveFileName
         {
@@ -135,16 +138,39 @@ namespace LootEditor.View.ViewModel
         {
             LootFile = new LootFile();
 
-            if (File.Exists(RECENT_FILE_NAME))
+            backupTimer = new DispatcherTimer();
+            backupTimer.Interval = TimeSpan.FromSeconds(5);
+            backupTimer.Tick += BackupTimer_Tick;
+
+            if (!IsInDesignMode)
             {
-                var json = File.ReadAllText(RECENT_FILE_NAME);
-                var files = JsonConvert.DeserializeObject<IEnumerable<string>>(json);
-                RecentFiles.AddRange(files);
-                while (RecentFiles.Count > RECENT_FILE_COUNT)
-                    RecentFiles.RemoveAt(RecentFiles.Count - 1);
-                RaisePropertyChanged(nameof(RecentFiles));
+                if (File.Exists(RECENT_FILE_NAME))
+                {
+                    var json = File.ReadAllText(RECENT_FILE_NAME);
+                    var files = JsonConvert.DeserializeObject<IEnumerable<string>>(json);
+                    RecentFiles.AddRange(files);
+                    while (RecentFiles.Count > RECENT_FILE_COUNT)
+                        RecentFiles.RemoveAt(RecentFiles.Count - 1);
+                    RaisePropertyChanged(nameof(RecentFiles));
+                }
+
+                if (File.Exists(BACKUP_FILE_NAME))
+                {
+                    var fileName = File.ReadLines(BACKUP_FILE_NAME).First();
+                    if (string.IsNullOrEmpty(fileName))
+                        fileName = null;
+                    var mbResult = MessageBox.Show($"File {fileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (mbResult == MessageBoxResult.Yes)
+                    {
+                        OpenFileAsync(BACKUP_FILE_NAME, saveFileName: fileName, ignoreFirstLine: true)
+                            .GetAwaiter()
+                            .GetResult();
+                        SaveFileName = fileName;
+                    }
+
+                    File.Delete(BACKUP_FILE_NAME);
+                }
             }
-            else
 
             NewFileCommand = new RelayCommand(async () =>
             {
@@ -306,7 +332,7 @@ namespace LootEditor.View.ViewModel
             });
         }
 
-        public async Task OpenFileAsync(string fileName)
+        public async Task OpenFileAsync(string fileName, string saveFileName = null, bool ignoreFirstLine = false)
         {
             BusyStatus = "Opening file...";
             IsBusy = true;
@@ -315,12 +341,15 @@ namespace LootEditor.View.ViewModel
                 using (var fs = File.OpenRead(fileName))
                 using (var reader = new StreamReader(fs))
                 {
+                    if (ignoreFirstLine)
+                        await reader.ReadLineAsync().ConfigureAwait(false);
+
                     var lf = new LootFile();
                     await lf.ReadFileAsync(reader).ConfigureAwait(false);
                     LootFile = lf;
                 }
 
-                SaveFileName = fileName;
+                SaveFileName = saveFileName ?? fileName;
             }
             catch (Exception ex)
             {
@@ -338,14 +367,7 @@ namespace LootEditor.View.ViewModel
             IsBusy = true;
             try
             {
-                using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
-                using (var writer = new StreamWriter(fs, System.Text.Encoding.UTF8, 65535))
-                {
-                    await LootFile.WriteFileAsync(writer).ConfigureAwait(false);
-                    await fs.FlushAsync();
-                    fs.Close();
-                }
-
+                await WriteFileAsync(fileName).ConfigureAwait(false);
                 SaveFileName = fileName;
 
                 LootRuleListViewModel.Clean();
@@ -358,6 +380,17 @@ namespace LootEditor.View.ViewModel
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        private async Task WriteFileAsync(string fileName, string saveFileName = null, bool writeFileName = false)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (var writer = new StreamWriter(fs, System.Text.Encoding.UTF8, 65535))
+            {
+                if (writeFileName)
+                    await writer.WriteLineAsync(saveFileName ?? "").ConfigureAwait(false);
+                await LootFile.WriteFileAsync(writer).ConfigureAwait(false);
             }
         }
 
@@ -379,7 +412,26 @@ namespace LootEditor.View.ViewModel
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "IsDirty")
+            {
                 RaisePropertyChanged(nameof(IsDirty));
+
+                if (IsDirty && !backupTimer.IsEnabled)
+                {
+                    backupTimer.Start();
+                }
+                else if (!IsDirty && backupTimer.IsEnabled)
+                {
+                    backupTimer.Stop();
+                    File.Delete(BACKUP_FILE_NAME);
+                }
+            }
+        }
+
+        private async void BackupTimer_Tick(object sender, EventArgs e)
+        {
+            if (!Directory.Exists(Path.GetDirectoryName(BACKUP_FILE_NAME)))
+                Directory.CreateDirectory(Path.GetDirectoryName(BACKUP_FILE_NAME));
+            await WriteFileAsync(BACKUP_FILE_NAME, saveFileName, writeFileName: true).ConfigureAwait(false);
         }
     }
 }
