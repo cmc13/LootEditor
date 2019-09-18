@@ -313,9 +313,10 @@ namespace LootEditor.View.ViewModel
             try
             {
                 using (var fs = File.OpenRead(fileName))
+                using (var reader = new StreamReader(fs))
                 {
                     var lf = new LootFile();
-                    await lf.ReadFileAsync(fs).ConfigureAwait(false);
+                    await lf.ReadFileAsync(reader).ConfigureAwait(false);
                     LootFile = lf;
                 }
 
@@ -338,8 +339,9 @@ namespace LootEditor.View.ViewModel
             try
             {
                 using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var writer = new StreamWriter(fs, System.Text.Encoding.UTF8, 65535))
                 {
-                    await LootFile.WriteFileAsync(fs).ConfigureAwait(false);
+                    await LootFile.WriteFileAsync(writer).ConfigureAwait(false);
                     await fs.FlushAsync();
                     fs.Close();
                 }

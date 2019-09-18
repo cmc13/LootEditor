@@ -86,16 +86,17 @@ namespace LootEditor.Model
             }
         }
 
-        public async Task WriteAsync(Stream stream)
+        public async Task WriteAsync(TextWriter stream)
         {
             using (var internalStream = new MemoryStream())
             {
                 await WriteInternalAsync(internalStream).ConfigureAwait(false);
 
-                await stream.WriteLineForRealAsync(internalStream.Length.ToString()).ConfigureAwait(false);
+                await stream.WriteLineAsync(internalStream.Length.ToString()).ConfigureAwait(false);
 
-                internalStream.Position = 0;
-                await internalStream.CopyToAsync(stream).ConfigureAwait(false);
+                internalStream.Seek(0, SeekOrigin.Begin);
+                await stream.WriteAsync(System.Text.Encoding.UTF8.GetString(internalStream.ToArray()));
+//                await internalStream.CopyToAsync(stream).ConfigureAwait(false);
             }
         }
 

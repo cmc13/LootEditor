@@ -101,18 +101,18 @@ namespace LootEditor.Model
 
         public void AddCriteria(LootCriteria criteria, int idx) => this.criteria.Insert(idx, criteria);
 
-        public async Task WriteAsync(Stream stream)
+        public async Task WriteAsync(TextWriter writer)
         {
-            await stream.WriteLineForRealAsync(Name).ConfigureAwait(false);
-            await stream.WriteLineForRealAsync(CustomExpression).ConfigureAwait(false);
+            await writer.WriteLineAsync(Name).ConfigureAwait(false);
+            await writer.WriteLineAsync(CustomExpression).ConfigureAwait(false);
 
             var bigLine = new List<int> { Priority, (int)Action };
-            await stream.WriteLineForRealAsync(string.Join(";", bigLine.Concat(Criteria.Select(c => (int)c.Type))));
+            await writer.WriteLineAsync(string.Join(";", bigLine.Concat(Criteria.Select(c => (int)c.Type))));
             if (Action == Enums.LootAction.KeepUpTo)
-                await stream.WriteLineForRealAsync(KeepUpToCount.ToString()).ConfigureAwait(false);
+                await writer.WriteLineAsync(KeepUpToCount.ToString()).ConfigureAwait(false);
             foreach (var criteria in Criteria)
             {
-                await criteria.WriteAsync(stream).ConfigureAwait(false);
+                await criteria.WriteAsync(writer).ConfigureAwait(false);
             }
         }
 

@@ -65,7 +65,7 @@ namespace LootEditor.Model
             }
         }
 
-        public override async Task WriteAsync(Stream stream)
+        public override async Task WriteAsync(TextWriter stream)
         {
             using (var subWriter = new MemoryStream())
             {
@@ -84,10 +84,11 @@ namespace LootEditor.Model
                     await subWriter.WriteLineForRealAsync(kvp.Value.ToString()).ConfigureAwait(false);
                 }
 
-                subWriter.Position = 0;
+                subWriter.Seek(0, SeekOrigin.Begin);
                 Length = subWriter.Length;
                 await base.WriteAsync(stream).ConfigureAwait(false);
-                await subWriter.CopyToAsync(stream).ConfigureAwait(false);
+                //await subWriter.CopyToAsync(stream).ConfigureAwait(false);
+                await stream.WriteAsync(System.Text.Encoding.UTF8.GetString(subWriter.ToArray())).ConfigureAwait(false);
             }
         }
     }

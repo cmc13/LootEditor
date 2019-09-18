@@ -24,10 +24,10 @@ namespace LootEditor.Model
             }
         }
 
-        public virtual async Task WriteAsync(Stream stream)
+        public virtual async Task WriteAsync(TextWriter stream)
         {
-            await stream.WriteLineForRealAsync(Name).ConfigureAwait(false);
-            await stream.WriteLineForRealAsync(Length.ToString()).ConfigureAwait(false);
+            await stream.WriteLineAsync(Name).ConfigureAwait(false);
+            await stream.WriteLineAsync(Length.ToString()).ConfigureAwait(false);
         }
 
         public virtual async Task ReadAsync(TextReader reader)
