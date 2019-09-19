@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor.View.CriteriaEditors"
+             xmlns:cvt="clr-namespace:LootEditor.View.Converters"
              mc:Ignorable="d" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cvt:HexStringToIntConverter x:Key="HexStringToIntConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -16,9 +20,9 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Slot}" Margin="5" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Slot, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette}" Margin="5" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette, Converter={StaticResource HexStringToIntConverter}, UpdateSourceTrigger=PropertyChanged, StringFormat=0x{0}}" Margin="5" />
     </Grid>
 </UserControl>

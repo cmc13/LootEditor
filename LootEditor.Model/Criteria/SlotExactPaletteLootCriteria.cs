@@ -23,6 +23,8 @@ namespace LootEditor.Model
             Palette = info.GetInt32(nameof(Palette));
         }
 
+        public override string ToString() => $"Slot {Slot} Palette 0x{Palette:X}";
+
         public override async Task ReadAsync(TextReader reader, int version)
         {
             await base.ReadAsync(reader, version).ConfigureAwait(false);

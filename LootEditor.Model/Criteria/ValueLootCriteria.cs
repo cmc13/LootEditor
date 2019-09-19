@@ -68,7 +68,7 @@ namespace LootEditor.Model
             }
             else
             {
-                await stream.WriteLineForRealAsync(Value.ToString()).ConfigureAwait(false);
+                await stream.WriteLineForRealAsync(Value?.ToString() ?? "").ConfigureAwait(false);
             }
         }
 

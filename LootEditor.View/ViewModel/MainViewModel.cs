@@ -139,7 +139,7 @@ namespace LootEditor.View.ViewModel
             LootFile = new LootFile();
 
             backupTimer = new DispatcherTimer();
-            backupTimer.Interval = TimeSpan.FromSeconds(5);
+            backupTimer.Interval = TimeSpan.FromMinutes(5);
             backupTimer.Tick += BackupTimer_Tick;
 
             if (!IsInDesignMode)
@@ -156,19 +156,25 @@ namespace LootEditor.View.ViewModel
 
                 if (File.Exists(BACKUP_FILE_NAME))
                 {
-                    var fileName = File.ReadLines(BACKUP_FILE_NAME).First();
-                    if (string.IsNullOrEmpty(fileName))
-                        fileName = null;
-                    var mbResult = MessageBox.Show($"File {fileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (mbResult == MessageBoxResult.Yes)
+                    try
                     {
-                        OpenFileAsync(BACKUP_FILE_NAME, saveFileName: fileName, ignoreFirstLine: true)
-                            .GetAwaiter()
-                            .GetResult();
-                        SaveFileName = fileName;
+                        var fileName = File.ReadLines(BACKUP_FILE_NAME).First();
+                        if (string.IsNullOrEmpty(fileName))
+                            fileName = null;
+                        var mbResult = MessageBox.Show($"File {fileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (mbResult == MessageBoxResult.Yes)
+                        {
+                            OpenFileAsync(BACKUP_FILE_NAME, saveFileName: fileName, ignoreFirstLine: true)
+                                .GetAwaiter()
+                                .GetResult();
+                            SaveFileName = fileName;
+                        }
                     }
-
-                    File.Delete(BACKUP_FILE_NAME);
+                    catch { }
+                    finally
+                    {
+                        File.Delete(BACKUP_FILE_NAME);
+                    }
                 }
             }
 
@@ -256,6 +262,11 @@ namespace LootEditor.View.ViewModel
                     else if (mbResult == MessageBoxResult.Yes)
                     {
                         SaveAsCommand.Execute(null);
+                    }
+                    else
+                    {
+                        backupTimer.Stop();
+                        File.Delete(BACKUP_FILE_NAME);
                     }
                 }
             });
