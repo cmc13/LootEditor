@@ -17,12 +17,45 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Calc'd Buffed/Tinked Damage over Time:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CalculatedBuffedTinkedDamageOverTime}" Margin="5" />
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
+            <TextBox.Text>
+                <Binding Path="CalculatedBuffedTinkedDamageOverTime"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Buffed Melee D Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BuffedMeleeDefenseBonus}" Margin="5" />
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+            <TextBox.Text>
+                <Binding Path="BuffedMeleeDefenseBonus"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Buffed Attack Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BuffedAttackBonus}" Margin="5" />
+        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+            <TextBox.Text>
+                <Binding Path="BuffedAttackBonus"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
     </Grid>
 </UserControl>

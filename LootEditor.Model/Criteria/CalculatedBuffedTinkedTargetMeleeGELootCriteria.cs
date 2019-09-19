@@ -16,6 +16,8 @@ namespace LootEditor.Model
 
         public CalculatedBuffedTinkedTargetMeleeGELootCriteria() { }
 
+        public override string ToString() => $"Melee Target: {CalculatedBuffedTinkedDamageOverTime} Dmg/Time; {BuffedMeleeDefenseBonus}md; {BuffedAttackBonus}a";
+
         private CalculatedBuffedTinkedTargetMeleeGELootCriteria(SerializationInfo info, StreamingContext context)
         {
             CalculatedBuffedTinkedDamageOverTime = info.GetDouble(nameof(CalculatedBuffedTinkedDamageOverTime));

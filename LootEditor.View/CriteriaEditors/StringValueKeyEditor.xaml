@@ -21,7 +21,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="5">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
             <TextBox.Text>
                 <Binding Path="Value"
                                  Mode="TwoWay"
@@ -32,18 +32,6 @@
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
-            <TextBox.Style>
-                <Style TargetType="TextBox">
-                    <Style.Triggers>
-                        <Trigger Property="Validation.HasError" Value="True">
-                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}" />
-                            <Setter Property="Background" Value="Salmon" />
-                            <Setter Property="BorderThickness" Value="2" />
-                            <Setter Property="BorderBrush" Value="Red" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
         </TextBox>
     </Grid>
 </UserControl>

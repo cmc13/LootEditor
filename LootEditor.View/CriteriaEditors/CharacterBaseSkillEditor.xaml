@@ -21,9 +21,31 @@
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding SkillType}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Min Base Skill Level:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MinSkillValue}" Margin="5" />
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+            <TextBox.Text>
+                <Binding Path="MinSkillValue"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Base Skill Level:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MaxSkillValue}" Margin="5" />
+        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+            <TextBox.Text>
+                <Binding Path="MaxSkillValue"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
     </Grid>
 </UserControl>

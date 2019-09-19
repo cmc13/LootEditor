@@ -20,9 +20,32 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Slot, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+            <TextBox.Text>
+                <Binding Path="Slot"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Palette, Converter={StaticResource HexStringToIntConverter}, UpdateSourceTrigger=PropertyChanged, StringFormat=0x{0}}" Margin="5" />
+        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+            <TextBox.Text>
+                <Binding Path="Palette"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         Converter="{StaticResource HexStringToIntConverter}"
+                         StringFormat="0x{0}">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
     </Grid>
 </UserControl>

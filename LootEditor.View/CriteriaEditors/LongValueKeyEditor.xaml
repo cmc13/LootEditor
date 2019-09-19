@@ -27,8 +27,19 @@
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
         <Grid Grid.Row="1" Grid.Column="1" Margin="5">
-            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding Value}"
-                         Visibility="{Binding Key, Converter={StaticResource LongValueKeyToVisibilityConverter}}" />
+            <TextBox ToolTip="{Binding Value}" Style="{StaticResource TextBoxErrorStyle}"
+                         Visibility="{Binding Key, Converter={StaticResource LongValueKeyToVisibilityConverter}}">
+                <TextBox.Text>
+                    <Binding Path="Value"
+                             UpdateSourceTrigger="PropertyChanged"
+                             Mode="TwoWay"
+                             NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <ExceptionValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:Material}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Material}}"/>

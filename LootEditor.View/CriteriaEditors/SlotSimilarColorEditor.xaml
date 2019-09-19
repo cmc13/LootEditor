@@ -18,6 +18,17 @@
         <local:ColorLootCriteriaEditor Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
 
         <TextBlock Grid.Row="3" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Slot}" Margin="5" />
+        <TextBox Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+            <TextBox.Text>
+                <Binding Path="Slot"
+                         UpdateSourceTrigger="PropertyChanged"
+                         Mode="TwoWay"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
     </Grid>
 </UserControl>
