@@ -197,6 +197,7 @@ namespace LootEditor.View.ViewModel
             {
                 SelectedCriteria = null;
 
+                v.PropertyChanged -= Vm_PropertyChanged;
                 var idx = Criteria.IndexOf(v);
                 Rule.RemoveCriteria(v.Criteria);
                 Criteria.RemoveAt(idx);

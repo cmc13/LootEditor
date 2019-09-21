@@ -104,7 +104,8 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Type:" VerticalAlignment="Center" />
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LootCriteriaType}}" SelectedItem="{Binding Type}" Margin="5" />
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:LootCriteriaType}}"
+                      SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5" />
 
             <ContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding}" ContentTemplateSelector="{StaticResource TemplateSelector}" />
         </Grid>
