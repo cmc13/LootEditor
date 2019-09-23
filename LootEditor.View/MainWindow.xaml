@@ -124,7 +124,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Header="Bulk Add" />
+                    <MenuItem Header="Bulk Add/Update Criteria" Command="{Binding BulkAddCommand}" />
                 </MenuItem>
             </Menu>
 

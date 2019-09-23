@@ -133,6 +133,7 @@ namespace LootEditor.View.ViewModel
         public RelayCommand<Window> ExitCommand { get; }
         public RelayCommand<string> OpenRecentFileCommand { get; }
         public RelayCommand<Model.Enums.SalvageGroup> AddUpdateSalvageRulesCommand { get; }
+        public RelayCommand BulkAddCommand { get; }
 
         public MainViewModel()
         {
@@ -341,6 +342,8 @@ namespace LootEditor.View.ViewModel
                     }
                 }
             });
+
+            BulkAddCommand = new RelayCommand(() => { });
         }
 
         public async Task OpenFileAsync(string fileName, string saveFileName = null, bool ignoreFirstLine = false)

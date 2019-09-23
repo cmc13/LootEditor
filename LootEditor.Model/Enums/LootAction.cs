@@ -5,7 +5,7 @@ namespace LootEditor.Model.Enums
     [TypeConverter(typeof(EnumDescriptionConverter))]
     public enum LootAction
     {
-        NoLoot = 0,
+        [Description("Don't Loot")] NoLoot = 0,
         Keep = 1,
         Salvage = 2,
         Sell = 3,
