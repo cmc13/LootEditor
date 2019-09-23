@@ -166,6 +166,7 @@
 
         <GridSplitter Width="3" Grid.Column="0" />
 
-        <local:LootRuleEditor Grid.Column="1" DataContext="{Binding SelectedRule}" Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}" />
+        <local:LootRuleEditor Grid.Column="1" DataContext="{Binding SelectedRule}"
+                              Visibility="{Binding DataContext.SelectedRule, RelativeSource={RelativeSource AncestorType=Grid}, Converter={StaticResource NullToVisibilityConverter}}" />
     </Grid>
 </UserControl>

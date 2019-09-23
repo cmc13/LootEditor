@@ -11,6 +11,7 @@
              mc:Ignorable="d" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:IsEqualConverter x:Key="IsEqualConverter" />
+        <cvt:AnyVisibleConverter x:Key="AnyVisibleConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -81,6 +82,14 @@
             </DockPanel>
             <CheckBox Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Unenchantable}}"
                       IsChecked="{Binding Value, Converter={StaticResource IsEqualConverter}, ConverterParameter={x:Static const:Constants.UNENCHANTABLE}}">Unenchantable?</CheckBox>
+            <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:DamageType}}" SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type modelEnums:DamageType}}">
+                <ComboBox.Visibility>
+                    <MultiBinding Converter="{StaticResource AnyVisibleConverter}">
+                        <Binding Path="Key" Converter="{StaticResource EqualityConverter}" ConverterParameter="{x:Static modelEnums:LongValueKey.DamageType}" />
+                        <Binding Path="Key" Converter="{StaticResource EqualityConverter}" ConverterParameter="{x:Static modelEnums:LongValueKey.WandElemDmgType}" />
+                    </MultiBinding>
+                </ComboBox.Visibility>
+            </ComboBox>
         </Grid>
     </Grid>
 </UserControl>

@@ -115,7 +115,7 @@ namespace LootEditor.Model.Enums
         [Description("Spell Count")] SpellCount = 218103838,
         [Description("Weapon Speed")] WeapSpeed = 218103839,
         [Description("Equip Skill")] EquipSkill = 218103840,
-        [Description("DamageType")] DamageType = 218103841,
+        [Description("Damage Type")] DamageType = 218103841,
         [Description("Max Damage")] MaxDamage = 218103842,
         [Description("Unknown10")] Unknown10 = 218103843,
         [Description("Unknown100000")] Unknown100000 = 218103844,

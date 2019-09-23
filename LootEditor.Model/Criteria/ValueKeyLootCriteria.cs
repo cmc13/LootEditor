@@ -114,6 +114,13 @@ namespace LootEditor.Model
                         var asValue = (Enums.ArmorSet)Enum.ToObject(typeof(Enums.ArmorSet), Convert.ToInt32(Value));
                         sb.Append(" (").Append(astd.ConvertToInvariantString(asValue)).Append(')');
                         break;
+
+                    case Enums.LongValueKey.DamageType:
+                    case Enums.LongValueKey.WandElemDmgType:
+                        var dttd = TypeDescriptor.GetConverter(typeof(Enums.DamageType));
+                        var dtValue = (Enums.DamageType)Enum.ToObject(typeof(Enums.DamageType), Convert.ToInt32(Value));
+                        sb.Append(" (").Append(dttd.ConvertToInvariantString(dtValue)).Append(')');
+                        break;
                 }
             }
 

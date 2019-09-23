@@ -55,6 +55,7 @@
     <Compile Include="Criteria\ValueLootCriteria.cs" />
     <Compile Include="EnumDescriptionConverter.cs" />
     <Compile Include="Enums\ArmorSet.cs" />
+    <Compile Include="Enums\DamageType.cs" />
     <Compile Include="Enums\EquippableSlot.cs" />
     <Compile Include="Enums\Coverage.cs" />
     <Compile Include="Enums\DoubleValueKey.cs" />

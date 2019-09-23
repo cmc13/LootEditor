@@ -92,6 +92,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CheckBoxForEnumsWithFlagAttribute.cs" />
+    <Compile Include="Converters\AnyVisibleConverter.cs" />
     <Compile Include="Converters\ArmorSlotLogicalAndConverter.cs" />
     <Compile Include="Converters\BoolToAsteriskConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
