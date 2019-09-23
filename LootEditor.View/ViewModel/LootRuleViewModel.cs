@@ -214,6 +214,8 @@ namespace LootEditor.View.ViewModel
 
                 if (newCriteria.Type == LootCriteriaType.DisabledRule)
                     RaisePropertyChanged(nameof(IsDisabled));
+
+                SelectedCriteria = vm;
             }
             else if (v.Type == LootCriteriaType.DisabledRule)
                 RaisePropertyChanged(nameof(IsDisabled));
