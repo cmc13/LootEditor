@@ -22,6 +22,7 @@
                 <Binding Path="CalculatedBuffedTinkedDamageOverTime"
                          UpdateSourceTrigger="PropertyChanged"
                          Mode="TwoWay"
+                         StringFormat="N"
                          NotifyOnValidationError="True">
                     <Binding.ValidationRules>
                         <ExceptionValidationRule />
@@ -36,6 +37,7 @@
                 <Binding Path="BuffedMeleeDefenseBonus"
                          UpdateSourceTrigger="PropertyChanged"
                          Mode="TwoWay"
+                         StringFormat="N"
                          NotifyOnValidationError="True">
                     <Binding.ValidationRules>
                         <ExceptionValidationRule />
@@ -50,6 +52,7 @@
                 <Binding Path="BuffedAttackBonus"
                          UpdateSourceTrigger="PropertyChanged"
                          Mode="TwoWay"
+                         StringFormat="N"
                          NotifyOnValidationError="True">
                     <Binding.ValidationRules>
                         <ExceptionValidationRule />

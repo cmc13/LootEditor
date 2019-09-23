@@ -32,6 +32,7 @@
                     <Binding Path="Value"
                              UpdateSourceTrigger="PropertyChanged"
                              Mode="TwoWay"
+                             StringFormat="N"
                              NotifyOnValidationError="True">
                         <Binding.ValidationRules>
                             <ExceptionValidationRule />

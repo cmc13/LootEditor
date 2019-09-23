@@ -166,8 +166,6 @@
 
         <GridSplitter Width="3" Grid.Column="0" />
 
-        <ScrollViewer Grid.Column="1" Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}" VerticalScrollBarVisibility="Auto">
-            <local:LootRuleEditor DataContext="{Binding SelectedRule}" />
-        </ScrollViewer>
+        <local:LootRuleEditor Grid.Column="1" DataContext="{Binding SelectedRule}" Visibility="{Binding SelectedRule, Converter={StaticResource NullToVisibilityConverter}}" />
     </Grid>
 </UserControl>
