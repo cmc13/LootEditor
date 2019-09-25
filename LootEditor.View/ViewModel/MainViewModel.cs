@@ -361,9 +361,7 @@ namespace LootEditor.View.ViewModel
                             .Append("This update will apply to the following ").Append(matchingRules.Length).Append(" rule").AppendLine(matchingRules.Length == 1 ? ":" : "s:");
 
                         foreach (var rule in matchingRules.Take(10))
-                        {
                             message.Append("    (").Append(rule.Action).Append(") ").AppendLine(rule.Name);
-                        }
 
                         if (matchingRules.Length > 10)
                             message.Append("    (").Append(matchingRules.Length - 10).AppendLine(" more...)");
@@ -373,7 +371,10 @@ namespace LootEditor.View.ViewModel
                         var mbResult = MessageBox.Show(message.ToString(), "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (mbResult == MessageBoxResult.Yes)
                         {
-
+                            foreach (var rule in matchingRules)
+                            {
+                                rule.AddCriteria(vm.LootCriteriaViewModel.Criteria);
+                            }
                         }
                     }
                     else

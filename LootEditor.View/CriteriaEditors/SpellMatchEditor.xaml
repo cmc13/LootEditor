@@ -46,6 +46,6 @@
         </TextBox>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Matching Spell Count:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:IntegerUpDown Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount}" Margin="5" Minimum="0" />
+        <xctk:IntegerUpDown Grid.Row="2" Grid.Column="1" Text="{Binding SpellCount, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5" Minimum="0" />
     </Grid>
 </UserControl>
