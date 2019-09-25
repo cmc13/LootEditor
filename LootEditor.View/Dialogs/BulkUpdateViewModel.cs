@@ -11,6 +11,7 @@ namespace LootEditor.View.Dialogs
         private LootCriteriaViewModel lootCriteriaViewModel = null;
         private string name = null;
         private LootAction? action;
+        private bool? applyToDisabled;
 
         public LootCriteriaViewModel LootCriteriaViewModel
         {
@@ -53,6 +54,19 @@ namespace LootEditor.View.Dialogs
                 {
                     action = value;
                     RaisePropertyChanged(nameof(Action));
+                }
+            }
+        }
+
+        public bool? ApplyToDisabled
+        {
+            get => applyToDisabled;
+            set
+            {
+                if (applyToDisabled != value)
+                {
+                    applyToDisabled = value;
+                    RaisePropertyChanged(nameof(ApplyToDisabled));
                 }
             }
         }

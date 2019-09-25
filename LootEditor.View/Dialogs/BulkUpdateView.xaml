@@ -13,6 +13,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:NullableToBoolConverter x:Key="NullableToBoolConverter" />
+        <cvt:NullableBoolToWhichRulesConverter x:Key="NullableBoolToWhichRulesConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -23,6 +24,7 @@
         <GroupBox Grid.Row="0" Header="Apply to Rules Matching:" Margin="5">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -53,6 +55,13 @@
                 <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{view:EnumBindingSource EnumType={x:Type modelEnums:LootAction}}"
                           IsEnabled="{Binding IsChecked, ElementName=cbxAction}"
                           SelectedItem="{Binding Action, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="5">
+                    <TextBlock VerticalAlignment="Center">Apply this update to</TextBlock>
+                    <ComboBox Margin="5,0" ItemsSource="{view:EnumBindingSource EnumType={x:Type local:WhichRules}}"
+                              SelectedItem="{Binding ApplyToDisabled, Converter={StaticResource NullableBoolToWhichRulesConverter}}" />
+                    <TextBlock VerticalAlignment="Center">rules</TextBlock>
+                </StackPanel>
             </Grid>
         </GroupBox>
 

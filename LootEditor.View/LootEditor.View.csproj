@@ -106,6 +106,7 @@
     <Compile Include="Converters\IsEqualConverter.cs" />
     <Compile Include="Converters\LongValueKeyToVisibilityConverter.cs" />
     <Compile Include="Converters\NameToFontWeightConverter.cs" />
+    <Compile Include="Converters\NullableBoolToWhichRulesConverter.cs" />
     <Compile Include="Converters\NullableToBoolConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ReverseBooleanToVisibilityConverter.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\SalvageCombineListViewModel.cs" />
     <Compile Include="ViewModel\SalvageCombineViewModel.cs" />
+    <Compile Include="Dialogs\WhichRules.cs" />
     <Page Include="CriteriaEditors\CalcedBuffedTinkedTargetMeleeGEEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

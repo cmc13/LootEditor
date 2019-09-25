@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -27,6 +29,7 @@ namespace LootEditor.View.ViewModel
         private bool isBusy = false;
         private string busyStatus;
         private readonly DispatcherTimer backupTimer;
+        private readonly Dialogs.DialogService dialogService = new Dialogs.DialogService();
 
         public string SaveFileName
         {
@@ -288,9 +291,8 @@ namespace LootEditor.View.ViewModel
 
             AddUpdateSalvageRulesCommand = new RelayCommand<Model.Enums.SalvageGroup>(group =>
             {
-                var dlg = new Dialogs.DialogService();
                 var wk = new Dialogs.SalvageGroupWorkmanshipViewModel(group);
-                var result = dlg.ShowDialog("Select Workmanship", wk);
+                var result = dialogService.ShowDialog("Select Workmanship", wk);
                 if (!result.HasValue || result.Value == false)
                 {
                     return;
@@ -345,8 +347,33 @@ namespace LootEditor.View.ViewModel
 
             BulkAddCommand = new RelayCommand(() =>
             {
-                var service = new Dialogs.DialogService();
-                service.ShowDialog("Bulk Add/Update", new Dialogs.BulkUpdateViewModel());
+                var vm = new Dialogs.BulkUpdateViewModel();
+                var result = dialogService.ShowDialog("Bulk Add/Update", vm);
+                if (result.HasValue && result.Value)
+                {
+                    var matchingRules = LootRuleListViewModel.LootRules.Where(r => (vm.Name == null || Regex.IsMatch(r.Name, vm.Name)) &&
+                        (!vm.Action.HasValue || vm.Action.Value == r.Action) &&
+                        (!vm.ApplyToDisabled.HasValue || vm.ApplyToDisabled.Value == r.IsDisabled)).ToArray();
+
+                    var message = new StringBuilder()
+                        .Append("This update will apply to the following ").Append(matchingRules.Length).Append(" rule").AppendLine(matchingRules.Length == 1 ? ":" : "s:");
+
+                    foreach (var rule in matchingRules.Take(10))
+                    {
+                        message.Append("    (").Append(rule.Action).Append(") ").AppendLine(rule.Name);
+                    }
+
+                    if (matchingRules.Length > 10)
+                        message.Append("    (").Append(matchingRules.Length - 10).AppendLine(" more...)");
+
+                    message.Append("Do you wish to continue?");
+
+                    var mbResult = MessageBox.Show(message.ToString(), "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (mbResult == MessageBoxResult.Yes)
+                    {
+
+                    }
+                }
             });
         }
 
