@@ -355,23 +355,30 @@ namespace LootEditor.View.ViewModel
                         (!vm.Action.HasValue || vm.Action.Value == r.Action) &&
                         (!vm.ApplyToDisabled.HasValue || vm.ApplyToDisabled.Value == r.IsDisabled)).ToArray();
 
-                    var message = new StringBuilder()
-                        .Append("This update will apply to the following ").Append(matchingRules.Length).Append(" rule").AppendLine(matchingRules.Length == 1 ? ":" : "s:");
-
-                    foreach (var rule in matchingRules.Take(10))
+                    if (matchingRules.Length > 0)
                     {
-                        message.Append("    (").Append(rule.Action).Append(") ").AppendLine(rule.Name);
+                        var message = new StringBuilder()
+                            .Append("This update will apply to the following ").Append(matchingRules.Length).Append(" rule").AppendLine(matchingRules.Length == 1 ? ":" : "s:");
+
+                        foreach (var rule in matchingRules.Take(10))
+                        {
+                            message.Append("    (").Append(rule.Action).Append(") ").AppendLine(rule.Name);
+                        }
+
+                        if (matchingRules.Length > 10)
+                            message.Append("    (").Append(matchingRules.Length - 10).AppendLine(" more...)");
+
+                        message.Append("Do you wish to continue?");
+
+                        var mbResult = MessageBox.Show(message.ToString(), "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (mbResult == MessageBoxResult.Yes)
+                        {
+
+                        }
                     }
-
-                    if (matchingRules.Length > 10)
-                        message.Append("    (").Append(matchingRules.Length - 10).AppendLine(" more...)");
-
-                    message.Append("Do you wish to continue?");
-
-                    var mbResult = MessageBox.Show(message.ToString(), "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (mbResult == MessageBoxResult.Yes)
+                    else
                     {
-
+                        MessageBox.Show("No matching rules found.", "No Match", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             });
