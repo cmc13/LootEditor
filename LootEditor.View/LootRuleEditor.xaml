@@ -57,9 +57,9 @@
                     </i:Interaction.Behaviors>
                     <ListBox.InputBindings>
                         <KeyBinding Key="Delete" Command="{Binding DeleteCriteriaCommand}" />
-                        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding CutItemCommand}" />
-                        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyItemCommand}" />
-                        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding PasteItemCommand}" />
+                        <KeyBinding Key="X" Modifiers="Ctrl+Shift" Command="{Binding CutItemCommand}" />
+                        <KeyBinding Key="C" Modifiers="Ctrl+Shift" Command="{Binding CopyItemCommand}" />
+                        <KeyBinding Key="V" Modifiers="Ctrl+Shift" Command="{Binding PasteItemCommand}" />
                     </ListBox.InputBindings>
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:LootCriteriaViewModel}">
@@ -79,17 +79,17 @@
                     </ListBox.ItemTemplate>
                     <ListBox.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
+                            <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+Shift+X" Command="{Binding CutItemCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="Assets/Cut_16x.png" />
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
+                            <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+Shift+C" Command="{Binding CopyItemCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="Assets/Copy_16x.png" />
                                 </MenuItem.Icon>
                             </MenuItem>
-                            <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
+                            <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+Shift+V" Command="{Binding PasteItemCommand}">
                                 <MenuItem.Icon>
                                     <Image Source="Assets/Paste_16x.png" />
                                 </MenuItem.Icon>

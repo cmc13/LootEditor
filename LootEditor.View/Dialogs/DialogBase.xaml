@@ -4,12 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LootEditor.View.Dialogs"
-        mc:Ignorable="d" WindowStyle="ToolWindow"
+        mc:Ignorable="d" WindowStyle="ToolWindow" ShowInTaskbar="False"
         SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
         Title="{Binding Title}" d:DesignHeight="450" d:DesignWidth="800">
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:SalvageGroupWorkmanshipViewModel}">
             <local:SalvageGroupWorkmanshipView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:BulkUpdateViewModel}">
+            <local:BulkUpdateView />
         </DataTemplate>
     </Window.Resources>
     <Grid>

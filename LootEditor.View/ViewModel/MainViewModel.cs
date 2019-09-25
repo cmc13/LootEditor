@@ -343,7 +343,11 @@ namespace LootEditor.View.ViewModel
                 }
             });
 
-            BulkAddCommand = new RelayCommand(() => { });
+            BulkAddCommand = new RelayCommand(() =>
+            {
+                var service = new Dialogs.DialogService();
+                service.ShowDialog("Bulk Add/Update", new Dialogs.BulkUpdateViewModel());
+            });
         }
 
         public async Task OpenFileAsync(string fileName, string saveFileName = null, bool ignoreFirstLine = false)
