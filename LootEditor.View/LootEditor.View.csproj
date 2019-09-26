@@ -157,6 +157,11 @@
       <DependentUpon>SalvageGroupWorkmanshipView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SalvageGroupWorkmanshipViewModel.cs" />
+    <Compile Include="Dialogs\EnumDialog.xaml.cs">
+      <DependentUpon>EnumDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SkipOverwriteAddDialogResult.cs" />
+    <Compile Include="Dialogs\EnumDialogViewModel.cs" />
     <Compile Include="EnumBindingSourceExtension.cs" />
     <Compile Include="LootCriteriaDataTemplateSelector.cs" />
     <Compile Include="LootCriteriaEditor.xaml.cs">
@@ -242,6 +247,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\SalvageGroupWorkmanshipView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\EnumDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -344,6 +353,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Filter_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Import_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

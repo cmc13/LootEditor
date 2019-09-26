@@ -1,8 +1,6 @@
-﻿using LootEditor.Model;
-using System;
+﻿using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Reflection;
 using System.Windows.Markup;
 
 namespace LootEditor.View

@@ -63,6 +63,12 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
+                    <MenuItem Header="Import" Command="{Binding ImportCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Import_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
                     <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}" IsEnabled="{Binding RecentFiles.Count, Converter={StaticResource GreaterThanZeroConverter}}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">

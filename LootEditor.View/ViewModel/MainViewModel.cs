@@ -137,6 +137,7 @@ namespace LootEditor.View.ViewModel
         public RelayCommand<string> OpenRecentFileCommand { get; }
         public RelayCommand<Model.Enums.SalvageGroup> AddUpdateSalvageRulesCommand { get; }
         public RelayCommand BulkAddCommand { get; }
+        public RelayCommand ImportCommand { get; }
 
         public MainViewModel()
         {
@@ -380,6 +381,53 @@ namespace LootEditor.View.ViewModel
                     else
                     {
                         MessageBox.Show("No matching rules found.", "No Match", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+            });
+
+            ImportCommand = new RelayCommand(async () =>
+            {
+                var ofd = new OpenFileDialog()
+                {
+                    Multiselect = false,
+                    Filter = "Loot Files|*.utl",
+                    CheckFileExists = true,
+                    CheckPathExists = true
+                };
+
+                var result = ofd.ShowDialog();
+                if (result.HasValue && result.Value)
+                {
+                    using (var fs = File.OpenRead(ofd.FileName))
+                    using (var reader = new StreamReader(fs))
+                    {
+                        var lf = new LootFile();
+                        await lf.ReadFileAsync(reader).ConfigureAwait(false);
+
+                        var mbResult = MessageBox.Show($"Importing {lf.RuleCount} rules from {ofd.FileName}. Do you wish to continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (mbResult == MessageBoxResult.Yes)
+                        {
+                            foreach (var rule in lf.Rules)
+                            {
+                                if (LootRuleListViewModel.LootRules.Any(r => r.Name.Equals(rule.Name)))
+                                {
+                                    var eResult = dialogService.ShowEnumDialog<Dialogs.SkipOverwriteAddDialogResult>($"Both files contain a rule named {rule.Name}. What would you like to do?", "Rule Exists", out var doForAll);
+                                    switch (eResult)
+                                    {
+                                        case null:
+                                            return;
+
+                                        case Dialogs.SkipOverwriteAddDialogResult.Skip:
+                                            continue;
+
+                                        case Dialogs.SkipOverwriteAddDialogResult.Overwrite:
+                                            continue;
+                                    }
+                                }
+
+                                LootRuleListViewModel.AddRule(rule);
+                            }
+                        }
                     }
                 }
             });
