@@ -407,11 +407,21 @@ namespace LootEditor.View.ViewModel
                         var mbResult = MessageBox.Show($"Importing {lf.RuleCount} rules from {ofd.FileName}. Do you wish to continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (mbResult == MessageBoxResult.Yes)
                         {
+                            Dialogs.SkipOverwriteAddDialogResult? doForAllResult = null;
                             foreach (var rule in lf.Rules)
                             {
                                 if (LootRuleListViewModel.LootRules.Any(r => r.Name.Equals(rule.Name)))
                                 {
-                                    var eResult = dialogService.ShowEnumDialog<Dialogs.SkipOverwriteAddDialogResult>($"Both files contain a rule named {rule.Name}. What would you like to do?", "Rule Exists", out var doForAll);
+                                    Dialogs.SkipOverwriteAddDialogResult? eResult;
+                                    if (!doForAllResult.HasValue)
+                                    {
+                                        eResult = dialogService.ShowEnumDialog<Dialogs.SkipOverwriteAddDialogResult>($"Both files contain a rule named {rule.Name}. What would you like to do?", "Rule Exists", out var doForAll);
+                                        if (doForAll && eResult.HasValue)
+                                            doForAllResult = eResult;
+                                    }
+                                    else
+                                        eResult = doForAllResult;
+
                                     switch (eResult)
                                     {
                                         case null:
