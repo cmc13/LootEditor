@@ -105,24 +105,26 @@
                 </ListBox>
 
                 <UniformGrid Grid.Row="1" Columns="3">
-                    <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="0">
-                        <StackPanel Orientation="Horizontal">
+                    <xctk:IconButton Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Add">
+                        <xctk:IconButton.Icon>
                             <Image Source="Assets/Add_16x.png" />
-                            <TextBlock>Add</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" BorderThickness="0">
-                        <StackPanel Orientation="Horizontal">
+                        </xctk:IconButton.Icon>
+                        <xctk:IconButton.Content>
+                            <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
+                        </xctk:IconButton.Content>
+                    </xctk:IconButton>
+                    <xctk:IconButton Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Clone">
+                        <xctk:IconButton.Icon>
                             <Image Source="Assets/Clone_16x.png" />
-                            <TextBlock>Clone</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Command="{Binding DeleteCriteriaCommand}" Padding="5" BorderThickness="0">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="Assets/Remove_16x.png" />
-                            <TextBlock>Delete</TextBlock>
-                        </StackPanel>
-                    </Button>
+                        </xctk:IconButton.Icon>
+                        <TextBlock TextTrimming="CharacterEllipsis">Clone</TextBlock>
+                    </xctk:IconButton>
+                    <xctk:IconButton Command="{Binding DeleteCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Delete">
+                        <xctk:IconButton.Icon>
+                            <Image Source="Assets/Clone_16x.png" />
+                        </xctk:IconButton.Icon>
+                        <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
+                    </xctk:IconButton>
                 </UniformGrid>
             </Grid>
         </Border>

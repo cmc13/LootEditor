@@ -57,7 +57,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="300" />
+            <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
@@ -84,9 +84,9 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <ListBox Grid.Row="0" ItemsSource="{Binding Source={StaticResource LootRules}}" BorderThickness="0"
-                     ItemTemplate="{StaticResource LootRuleItemTemplate}"
-                     SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
-                     dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
+                         ItemTemplate="{StaticResource LootRuleItemTemplate}"
+                         SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
+                         dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
                         <i:Interaction.Behaviors>
                             <local:ScrollIntoViewBehavior />
                         </i:Interaction.Behaviors>
@@ -144,20 +144,29 @@
                     </ListBox>
 
                     <UniformGrid Grid.Row="1" Columns="3">
-                        <xctk:IconButton Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" Content="Add" BorderThickness="0">
+                        <xctk:IconButton Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Add">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Add_16x.png" />
                             </xctk:IconButton.Icon>
+                            <xctk:IconButton.Content>
+                                <TextBlock Text="Add" TextTrimming="CharacterEllipsis" />
+                            </xctk:IconButton.Content>
                         </xctk:IconButton>
-                        <xctk:IconButton Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" Content="Clone" BorderThickness="0">
+                        <xctk:IconButton Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Clone">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Clone_16x.png" />
                             </xctk:IconButton.Icon>
+                            <xctk:IconButton.Content>
+                                <TextBlock Text="Clone" TextTrimming="CharacterEllipsis" />
+                            </xctk:IconButton.Content>
                         </xctk:IconButton>
-                        <xctk:IconButton Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" Content="Delete" BorderThickness="0">
+                        <xctk:IconButton Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Delete">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Remove_16x.png" />
                             </xctk:IconButton.Icon>
+                            <xctk:IconButton.Content>
+                                <TextBlock Text="Delete" TextTrimming="CharacterEllipsis" />
+                            </xctk:IconButton.Content>
                         </xctk:IconButton>
                     </UniformGrid>
                 </Grid>
