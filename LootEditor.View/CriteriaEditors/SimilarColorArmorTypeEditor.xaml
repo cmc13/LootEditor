@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor.View.CriteriaEditors"
+             xmlns:view="clr-namespace:LootEditor.View"
              mc:Ignorable="d" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -18,6 +19,8 @@
         <local:ColorLootCriteriaEditor Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Armor Group:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ArmorGroup}" Margin="5" />
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{view:ArmorGroupBindingSource}" DisplayMemberPath="Item1" SelectedValuePath="Item2"
+                  SelectedValue="{Binding ArmorGroup}"/>
+        <!--<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ArmorGroup}" Margin="5" />-->
     </Grid>
 </UserControl>
