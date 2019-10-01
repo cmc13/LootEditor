@@ -12,7 +12,7 @@
         <cvt:EnumFlagsToBoolConverter x:Key="EnumFlagsToBoolConverter" />
         <cvt:LongValueKeyToVisibilityConverter x:Key="LongValueKeyToVisibilityConverter" />
         <cvt:EqualityToVisibilityConverter x:Key="EqualityConverter" />
-        <cvt:EnumToIntConverter x:Key="EnumToIntConverter" />
+        <cvt:IntToEnumConverter x:Key="IntToEnumConverter" />
         <cvt:ArmorSlotLogicalAndConverter x:Key="ArmorSlotLogicalAndConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <cvt:ReverseBooleanToVisibilityConverter x:Key="ReverseBooleanToVisibilityConverter" />

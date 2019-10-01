@@ -28,6 +28,7 @@
         <cvt:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
         <cvt:IndexingConverter x:Key="IndexingConverter" />
         <cvt:SalvageGroupToMaterialListConverter x:Key="SalvageGroupToMaterialListConverter" />
+        <cvt:AllNotNullConverter x:Key="AllNotNullConverter" />
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewFileCommand}" />
@@ -63,7 +64,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
-                    <MenuItem Header="Import" Command="{Binding ImportCommand}">
+                    <MenuItem Header="Import Rules" ToolTip="Import rules from another .utl file" Command="{Binding ImportCommand}">
                         <MenuItem.Icon>
                             <Image Source="Assets/Import_16x.png" />
                         </MenuItem.Icon>
@@ -94,23 +95,8 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Edit">
-                    <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding LootRuleListViewModel.CutItemCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="Assets/Cut_16x.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding LootRuleListViewModel.CopyItemCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="Assets/Copy_16x.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding LootRuleListViewModel.PasteItemCommand}">
-                        <MenuItem.Icon>
-                            <Image Source="Assets/Paste_16x.png" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </MenuItem>
+                <!--<MenuItem Header="Edit">
+                </MenuItem>-->
                 <MenuItem Header="View" ItemsSource="{Binding ElementName=tabMain, Path=Items}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
@@ -131,6 +117,72 @@
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem Header="Bulk Add/Update Criteria" Command="{Binding BulkAddCommand}" />
+                </MenuItem>
+                <MenuItem Header="Rule">
+                    <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding LootRuleListViewModel.CutItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Cut_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding LootRuleListViewModel.CopyItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Copy_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding LootRuleListViewModel.PasteItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Paste_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Add Rule" Command="{Binding LootRuleListViewModel.AddRuleCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Add_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Clone Rule" Command="{Binding LootRuleListViewModel.CloneRuleCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Clone_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Delete Rule" InputGestureText="Del" Command="{Binding LootRuleListViewModel.DeleteRuleCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Remove_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Criteria">
+                    <MenuItem.IsEnabled>
+                        <MultiBinding Converter="{StaticResource AllNotNullConverter}">
+                            <Binding Path="LootRuleListViewModel.SelectedRule" />
+                        </MultiBinding>
+                    </MenuItem.IsEnabled>
+                    <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+Shift+X" Command="{Binding LootRuleListViewModel.SelectedRule.CutItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Cut_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+Shift+C" Command="{Binding LootRuleListViewModel.SelectedRule.CopyItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Copy_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+Shift+V" Command="{Binding LootRuleListViewModel.SelectedRule.PasteItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Paste_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Add Criteria" Command="{Binding LootRuleListViewModel.SelectedRule.AddCriteriaCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Add_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Delete Criteria" Command="{Binding LootRuleListViewModel.SelectedRule.DeleteCriteriaCommand}" InputGestureText="Del">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/DeleteListItem_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
 

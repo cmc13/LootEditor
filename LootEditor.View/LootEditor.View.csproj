@@ -92,12 +92,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CheckBoxForEnumsWithFlagAttribute.cs" />
+    <Compile Include="Converters\AllNotNullConverter.cs" />
     <Compile Include="Converters\AnyVisibleConverter.cs" />
     <Compile Include="Converters\ArmorSlotLogicalAndConverter.cs" />
     <Compile Include="Converters\BoolToAsteriskConverter.cs" />
     <Compile Include="Converters\EnumDescriptionConverter.cs" />
     <Compile Include="Converters\EnumFlagsToBoolConverter.cs" />
     <Compile Include="Converters\EnumToIntConverter.cs" />
+    <Compile Include="Converters\IntToEnumConverter.cs" />
     <Compile Include="Converters\EqualityToVisibilityConverter.cs" />
     <Compile Include="Converters\GreaterThanZeroConverter.cs" />
     <Compile Include="Converters\HasNonDisabledTypeCriteriaConverter.cs" />
@@ -356,6 +358,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Import_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\ColorSlots.Default.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

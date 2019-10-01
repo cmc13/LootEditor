@@ -59,7 +59,8 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <ListView Grid.Row="0" ItemsSource="{Binding CombineRules}" SelectedItem="{Binding SelectedItem}" BorderThickness="0">
+                    <ListView Grid.Row="0" ItemsSource="{Binding CombineRules}" SelectedItem="{Binding SelectedItem}"
+                              BorderThickness="0" SelectionMode="Single">
                         <ListView.View>
                             <GridView>
                                 <GridView.ColumnHeaderContainerStyle>

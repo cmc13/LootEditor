@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Model;
 using LootEditor.Model.Enums;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -187,6 +188,16 @@ namespace LootEditor.View.ViewModel
                 Name = "New Rule",
                 Action = LootAction.Keep
             };
+
+            AddRule(rule);
+        }
+
+        public void ReplaceRule(LootRule rule)
+        {
+            var matchingRule = LootRules.FirstOrDefault(r => r.Name.Equals(rule.Name));
+            matchingRule.PropertyChanged -= Vm_PropertyChanged;
+            LootRules.Remove(matchingRule);
+            lootFile.RemoveRule(matchingRule.Rule);
 
             AddRule(rule);
         }

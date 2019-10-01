@@ -431,6 +431,7 @@ namespace LootEditor.View.ViewModel
                                             continue;
 
                                         case Dialogs.SkipOverwriteAddDialogResult.Overwrite:
+                                            LootRuleListViewModel.ReplaceRule(rule);
                                             continue;
                                     }
                                 }
