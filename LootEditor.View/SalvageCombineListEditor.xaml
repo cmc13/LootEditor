@@ -48,7 +48,7 @@
         
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="300" />
+                <ColumnDefinition Width="300" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -77,15 +77,17 @@
                     </ListView>
 
                     <UniformGrid Grid.Row="1" Columns="2">
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" Content="Add" Command="{Binding AddSalvageCommand}">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Add_16x.png" />
                             </xctk:IconButton.Icon>
+                            <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                         </xctk:IconButton>
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" Content="Delete" Command="{Binding DeleteSalvageCommand}">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Remove_16x.png" />
                             </xctk:IconButton.Icon>
+                            <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
                         </xctk:IconButton>
                     </UniformGrid>
                 </Grid>
