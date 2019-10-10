@@ -54,7 +54,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-                <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:WeaponMasteryCategory}}"
+            <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:WeaponMasteryCategory}}"
                           SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToEnumConverter}, ConverterParameter={x:Type modelEnums:WeaponMasteryCategory}}"
                           Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.WeaponMasteryCategory}}" />
             <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}"
@@ -88,7 +88,7 @@
             </ListBox>
             <DockPanel Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Workmanship}}">
                 <xctk:IntegerUpDown DockPanel.Dock="Left" Value="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,5,0" Minimum="1" Maximum="10" Increment="1" Width="75" />
-                <Slider Value="{Binding Value, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Minimum="1" Maximum="10" TickFrequency="1" TickPlacement="BottomRight" />
+                <Slider Value="{Binding Value}" Minimum="1" Maximum="10" SmallChange="1" LargeChange="1" TickFrequency="1" IsSnapToTickEnabled="True" />
             </DockPanel>
             <CheckBox Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.Unenchantable}}"
                       IsChecked="{Binding Value, Converter={StaticResource IsEqualConverter}, ConverterParameter={x:Static const:Constants.UNENCHANTABLE}}">Unenchantable?</CheckBox>

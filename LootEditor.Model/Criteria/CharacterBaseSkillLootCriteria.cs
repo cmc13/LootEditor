@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -23,7 +24,11 @@ namespace LootEditor.Model
             MaxSkillValue = info.GetInt32(nameof(MaxSkillValue));
         }
 
-        public override string ToString() => $"{MinSkillValue} <= {SkillType} <= {MaxSkillValue}";
+        public override string ToString()
+        {
+            var td = TypeDescriptor.GetConverter(typeof(Enums.SkillType));
+            return $"{MinSkillValue} <= {td.ConvertToInvariantString(SkillType)} <= {MaxSkillValue}";
+        }
 
         public override async Task ReadAsync(TextReader reader, int version)
         {

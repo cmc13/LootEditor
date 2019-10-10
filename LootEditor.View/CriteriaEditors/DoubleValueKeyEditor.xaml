@@ -42,7 +42,7 @@
             </TextBox>
             <DockPanel Grid.Row="1" Grid.Column="1" Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.SalvageWorkmanship}}">
                 <xctk:DoubleUpDown FormatString="N2" Value="{Binding Value}" Minimum="1" Maximum="10" Increment="0.01" Margin="0,0,5,0" Width="75" />
-                <Slider Value="{Binding Value}" SmallChange="0.01" LargeChange="1" TickFrequency="0.01" IsSnapToTickEnabled="True" />
+                <Slider Value="{Binding Value}" Minimum="1" Maximum="10" SmallChange="0.01" LargeChange="1" TickFrequency="0.01" IsSnapToTickEnabled="True" />
             </DockPanel>
         </Grid>
     </Grid>

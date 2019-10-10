@@ -207,7 +207,7 @@ namespace LootEditor.View.ViewModel
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
-                        SaveAsCommand.Execute(null);
+                        SaveFileCommand.Execute(null);
                     }
                     else if (mbResult == MessageBoxResult.Cancel)
                         return;
@@ -266,7 +266,7 @@ namespace LootEditor.View.ViewModel
                         e.Cancel = true;
                     else if (mbResult == MessageBoxResult.Yes)
                     {
-                        SaveAsCommand.Execute(null);
+                        SaveFileCommand.Execute(null);
                     }
                     else
                     {
@@ -280,6 +280,17 @@ namespace LootEditor.View.ViewModel
 
             OpenRecentFileCommand = new RelayCommand<string>(async fileName =>
             {
+                if (IsDirty)
+                {
+                    var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    if (mbResult == MessageBoxResult.Yes)
+                    {
+                        SaveAsCommand.Execute(null);
+                    }
+                    else if (mbResult == MessageBoxResult.Cancel)
+                        return;
+                }
+
                 if (File.Exists(fileName))
                     await OpenFileAsync(fileName).ConfigureAwait(false);
                 else
