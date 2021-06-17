@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="LootEditor.SalvageCombineListEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LootEditor"
+             xmlns:cvt="clr-namespace:LootEditor.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:vr="clr-namespace:LootEditor.ValidationRules"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <CollectionViewSource Source="{Binding CombineRules}" x:Key="CombineRules">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Key" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0">Default Combine Range:</TextBlock>
+            <TextBox Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}">
+                <TextBox.Text>
+                    <Binding Path="DefaultCombineRange"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <vr:RegexValidationRule Regex="^\s*\d+(\.\d+)?\s*(-\s*\d+(\.\d+)?)?(\s*[,;]\s*\d+(\.\d+)?\s*(-\s*\d+(\.\d+)?)?)*$" ValidatesOnTargetUpdated="True" />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray" Margin="5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <ListView Grid.Row="0" ItemsSource="{Binding CombineRules}" SelectedItem="{Binding SelectedItem}"
+                              BorderThickness="0" SelectionMode="Single">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader">
+                                        <Setter Property="IsHitTestVisible" Value="False" />
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+
+                                <GridViewColumn DisplayMemberBinding="{Binding Key}" Header="Material" Width="Auto"  />
+                                <GridViewColumn DisplayMemberBinding="{Binding Value.CombineRange}" Header="Combine Range" Width="{x:Static sys:Double.NaN}" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Value.CombineValue}" Header="Combine Up To" Width="Auto" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <UniformGrid Grid.Row="1" Columns="2">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}">
+                            <xctk:IconButton.Icon>
+                                <Image Source="Assets/Add_16x.png" />
+                            </xctk:IconButton.Icon>
+                            <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
+                        </xctk:IconButton>
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}">
+                            <xctk:IconButton.Icon>
+                                <Image Source="Assets/Remove_16x.png" />
+                            </xctk:IconButton.Icon>
+                            <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
+                        </xctk:IconButton>
+                    </UniformGrid>
+                </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="0" Width="3" />
+
+            <Grid Grid.Column="1" Visibility="{Binding SelectedItem, Converter={StaticResource NullToVisibilityConverter}}">
+                <local:SalvageCombineEditor Grid.Column="2" DataContext="{Binding SalvageCombineViewModel}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

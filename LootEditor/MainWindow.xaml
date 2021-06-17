@@ -1,0 +1,201 @@
+﻿<Window x:Class="LootEditor.MainWindow"
+        x:Name="LootEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:cvt="clr-namespace:LootEditor.Converters"
+        xmlns:local="clr-namespace:LootEditor"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:modelEnums="clr-namespace:LootEditor.Models.Enums"
+        DataContext="{StaticResource MainViewModel}"
+        mc:Ignorable="d"
+        Height="450" Width="800">
+    <Window.Title>
+        <MultiBinding StringFormat="Loot Editor - {0}{1}">
+            <Binding Path="SaveFileName" />
+            <Binding Path="IsDirty" Converter="{StaticResource BoolToAsteriskConverter}" />
+        </MultiBinding>
+    </Window.Title>
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Closing">
+            <b:InvokeCommandAction Command="{Binding ClosingCommand}" PassEventArgsToCommand="True" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    <Window.Resources>
+        <cvt:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+        <cvt:IndexingConverter x:Key="IndexingConverter" />
+        <cvt:SalvageGroupToMaterialListConverter x:Key="SalvageGroupToMaterialListConverter" />
+        <cvt:AllNotNullConverter x:Key="AllNotNullConverter" />
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewFileCommand}" />
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding OpenFileCommand}" />
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveFileCommand}" />
+        <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="{Binding SaveAsCommand}" />
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="{Binding LootRuleListViewModel.CutItemCommand}" />
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding LootRuleListViewModel.CopyItemCommand}" />
+        <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding LootRuleListViewModel.PasteItemCommand}"/>
+    </Window.InputBindings>
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyStatus}">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top" Grid.ColumnSpan="3">
+                <MenuItem Header="File">
+                    <MenuItem Header="New File" Command="{Binding NewFileCommand}" InputGestureText="Ctrl+N">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/NewFile_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Open File" Command="{Binding OpenFileCommand}" InputGestureText="Ctrl+O">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/OpenFile_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save File" Command="{Binding SaveFileCommand}" InputGestureText="Ctrl+S">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Save_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Save As" Command="{Binding SaveAsCommand}" InputGestureText="Ctrl+Shift+S">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/SaveAs_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Import Rules" ToolTip="Import rules from another .utl file" Command="{Binding ImportCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Import_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}" IsEnabled="{Binding RecentFiles.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/History_16x.png" />
+                        </MenuItem.Icon>
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="HeaderTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Key}" />
+                                                <TextBlock Text="{Binding Value}" Margin="3,0,0,0" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=Menu}, Path=DataContext.OpenRecentFileCommand}" />
+                                <Setter Property="CommandParameter" Value="{Binding Value}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Exit" Command="{Binding ExitCommand}" CommandParameter="{Binding ElementName=LootEditorWindow}" InputGestureText="Alt+F4">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Close_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <!--<MenuItem Header="Edit">
+                </MenuItem>-->
+                <MenuItem Header="View" ItemsSource="{Binding ElementName=tabMain, Path=Items}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Header}" />
+                            <Setter Property="IsCheckable" Value="True" />
+                            <Setter Property="IsChecked" Value="{Binding IsSelected}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="Bulk Updates">
+                    <MenuItem Header="Add/Update Salvage Rules" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SalvageGroup}}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=Menu}, Path=DataContext.AddUpdateSalvageRulesCommand}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                                <Setter Property="ToolTip" Value="{Binding Converter={StaticResource SalvageGroupToMaterialListConverter}}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    <MenuItem Header="Bulk Add/Update Criteria" Command="{Binding BulkAddCommand}" />
+                </MenuItem>
+                <MenuItem Header="Rule">
+                    <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding LootRuleListViewModel.CutItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Cut_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding LootRuleListViewModel.CopyItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Copy_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding LootRuleListViewModel.PasteItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Paste_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="Add Rule" Command="{Binding LootRuleListViewModel.AddRuleCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Create_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Clone Rule" Command="{Binding LootRuleListViewModel.CloneRuleCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Clone_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Delete Rule" InputGestureText="Del" Command="{Binding LootRuleListViewModel.DeleteRuleCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Trash_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Criteria">
+                    <MenuItem.IsEnabled>
+                        <MultiBinding Converter="{StaticResource AllNotNullConverter}">
+                            <Binding Path="LootRuleListViewModel.SelectedRule" />
+                        </MultiBinding>
+                    </MenuItem.IsEnabled>
+                    <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+Shift+X" Command="{Binding LootRuleListViewModel.SelectedRule.CutItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Cut_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+Shift+C" Command="{Binding LootRuleListViewModel.SelectedRule.CopyItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Copy_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+Shift+V" Command="{Binding LootRuleListViewModel.SelectedRule.PasteItemCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Paste_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Header="Add Criteria" Command="{Binding LootRuleListViewModel.SelectedRule.AddCriteriaCommand}">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/Create_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Delete Criteria" Command="{Binding LootRuleListViewModel.SelectedRule.DeleteCriteriaCommand}" InputGestureText="Del">
+                        <MenuItem.Icon>
+                            <Image Source="Assets/DeleteListItem_16x.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <TabControl TabStripPlacement="Bottom" Margin="2" x:Name="tabMain">
+                <TabItem Header="Rules">
+                    <local:LootRuleListEditor DataContext="{Binding LootRuleListViewModel}" />
+                </TabItem>
+                <TabItem Header="Salvage Combine">
+                    <local:SalvageCombineListEditor DataContext="{Binding SalvageCombineListViewModel}" />
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </xctk:BusyIndicator>
+</Window>

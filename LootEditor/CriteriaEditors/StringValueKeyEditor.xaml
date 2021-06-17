@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="LootEditor.CriteriaEditors.StringValueKeyEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LootEditor"
+             xmlns:vr="clr-namespace:LootEditor.ValidationRules"
+             xmlns:modelEnums="clr-namespace:LootEditor.Models.Enums"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Key:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" Margin="5" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
+        <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
+            <xctk:WatermarkTextBox.Watermark>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="../Assets/RegularExpression_16x.png" />
+                    <TextBlock>Regex</TextBlock>
+                </StackPanel>
+            </xctk:WatermarkTextBox.Watermark>
+            <xctk:WatermarkTextBox.Text>
+                <Binding Path="Value"
+                                 Mode="TwoWay"
+                                 UpdateSourceTrigger="PropertyChanged"
+                                 NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <vr:IsValidRegexValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </xctk:WatermarkTextBox.Text>
+        </xctk:WatermarkTextBox>
+    </Grid>
+</UserControl>
