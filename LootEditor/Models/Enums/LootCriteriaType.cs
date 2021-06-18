@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace LootEditor.Models.Enums
 {
     [TypeConverter(typeof(EnumDescriptionConverter))]
     public enum LootCriteriaType
     {
-        UnsupportedRequirement = -1,
+        [Obsolete] UnsupportedRequirement = -1,
 
         [Description("Spell Name Match")] SpellNameMatch = 0,
         [Description("String Value Match")] StringValueMatch = 1,

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Markup;
 
 namespace LootEditor
@@ -49,8 +51,14 @@ namespace LootEditor
             if (null == this._enumType)
                 throw new InvalidOperationException("The EnumType must be specified.");
 
-            Type actualEnumType = Nullable.GetUnderlyingType(this._enumType) ?? this._enumType;
-            Array enumValues = Enum.GetValues(actualEnumType);
+            var actualEnumType = Nullable.GetUnderlyingType(this._enumType) ?? this._enumType;
+            var enumValues = Enum.GetValues(actualEnumType)
+                .OfType<object>()
+                .Where(o =>
+                {
+                    var memInfo = actualEnumType.GetMember(o.ToString()).FirstOrDefault();
+                    return !memInfo.GetCustomAttributes(typeof(ObsoleteAttribute), false).Any();
+                }).ToArray();
 
             if (actualEnumType == this._enumType)
             {

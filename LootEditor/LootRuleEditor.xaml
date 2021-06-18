@@ -51,7 +51,7 @@
 
                     <ListBox Grid.Row="0" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}" MinHeight="100" HorizontalContentAlignment="Stretch"
                          dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" BorderThickness="0" FontSize="14"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
                         <b:Interaction.Behaviors>
                             <local:ScrollIntoViewBehavior />
                         </b:Interaction.Behaviors>

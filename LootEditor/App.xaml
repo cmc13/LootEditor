@@ -16,6 +16,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <cvt:ReverseBooleanToVisibilityConverter x:Key="ReverseBooleanToVisibilityConverter" />
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <cvt:EnumToBitmapSourceConverter x:Key="EnumToBitmapSourceConverter" />
         <Style x:Key="TextBoxErrorStyle" TargetType="TextBox">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">

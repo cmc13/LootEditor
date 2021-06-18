@@ -6,8 +6,6 @@
              xmlns:local="clr-namespace:LootEditor"
              xmlns:cvt="clr-namespace:LootEditor.Converters"
              xmlns:modelEnums="clr-namespace:LootEditor.Models.Enums"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:vr="clr-namespace:LootEditor.ValidationRules"
              xmlns:criteria="clr-namespace:LootEditor.CriteriaEditors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -35,7 +33,16 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Object Class:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ObjectClass}}" SelectedItem="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:ObjectClass}}" SelectedItem="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="5">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Converter={StaticResource EnumToBitmapSourceConverter}}" Height="14" />
+                                <TextBlock Text="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ValueTemplate">

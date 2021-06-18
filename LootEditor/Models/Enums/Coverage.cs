@@ -20,6 +20,7 @@ namespace LootEditor.Models.Enums
         [Description("Upper Arms")] UpperArms = 4096,
         [Description("Lower Arms")] LowerArms = 8192,
         [Description("Upper Legs")] UpperLegs = 256,
-        [Description("Lower Legs")] LowerLegs = 512
+        [Description("Lower Legs")] LowerLegs = 512,
+        Cloak = 131072
     }
 }

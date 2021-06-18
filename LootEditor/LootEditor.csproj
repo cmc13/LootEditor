@@ -20,7 +20,196 @@
     <None Remove="Assets\History_16x.png" />
     <None Remove="Assets\Import_16x.png" />
     <None Remove="Assets\Lock_16x.png" />
+    <None Remove="Assets\Material\Agate.png" />
+    <None Remove="Assets\Material\Alabaster.png" />
+    <None Remove="Assets\Material\Amber.png" />
+    <None Remove="Assets\Material\Amethyst.png" />
+    <None Remove="Assets\Material\Aquamarine.png" />
+    <None Remove="Assets\Material\ArmoredilloHide.png" />
+    <None Remove="Assets\Material\Azurite.png" />
+    <None Remove="Assets\Material\BlackGarnet.png" />
+    <None Remove="Assets\Material\BlackOpal.png" />
+    <None Remove="Assets\Material\Bloodstone.png" />
+    <None Remove="Assets\Material\Brass.png" />
+    <None Remove="Assets\Material\Bronze.png" />
+    <None Remove="Assets\Material\Carnelian.png" />
+    <None Remove="Assets\Material\Ceramic.png" />
+    <None Remove="Assets\Material\Citrine.png" />
+    <None Remove="Assets\Material\Copper.png" />
+    <None Remove="Assets\Material\Diamond.png" />
+    <None Remove="Assets\Material\Ebony.png" />
+    <None Remove="Assets\Material\Emerald.png" />
+    <None Remove="Assets\Material\FireOpal.png" />
+    <None Remove="Assets\Material\Gold.png" />
+    <None Remove="Assets\Material\Granite.png" />
+    <None Remove="Assets\Material\GreenGarnet.png" />
+    <None Remove="Assets\Material\GreenGarnetIcon %281%29.png" />
+    <None Remove="Assets\Material\GreenJade.png" />
+    <None Remove="Assets\Material\GromnieHide.png" />
+    <None Remove="Assets\Material\Hematite.png" />
+    <None Remove="Assets\Material\ImperialTopaz.png" />
+    <None Remove="Assets\Material\Iron.png" />
+    <None Remove="Assets\Material\Ivory.png" />
+    <None Remove="Assets\Material\Jet.png" />
+    <None Remove="Assets\Material\LapisLazuli.png" />
+    <None Remove="Assets\Material\LavenderJade.png" />
+    <None Remove="Assets\Material\Leather.png" />
+    <None Remove="Assets\Material\Linen.png" />
+    <None Remove="Assets\Material\Mahogany.png" />
+    <None Remove="Assets\Material\Malachite.png" />
+    <None Remove="Assets\Material\Marble.png" />
+    <None Remove="Assets\Material\Moonstone.png" />
+    <None Remove="Assets\Material\Oak.png" />
+    <None Remove="Assets\Material\Obsidian.png" />
+    <None Remove="Assets\Material\Onyx.png" />
+    <None Remove="Assets\Material\Opal.png" />
+    <None Remove="Assets\Material\Peridot.png" />
+    <None Remove="Assets\Material\Pine.png" />
+    <None Remove="Assets\Material\Porcelain.png" />
+    <None Remove="Assets\Material\Pyreal.png" />
+    <None Remove="Assets\Material\RedGarnet.png" />
+    <None Remove="Assets\Material\RedJade.png" />
+    <None Remove="Assets\Material\ReedsharkHide.png" />
+    <None Remove="Assets\Material\RoseQuartz.png" />
+    <None Remove="Assets\Material\Ruby.png" />
+    <None Remove="Assets\Material\Salvaged_Agate_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Alabaster_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Amber_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Amethyst_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Aquamarine_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Armoredillo_Hide_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Azurite_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Black_Garnet_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Black_Opal_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Bloodstone_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Brass_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Bronze_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Carnelian_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Ceramic_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Citrine_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Copper_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Diamond_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Ebony_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Emerald_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Fire_Opal_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Gold_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Granite_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Green_Garnet_Icon %281%29.png" />
+    <None Remove="Assets\Material\Salvaged_Green_Garnet_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Green_Jade_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Gromnie_Hide_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Hematite_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Imperial_Topaz_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Iron_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Ivory_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Jet_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Lapis_Lazuli_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Lavender_Jade_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Leather_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Linen_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Mahogany_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Malachite_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Marble_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Moonstone_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Oak_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Obsidian_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Onyx_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Opal_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Peridot_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Pine_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Porcelain_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Pyreal_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Red_Garnet_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Red_Jade_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Reedshark_Hide_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Rose_Quartz_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Ruby_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Sandstone_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Sapphire_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Satin_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Serpentine_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Silk_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Silver_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Steel_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Sunstone_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Teak_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Tiger_Eye_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Tourmaline_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Turquoise_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Velvet_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_White_Jade_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_White_Quartz_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_White_Sapphire_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Wool_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Yellow_Garnet_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Yellow_Topaz_Icon.png" />
+    <None Remove="Assets\Material\Salvaged_Zircon_Icon.png" />
+    <None Remove="Assets\Material\Sandstone.png" />
+    <None Remove="Assets\Material\Sapphire.png" />
+    <None Remove="Assets\Material\Satin.png" />
+    <None Remove="Assets\Material\Serpentine.png" />
+    <None Remove="Assets\Material\Silk.png" />
+    <None Remove="Assets\Material\Silver.png" />
+    <None Remove="Assets\Material\SmokyQuartz.png" />
+    <None Remove="Assets\Material\Smoky_Quartz_Salvage_Icon.png" />
+    <None Remove="Assets\Material\Steel.png" />
+    <None Remove="Assets\Material\Sunstone.png" />
+    <None Remove="Assets\Material\Teak.png" />
+    <None Remove="Assets\Material\TigerEye.png" />
+    <None Remove="Assets\Material\Tourmaline.png" />
+    <None Remove="Assets\Material\Turquoise.png" />
+    <None Remove="Assets\Material\Velvet.png" />
+    <None Remove="Assets\Material\WhiteJade.png" />
+    <None Remove="Assets\Material\WhiteQuartz.png" />
+    <None Remove="Assets\Material\WhiteSapphire.png" />
+    <None Remove="Assets\Material\Wool.png" />
+    <None Remove="Assets\Material\YellowGarnet.png" />
+    <None Remove="Assets\Material\YellowTopaz.png" />
+    <None Remove="Assets\Material\Zircon.png" />
     <None Remove="Assets\NewFile_16x.png" />
+    <None Remove="Assets\ObjectClass\Armor.png" />
+    <None Remove="Assets\ObjectClass\BaseAlchemy.png" />
+    <None Remove="Assets\ObjectClass\BaseCooking.png" />
+    <None Remove="Assets\ObjectClass\BaseFletching.png" />
+    <None Remove="Assets\ObjectClass\Book.png" />
+    <None Remove="Assets\ObjectClass\Bundle.png" />
+    <None Remove="Assets\ObjectClass\Clothing.png" />
+    <None Remove="Assets\ObjectClass\Container.png" />
+    <None Remove="Assets\ObjectClass\Corpse.png" />
+    <None Remove="Assets\ObjectClass\CraftedAlchemy.png" />
+    <None Remove="Assets\ObjectClass\CraftedCooking.png" />
+    <None Remove="Assets\ObjectClass\CraftedFletching.png" />
+    <None Remove="Assets\ObjectClass\Door.png" />
+    <None Remove="Assets\ObjectClass\Foci.png" />
+    <None Remove="Assets\ObjectClass\Food.png" />
+    <None Remove="Assets\ObjectClass\Gem.png" />
+    <None Remove="Assets\ObjectClass\HealingKit.png" />
+    <None Remove="Assets\ObjectClass\Housing.png" />
+    <None Remove="Assets\ObjectClass\Jewelry.png" />
+    <None Remove="Assets\ObjectClass\Journal.png" />
+    <None Remove="Assets\ObjectClass\Key.png" />
+    <None Remove="Assets\ObjectClass\Lifestone.png" />
+    <None Remove="Assets\ObjectClass\Lockpick.png" />
+    <None Remove="Assets\ObjectClass\ManaStone.png" />
+    <None Remove="Assets\ObjectClass\MeleeWeapon.png" />
+    <None Remove="Assets\ObjectClass\Misc.png" />
+    <None Remove="Assets\ObjectClass\MissileWeapon.png" />
+    <None Remove="Assets\ObjectClass\Money.png" />
+    <None Remove="Assets\ObjectClass\Monster.png" />
+    <None Remove="Assets\ObjectClass\NPC.png" />
+    <None Remove="Assets\ObjectClass\Plant.png" />
+    <None Remove="Assets\ObjectClass\Player.png" />
+    <None Remove="Assets\ObjectClass\Portal.png" />
+    <None Remove="Assets\ObjectClass\Salvage.png" />
+    <None Remove="Assets\ObjectClass\Scroll.png" />
+    <None Remove="Assets\ObjectClass\Services.png" />
+    <None Remove="Assets\ObjectClass\Sign.png" />
+    <None Remove="Assets\ObjectClass\SpellComponent.png" />
+    <None Remove="Assets\ObjectClass\TradeNote.png" />
+    <None Remove="Assets\ObjectClass\Unknown.png" />
+    <None Remove="Assets\ObjectClass\Ust.png" />
+    <None Remove="Assets\ObjectClass\Vendor.png" />
+    <None Remove="Assets\ObjectClass\WandStaffOrb.png" />
     <None Remove="Assets\OpenFile_16x.png" />
     <None Remove="Assets\Paste_16x.png" />
     <None Remove="Assets\RegularExpression_16x.png" />
@@ -30,7 +219,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\ColorSlots.Default.xml" />
+    <Resource Include="Assets\ColorSlots.Default.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -41,72 +232,420 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\Add_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Clone_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Close_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Copy_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Cut_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\DeleteListItem_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Filter_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Import_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Lock_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\NewFile_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\OpenFile_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Paste_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\SaveAs_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Save_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Assets\Add_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Clone_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Close_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Copy_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Cut_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\DeleteListItem_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Filter_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Import_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Lock_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Agate.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Alabaster.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Amber.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Amethyst.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Aquamarine.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\ArmoredilloHide.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Azurite.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\BlackGarnet.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\BlackOpal.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Bloodstone.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Brass.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Bronze.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Carnelian.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Ceramic.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Citrine.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Copper.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Diamond.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Ebony.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Emerald.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\FireOpal.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Gold.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Granite.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\GreenGarnet.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\GreenGarnetIcon (1).png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\GreenJade.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\GromnieHide.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Hematite.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\ImperialTopaz.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Iron.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Ivory.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Jet.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\LapisLazuli.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\LavenderJade.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Leather.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Linen.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Mahogany.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Malachite.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Marble.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Moonstone.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Oak.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Obsidian.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Onyx.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Opal.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Peridot.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Pine.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Porcelain.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Pyreal.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\RedGarnet.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\RedJade.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\ReedsharkHide.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\RoseQuartz.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Ruby.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Sandstone.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Sapphire.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Satin.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Serpentine.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Silk.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Silver.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\SmokyQuartz.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Steel.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Sunstone.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Teak.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\TigerEye.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Tourmaline.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Turquoise.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Velvet.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\WhiteJade.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\WhiteQuartz.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\WhiteSapphire.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Wool.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\YellowGarnet.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\YellowTopaz.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Material\Zircon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\NewFile_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Armor.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\BaseAlchemy.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\BaseCooking.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\BaseFletching.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Book.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Bundle.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Clothing.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Container.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Corpse.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\CraftedAlchemy.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\CraftedCooking.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\CraftedFletching.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Door.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Foci.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Food.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Gem.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\HealingKit.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Housing.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Jewelry.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Journal.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Key.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Lifestone.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Lockpick.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\ManaStone.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\MeleeWeapon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Misc.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\MissileWeapon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Money.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Monster.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\NPC.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Plant.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Player.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Portal.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Salvage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Scroll.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Services.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Sign.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\SpellComponent.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\TradeNote.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Unknown.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Ust.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\Vendor.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\ObjectClass\WandStaffOrb.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\OpenFile_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Paste_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\SaveAs_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Save_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\History_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Assets\History_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\Trash_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Assets\Trash_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\Create_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Assets\Create_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\RegularExpression_16x.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="Assets\RegularExpression_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
