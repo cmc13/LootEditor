@@ -150,7 +150,7 @@
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Command" Value="{Binding Command}" />
-                                <Setter Property="Header" Value="{Binding Header, Converter={StaticResource FullPathToFileNameConverter}}" />
+                                <Setter Property="Header" Value="{Binding Header}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
@@ -212,11 +212,32 @@
             </Menu>
 
             <TabControl TabStripPlacement="Bottom" Margin="2" x:Name="tabMain">
-                <TabItem Header="Rules">
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/Icons/ListView_16x.png" />
+                            <TextBlock Text="Rules" />
+                        </StackPanel>
+                    </TabItem.Header>
                     <local:LootRuleListEditor DataContext="{Binding LootRuleListViewModel}" />
                 </TabItem>
-                <TabItem Header="Salvage Combine">
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/ObjectClass/Ust.png" Height="12" />
+                            <TextBlock Text="Salvage Combine" />
+                        </StackPanel>
+                    </TabItem.Header>
                     <local:SalvageCombineListEditor DataContext="{Binding SalvageCombineListViewModel}" />
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="Assets/Icons/Settings_16x.png" />
+                            <TextBlock Text="Settings" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <local:SettingsView DataContext="{Binding SettingsViewModel}" />
                 </TabItem>
             </TabControl>
         </DockPanel>

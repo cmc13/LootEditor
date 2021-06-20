@@ -132,7 +132,7 @@
                                     </MenuItem.Icon>
                                     <MenuItem.ItemContainerStyle>
                                         <Style TargetType="MenuItem">
-                                            <Setter Property="Header" Value="{Binding Header, Converter={StaticResource FullPathToFileNameConverter}}" />
+                                            <Setter Property="Header" Value="{Binding Header}" />
                                             <Setter Property="Command" Value="{Binding Command}" />
                                         </Style>
                                     </MenuItem.ItemContainerStyle>

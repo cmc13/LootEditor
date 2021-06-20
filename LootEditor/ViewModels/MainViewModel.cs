@@ -26,6 +26,7 @@ namespace LootEditor.ViewModels
         private LootFile lootFile = null;
         private LootRuleListViewModel lootRuleListViewModel = null;
         private SalvageCombineListViewModel salvageCombineViewModel = null;
+        private readonly SettingsViewModel settingsViewModel = new();
         private bool isBusy = false;
         private string busyStatus;
         private readonly DispatcherTimer backupTimer;
@@ -97,6 +98,8 @@ namespace LootEditor.ViewModels
                 }
             }
         }
+
+        public SettingsViewModel SettingsViewModel => settingsViewModel;
 
         public bool IsBusy
         {

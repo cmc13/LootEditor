@@ -2,6 +2,7 @@
 using LootEditor.Dialogs;
 using LootEditor.Models;
 using LootEditor.Models.Enums;
+using LootEditor.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
@@ -20,9 +21,8 @@ namespace LootEditor.ViewModels
         private bool isDirty = false;
         private LootRuleViewModel selectedRule = null;
         private string filter;
-        private static readonly string TEMPLATES_FOLDER = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Loot Editor", "Templates");
-        private readonly FileSystemWatcher fsw;
-        private readonly DialogService dialogService = new DialogService();
+        private readonly DialogService dialogService = new();
+        private readonly TemplateService templateService = new();
 
         public LootRuleListViewModel(LootFile lootFile)
         {
@@ -44,17 +44,10 @@ namespace LootEditor.ViewModels
             CutItemCommand = new(CutRule, SelectedRule_CanExecute);
             CopyItemCommand = new(CopyRule, SelectedRule_CanExecute);
             PasteItemCommand = new(PasteRule, () => Clipboard.ContainsData(typeof(LootRule).Name));
-            AddRuleFromTemplateCommand = new(AddRuleFromTemplate, s => !string.IsNullOrEmpty(s));
+            AddRuleFromTemplateCommand = new(AddRuleFromTemplate, s => s != null);
             SaveRuleAsTemplateCommand = new(SaveRuleAsTemplate, SelectedRule_CanExecute);
 
-            if (!Directory.Exists(TEMPLATES_FOLDER))
-                Directory.CreateDirectory(TEMPLATES_FOLDER);
-            fsw = new FileSystemWatcher(TEMPLATES_FOLDER, "*.ruleTemplate");
-            fsw.Created += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
-            fsw.Changed += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
-            fsw.Deleted += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
-            fsw.Renamed += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
-            fsw.EnableRaisingEvents = true;
+            templateService.TemplatesChanged += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
         }
 
         public ObservableCollection<LootRuleViewModel> LootRules { get; } = new ObservableCollection<LootRuleViewModel>();
@@ -63,14 +56,8 @@ namespace LootEditor.ViewModels
         {
             get
             {
-                var files = Directory.Exists(TEMPLATES_FOLDER) ? Directory.GetFiles(TEMPLATES_FOLDER, "*.ruleTemplate").OrderBy(Path.GetFileNameWithoutExtension) : Enumerable.Empty<string>();
-                return files.Select(f => new MenuItemViewModel(f, async () => await AddRuleFromTemplate(f).ConfigureAwait(false))).Concat(new[]
-                {
-                    new MenuItemViewModel("Manage Templates", () =>
-                    {
-
-                    })
-                });
+                var templates = templateService.GetTemplates();
+                return templates.Select(t => new MenuItemViewModel(t.Name, async () => await AddRuleFromTemplate(t).ConfigureAwait(false)));
             }
         }
 
@@ -131,7 +118,7 @@ namespace LootEditor.ViewModels
         public RelayCommand CopyItemCommand { get; }
         public RelayCommand PasteItemCommand { get; }
         public RelayCommand ToggleDisabledCommand { get; }
-        public AsyncRelayCommand<string> AddRuleFromTemplateCommand { get; }
+        public AsyncRelayCommand<RuleTemplate> AddRuleFromTemplateCommand { get; }
         public AsyncRelayCommand SaveRuleAsTemplateCommand { get; }
 
         public void AddRule(LootRule rule)
@@ -277,54 +264,22 @@ namespace LootEditor.ViewModels
             }
         }
 
-        public async Task AddRuleFromTemplate(string file)
+        public async Task AddRuleFromTemplate(RuleTemplate template)
         {
             try
             {
-                using var fs = File.OpenRead(file);
-                using var reader = new StreamReader(fs);
-                var rule = await LootRule.ReadRuleAsync(lootFile.Version, reader).ConfigureAwait(false);
+                var rule = await templateService.GetRuleFromTemplate(template).ConfigureAwait(false);
                 AddRule(rule);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to add rule from template {file}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Failed to add rule from template {template.Name}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         public async Task SaveRuleAsTemplate()
         {
-            var vm = new SaveRuleTemplateViewModel();
-            while(true)
-            {
-                var result = dialogService.ShowDialog("Name Template", vm);
-                if (result == null || result.Value == false)
-                    return;
-
-                if (!string.IsNullOrWhiteSpace(vm.TemplateName))
-                {
-                    if (File.Exists(Path.Combine(TEMPLATES_FOLDER, vm.TemplateName + ".ruleTemplate")))
-                    {
-                        var mbResult = MessageBox.Show(
-                            $"A template named {vm.TemplateName} already exists. Would you like to overwrite it?",
-                            "Overwrite Existing Template",
-                            MessageBoxButton.YesNoCancel,
-                            MessageBoxImage.Question);
-                        if (mbResult == MessageBoxResult.No)
-                            continue;
-                        else if (mbResult == MessageBoxResult.Cancel)
-                            return;
-                    }
-                    break;
-                }
-            }
-
-            if (!Directory.Exists(TEMPLATES_FOLDER))
-                Directory.CreateDirectory(TEMPLATES_FOLDER);
-            using var fs = File.OpenWrite(Path.Combine(TEMPLATES_FOLDER, vm.TemplateName + ".ruleTemplate"));
-            using var writer = new StreamWriter(fs);
-            await SelectedRule.Rule.WriteAsync(writer).ConfigureAwait(false);
-            await fs.FlushAsync().ConfigureAwait(false);
+            await templateService.SaveRuleAsTemplate(SelectedRule.Rule).ConfigureAwait(false);
         }
     }
 }

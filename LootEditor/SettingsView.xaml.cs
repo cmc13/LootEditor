@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LootEditor.Dialogs
+namespace LootEditor
 {
     /// <summary>
-    /// Interaction logic for TemplateEditorView.xaml
+    /// Interaction logic for SettingsView.xaml
     /// </summary>
-    public partial class TemplateEditorView : UserControl
+    public partial class SettingsView : UserControl
     {
-        public TemplateEditorView()
+        public SettingsView()
         {
             InitializeComponent();
         }

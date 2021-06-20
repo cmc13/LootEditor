@@ -20,6 +20,8 @@
     <None Remove="Assets\History_16x.png" />
     <None Remove="Assets\Icons\ExportFile_16x.png" />
     <None Remove="Assets\Icons\ImportFile_16x.png" />
+    <None Remove="Assets\Icons\ListView_16x.png" />
+    <None Remove="Assets\Icons\Settings_16x.png" />
     <None Remove="Assets\Import_16x.png" />
     <None Remove="Assets\Lock_16x.png" />
     <None Remove="Assets\Material\Agate.png" />
@@ -260,9 +262,11 @@
     <Resource Include="Assets\Icons\Import_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Icons\ListView_16x.png" />
     <Resource Include="Assets\Icons\Lock_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Icons\Settings_16x.png" />
     <Resource Include="Assets\Material\Agate.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
