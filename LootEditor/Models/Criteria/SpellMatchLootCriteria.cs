@@ -13,6 +13,7 @@ namespace LootEditor.Models
         public string Match { get; set; }
         public string NoMatch { get; set; }
         public int SpellCount { get; set; }
+        public override string Filter => $"{base.Filter}:{Match}:{NoMatch}:{SpellCount}";
 
         public SpellMatchLootCriteria()
         {
@@ -37,8 +38,8 @@ namespace LootEditor.Models
 
         public override async Task WriteInternalAsync(Stream stream)
         {
-            await stream.WriteLineForRealAsync(Match).ConfigureAwait(false);
-            await stream.WriteLineForRealAsync(NoMatch).ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(Match ?? "").ConfigureAwait(false);
+            await stream.WriteLineForRealAsync(NoMatch ?? "").ConfigureAwait(false);
             await stream.WriteLineForRealAsync(SpellCount.ToString()).ConfigureAwait(false);
         }
 
@@ -47,6 +48,32 @@ namespace LootEditor.Models
             info.AddValue(nameof(Match), Match, typeof(string));
             info.AddValue(nameof(NoMatch), NoMatch, typeof(string));
             info.AddValue(nameof(SpellCount), SpellCount, typeof(int));
+        }
+
+        public override bool IsMatch(string[] filter)
+        {
+            if (!base.IsMatch(filter))
+                return false;
+
+            if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+            {
+                if (!Match.Contains(filter[2], filter[2].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    return false;
+            }
+
+            if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
+            {
+                if (!NoMatch.Contains(filter[3], filter[3].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    return false;
+            }
+
+            if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
+            {
+                if (!int.TryParse(filter[4], out var test) || test != SpellCount)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

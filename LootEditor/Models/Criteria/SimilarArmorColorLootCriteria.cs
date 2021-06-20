@@ -20,6 +20,8 @@ namespace LootEditor.Models
 
         public string ArmorGroup { get; set; }
 
+        public override string Filter => $"{base.Filter}:{ArmorGroup}";
+
         public override string ToString() => $"{base.ToString()}; {ArmorGroup}";
 
         public override async Task ReadAsync(TextReader reader, int version)
@@ -38,6 +40,20 @@ namespace LootEditor.Models
         {
             base.GetObjectData(info, context);
             info.AddValue(nameof(ArmorGroup), ArmorGroup, typeof(string));
+        }
+
+        public override bool IsMatch(string[] filter)
+        {
+            if (!base.IsMatch(filter))
+                return false;
+
+            if (filter.Length >= 6 && !string.IsNullOrEmpty(filter[5]))
+            {
+                if (ArmorGroup.Equals(filter[5], filter[5].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    return false;
+            }
+
+            return true;
         }
     }
 }

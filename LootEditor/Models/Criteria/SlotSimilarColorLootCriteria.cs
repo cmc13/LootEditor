@@ -20,6 +20,8 @@ namespace LootEditor.Models
 
         public int Slot { get; set; }
 
+        public override string Filter => $"{base.Filter}:{Slot}";
+
         public override string ToString() => $"{base.ToString()}; Slot:{Slot}";
 
         public override async Task ReadAsync(TextReader reader, int version)
@@ -38,6 +40,20 @@ namespace LootEditor.Models
         {
             info.AddValue(nameof(Slot), Slot, typeof(int));
             base.GetObjectData(info, context);
+        }
+
+        public override bool IsMatch(string[] filter)
+        {
+            if (!base.IsMatch(filter))
+                return false;
+
+            if (filter.Length >= 6 && !string.IsNullOrEmpty(filter[5]))
+            {
+                if (!int.TryParse(filter[5], out var test) || test != Slot)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

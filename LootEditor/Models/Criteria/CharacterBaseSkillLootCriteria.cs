@@ -14,6 +14,7 @@ namespace LootEditor.Models
         public Enums.SkillType SkillType { get; set; }
         public int MinSkillValue { get; set; } = 0;
         public int MaxSkillValue { get; set; } = 999;
+        public override string Filter => $"{base.Filter}:{SkillType}:{MinSkillValue}:{MaxSkillValue}";
 
         public CharacterBaseSkillLootCriteria() { }
 
@@ -27,7 +28,7 @@ namespace LootEditor.Models
         public override string ToString()
         {
             var td = TypeDescriptor.GetConverter(typeof(Enums.SkillType));
-            return $"{MinSkillValue} <= {td.ConvertToInvariantString(SkillType)} <= {MaxSkillValue}";
+            return $"{MinSkillValue} ≤ {td.ConvertToInvariantString(SkillType)} ≤ {MaxSkillValue}";
         }
 
         public override async Task ReadAsync(TextReader reader, int version)
@@ -50,6 +51,32 @@ namespace LootEditor.Models
             info.AddValue(nameof(SkillType), SkillType, typeof(Enums.SkillType));
             info.AddValue(nameof(MinSkillValue), MinSkillValue, typeof(int));
             info.AddValue(nameof(MaxSkillValue), MaxSkillValue, typeof(int));
+        }
+
+        public override bool IsMatch(string[] filter)
+        {
+            if (!base.IsMatch(filter))
+                return false;
+
+            if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+            {
+                if (!Enum.TryParse<Enums.SkillType>(filter[2], out var test) || test != SkillType)
+                    return false;
+            }
+
+            if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
+            {
+                if (!int.TryParse(filter[3], out var test2) || test2 != MinSkillValue)
+                    return false;
+            }
+
+            if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
+            {
+                if (!int.TryParse(filter[4], out var test2) || test2 != MaxSkillValue)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

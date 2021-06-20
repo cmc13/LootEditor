@@ -89,6 +89,7 @@ namespace LootEditor.ViewModels
                     DeleteCriteriaCommand?.NotifyCanExecuteChanged();
                     CutItemCommand?.NotifyCanExecuteChanged();
                     CopyItemCommand?.NotifyCanExecuteChanged();
+                    FilterMatchingRulesCommand?.NotifyCanExecuteChanged();
                 }
             }
         }
@@ -100,6 +101,7 @@ namespace LootEditor.ViewModels
         public RelayCommand CopyItemCommand { get; }
         public RelayCommand PasteItemCommand { get; }
         public RelayCommand ToggleDisabledCommand { get; }
+        public RelayCommand<LootRuleListViewModel> FilterMatchingRulesCommand { get; }
 
         public LootRuleViewModel(LootRule rule)
         {
@@ -127,6 +129,8 @@ namespace LootEditor.ViewModels
             PasteItemCommand = new RelayCommand(PasteItem, CanPaste);
 
             ToggleDisabledCommand = new RelayCommand(ToggleDisabled);
+
+            FilterMatchingRulesCommand = new(FilterMatchingRules, _ => SelectedCriteria_CanExecute());
         }
 
         private void Criteria_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -191,7 +195,7 @@ namespace LootEditor.ViewModels
         private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             var v = sender as LootCriteriaViewModel;
-            if (e.PropertyName == "Type")
+            if (e.PropertyName == nameof(LootCriteriaViewModel.Type))
             {
                 SelectedCriteria = null;
 
@@ -293,6 +297,15 @@ namespace LootEditor.ViewModels
 
             IsDirty = true;
             SelectedCriteria = vm;
+        }
+
+        private void FilterMatchingRules(LootRuleListViewModel lootRuleListViewModel)
+        {
+            // Generate filter
+            var filter = SelectedCriteria.Criteria.Filter;
+
+            // Send to MainVM
+            lootRuleListViewModel.Filter = filter;
         }
     }
 }

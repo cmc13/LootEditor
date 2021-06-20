@@ -11,6 +11,7 @@ namespace LootEditor.Models
         public double CalculatedBuffedTinkedDamageOverTime { get; set; }
         public double BuffedMeleeDefenseBonus { get; set; }
         public double BuffedAttackBonus { get; set; }
+        public override string Filter => $"{base.Filter}:{CalculatedBuffedTinkedDamageOverTime}:{BuffedMeleeDefenseBonus}:{BuffedAttackBonus}";
 
         public override Enums.LootCriteriaType Type => Enums.LootCriteriaType.CalcedBuffedTinkedTargetMeleeGE;
 
@@ -45,6 +46,32 @@ namespace LootEditor.Models
             info.AddValue(nameof(CalculatedBuffedTinkedDamageOverTime), CalculatedBuffedTinkedDamageOverTime, typeof(double));
             info.AddValue(nameof(BuffedMeleeDefenseBonus), BuffedMeleeDefenseBonus, typeof(double));
             info.AddValue(nameof(BuffedAttackBonus), BuffedAttackBonus, typeof(double));
+        }
+
+        public override bool IsMatch(string[] filter)
+        {
+            if (!base.IsMatch(filter))
+                return false;
+
+            if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+            {
+                if (!double.TryParse(filter[2], out var test) || test != CalculatedBuffedTinkedDamageOverTime)
+                    return false;
+            }
+
+            if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
+            {
+                if (!double.TryParse(filter[3], out var test) || test != BuffedMeleeDefenseBonus)
+                    return false;
+            }
+
+            if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
+            {
+                if (!double.TryParse(filter[4], out var test) || test != BuffedAttackBonus)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

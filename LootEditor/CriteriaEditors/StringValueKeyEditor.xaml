@@ -25,7 +25,7 @@
         <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
             <xctk:WatermarkTextBox.Watermark>
                 <StackPanel Orientation="Horizontal">
-                    <Image Source="../Assets/RegularExpression_16x.png" />
+                    <Image Source="../Assets/Icons/RegularExpression_16x.png" />
                     <TextBlock>Regex</TextBlock>
                 </StackPanel>
             </xctk:WatermarkTextBox.Watermark>

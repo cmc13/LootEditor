@@ -23,6 +23,15 @@ namespace LootEditor.Models
         }
 
         public TKey Key { get; set; }
+        public override string Filter
+        {
+            get
+            {
+                var list = base.Filter.Split(':').ToList();
+                list.Insert(2, Key.ToString());
+                return string.Join(':', list);
+            }
+        }
 
         public override string ToString()
         {
@@ -45,20 +54,20 @@ namespace LootEditor.Models
                 case Enums.LootCriteriaType.CharacterSkillGE:
                 case Enums.LootCriteriaType.DoubleValKeyGE:
                 case Enums.LootCriteriaType.LongValKeyGE:
-                    sb.Append(" >= ");
+                    sb.Append(" ≥ ");
                     break;
 
                 case Enums.LootCriteriaType.DoubleValKeyLE:
                 case Enums.LootCriteriaType.LongValKeyLE:
-                    sb.Append(" <= ");
+                    sb.Append(" ≤ ");
                     break;
 
                 case Enums.LootCriteriaType.LongValKeyE:
-                    sb.Append(" == ");
+                    sb.Append(" = ");
                     break;
 
                 case Enums.LootCriteriaType.LongValKeyNE:
-                    sb.Append(" != ");
+                    sb.Append(" ≠ ");
                     break;
             }
 
@@ -155,6 +164,35 @@ namespace LootEditor.Models
         {
             base.GetObjectData(info, context);
             info.AddValue(nameof(Key), Key, typeof(TKey));
+        }
+
+        public override bool IsMatch(string[] filter)
+        {
+            // Copy array except for key so we can call the base IsMatch
+            var modifiedFilter = new string[Math.Max(filter.Length - 1, 2)];
+            Array.Copy(filter, 0, modifiedFilter, 0, 2);
+            if (filter.Length > 3)
+                Array.Copy(filter, 3, modifiedFilter, 2, filter.Length - 3);
+            
+            if (!base.IsMatch(modifiedFilter))
+                return false;
+
+            if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+            {
+                if (Key is Enum)
+                {
+                    if (!Enum.TryParse(typeof(TKey), filter[2], out var test) || !test.Equals(Key))
+                        return false;
+                }
+                else
+                {
+                    var test = Convert.ChangeType(filter[2], typeof(TKey));
+                    if (!test.Equals(Key))
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 }

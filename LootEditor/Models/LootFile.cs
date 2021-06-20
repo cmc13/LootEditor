@@ -11,7 +11,7 @@ namespace LootEditor.Models
     {
         private readonly List<LootRule> lootRules = new();
 
-        public int Version { get; set; }
+        public int Version { get; set; } = MAX_FILE_VERSION;
 
         public int RuleCount { get; set; }
 

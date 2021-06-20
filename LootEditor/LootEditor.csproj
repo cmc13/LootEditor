@@ -18,6 +18,8 @@
     <None Remove="Assets\DeleteListItem_16x.png" />
     <None Remove="Assets\Filter_16x.png" />
     <None Remove="Assets\History_16x.png" />
+    <None Remove="Assets\Icons\ExportFile_16x.png" />
+    <None Remove="Assets\Icons\ImportFile_16x.png" />
     <None Remove="Assets\Import_16x.png" />
     <None Remove="Assets\Lock_16x.png" />
     <None Remove="Assets\Material\Agate.png" />
@@ -232,31 +234,33 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\Add_16x.png">
+    <Resource Include="Assets\Icons\Add_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Clone_16x.png">
+    <Resource Include="Assets\Icons\Clone_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Close_16x.png">
+    <Resource Include="Assets\Icons\Close_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Copy_16x.png">
+    <Resource Include="Assets\Icons\Copy_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Cut_16x.png">
+    <Resource Include="Assets\Icons\Cut_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\DeleteListItem_16x.png">
+    <Resource Include="Assets\Icons\DeleteListItem_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Filter_16x.png">
+    <Resource Include="Assets\Icons\ExportFile_16x.png" />
+    <Resource Include="Assets\Icons\Filter_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Import_16x.png">
+    <Resource Include="Assets\Icons\ImportFile_16x.png" />
+    <Resource Include="Assets\Icons\Import_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Lock_16x.png">
+    <Resource Include="Assets\Icons\Lock_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\Material\Agate.png">
@@ -478,7 +482,7 @@
     <Resource Include="Assets\Material\Zircon.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\NewFile_16x.png">
+    <Resource Include="Assets\Icons\NewFile_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\ObjectClass\Armor.png">
@@ -610,40 +614,40 @@
     <Resource Include="Assets\ObjectClass\WandStaffOrb.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\OpenFile_16x.png">
+    <Resource Include="Assets\Icons\OpenFile_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Paste_16x.png">
+    <Resource Include="Assets\Icons\Paste_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\SaveAs_16x.png">
+    <Resource Include="Assets\Icons\SaveAs_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Save_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\History_16x.png">
+    <Resource Include="Assets\Icons\Save_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\Trash_16x.png">
+    <Resource Include="Assets\Icons\History_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\Create_16x.png">
+    <Resource Include="Assets\Icons\Trash_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\RegularExpression_16x.png">
+    <Resource Include="Assets\Icons\Create_16x.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Icons\RegularExpression_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

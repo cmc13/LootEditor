@@ -51,7 +51,8 @@
 
                     <ListBox Grid.Row="0" ItemsSource="{Binding Criteria}" SelectedItem="{Binding SelectedCriteria}" MinHeight="100" HorizontalContentAlignment="Stretch"
                          dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" BorderThickness="0" FontSize="14"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False"
+                             Tag="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.LootRuleListViewModel}">
                         <b:Interaction.Behaviors>
                             <local:ScrollIntoViewBehavior />
                         </b:Interaction.Behaviors>
@@ -81,23 +82,29 @@
                             <ContextMenu>
                                 <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+Shift+X" Command="{Binding CutItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Cut_16x.png" />
+                                        <Image Source="Assets/Icons/Cut_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+Shift+C" Command="{Binding CopyItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Copy_16x.png" />
+                                        <Image Source="Assets/Icons/Copy_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+Shift+V" Command="{Binding PasteItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Paste_16x.png" />
+                                        <Image Source="Assets/Icons/Paste_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
                                 <MenuItem Header="Delete Criteria" Command="{Binding DeleteCriteriaCommand}" InputGestureText="Del">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/DeleteListItem_16x.png" />
+                                        <Image Source="Assets/Icons/DeleteListItem_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Filter Rules with Matching Criteria" Command="{Binding FilterMatchingRulesCommand}" CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ContextMenu}}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Icons/Filter_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
@@ -107,7 +114,7 @@
                     <UniformGrid Grid.Row="1" Columns="3">
                         <xctk:IconButton Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Add">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Create_16x.png" />
+                                <Image Source="Assets/Icons/Create_16x.png" />
                             </xctk:IconButton.Icon>
                             <xctk:IconButton.Content>
                                 <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
@@ -115,13 +122,13 @@
                         </xctk:IconButton>
                         <xctk:IconButton Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Clone">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Clone_16x.png" />
+                                <Image Source="Assets/Icons/Clone_16x.png" />
                             </xctk:IconButton.Icon>
                             <TextBlock TextTrimming="CharacterEllipsis">Clone</TextBlock>
                         </xctk:IconButton>
                         <xctk:IconButton Command="{Binding DeleteCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Delete">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Trash_16x.png" />
+                                <Image Source="Assets/Icons/Trash_16x.png" />
                             </xctk:IconButton.Icon>
                             <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
                         </xctk:IconButton>

@@ -79,7 +79,7 @@ namespace LootEditor.Dialogs
 
         private void LootCriteriaViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Type")
+            if (e.PropertyName == nameof(LootCriteriaViewModel.Type))
             {
                 var crit = LootCriteria.CreateLootCriteria(LootCriteriaViewModel.Type);
 

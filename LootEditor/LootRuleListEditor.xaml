@@ -18,13 +18,14 @@
         <cvt:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <cvt:HasNonDisabledTypeCriteriaConverter x:Key="HasNonDisabledTypeCriteriaConverter" />
         <cvt:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
+        <cvt:FullPathToFileNameConverter x:Key="FullPathToFileNameConverter" />
         <DataTemplate x:Key="LootRuleItemTemplate" DataType="{x:Type vm:LootRuleViewModel}">
             <Grid ToolTip="{Binding Name}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                
+
                 <TextBlock Grid.Row="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}" FontSize="14">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
@@ -38,7 +39,7 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                
+
                 <Grid Grid.Row="1" Opacity="0.5" Visibility="{Binding Criteria, Converter={StaticResource HasNonDisabledTypeCriteriaConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -55,24 +56,24 @@
         </DataTemplate>
         <CollectionViewSource x:Key="LootRules" Source="{Binding LootRules}" Filter="CollectionViewSource_Filter"></CollectionViewSource>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
+
         <Grid Grid.Column="0" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="0" Margin="0,5"
+            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="0" Margin="0,5" Text="{Binding Filter}"
                                    TextChanged="TxtFilter_TextChanged">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="Assets/Filter_16x.png" />
+                        <Image Source="Assets/Icons/Filter_16x.png" />
                         <TextBlock>Filter</TextBlock>
                     </StackPanel>
                 </xctk:WatermarkTextBox.Watermark>
@@ -100,39 +101,55 @@
                             <ContextMenu>
                                 <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Cut_16x.png" />
+                                        <Image Source="Assets/Icons/Cut_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Copy_16x.png" />
+                                        <Image Source="Assets/Icons/Copy_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Paste_16x.png" />
+                                        <Image Source="Assets/Icons/Paste_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
                                 <MenuItem Header="{Binding SelectedRule.IsDisabled, Converter={StaticResource BoolToEnableDisableStringConverter}}" Command="{Binding ToggleDisabledCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Lock_16x.png" />
+                                        <Image Source="Assets/Icons/Lock_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
                                 <MenuItem Header="Add Rule" Command="{Binding AddRuleCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Add_16x.png" />
+                                        <Image Source="Assets/Icons/Add_16x.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Add Rule from Template" ItemsSource="{Binding RuleTemplates}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Icons/ImportFile_16x.png" />
+                                    </MenuItem.Icon>
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Header" Value="{Binding Header, Converter={StaticResource FullPathToFileNameConverter}}" />
+                                            <Setter Property="Command" Value="{Binding Command}" />
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                                <MenuItem Header="Save Rule as Template" Command="{Binding SaveRuleAsTemplateCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Assets/Icons/ExportFile_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Clone Rule" Command="{Binding CloneRuleCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Clone_16x.png" />
+                                        <Image Source="Assets/Icons/Clone_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Delete Rule" Command="{Binding DeleteRuleCommand}" InputGestureText="Del">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/DeleteListItem_16x.png" />
+                                        <Image Source="Assets/Icons/DeleteListItem_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
@@ -144,32 +161,37 @@
                         </ListBox.ItemContainerStyle>
                     </ListBox>
 
-                    <UniformGrid Grid.Row="1" Columns="3">
-                        <xctk:IconButton Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Add">
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <xctk:IconButton Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Add">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Create_16x.png" />
+                                <Image Source="Assets/Icons/Create_16x.png" />
                             </xctk:IconButton.Icon>
                             <xctk:IconButton.Content>
                                 <TextBlock Text="Add" TextTrimming="CharacterEllipsis" />
                             </xctk:IconButton.Content>
                         </xctk:IconButton>
-                        <xctk:IconButton Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Clone">
+                        <xctk:IconButton Grid.Column="1" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Clone">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Clone_16x.png" />
+                                <Image Source="Assets/Icons/Clone_16x.png" />
                             </xctk:IconButton.Icon>
                             <xctk:IconButton.Content>
                                 <TextBlock Text="Clone" TextTrimming="CharacterEllipsis" />
                             </xctk:IconButton.Content>
                         </xctk:IconButton>
-                        <xctk:IconButton Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Delete">
+                        <xctk:IconButton Grid.Column="2" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Delete">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Trash_16x.png" />
+                                <Image Source="Assets/Icons/Trash_16x.png" />
                             </xctk:IconButton.Icon>
                             <xctk:IconButton.Content>
                                 <TextBlock Text="Delete" TextTrimming="CharacterEllipsis" />
                             </xctk:IconButton.Content>
                         </xctk:IconButton>
-                    </UniformGrid>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>

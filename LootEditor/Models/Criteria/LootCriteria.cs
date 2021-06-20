@@ -13,6 +13,8 @@ namespace LootEditor.Models
         public abstract LootCriteriaType Type { get; }
         public int RequirementLength { get; set; }
 
+        public virtual string Filter => "has:" + Type.ToString();
+
         public static LootCriteria CreateLootCriteria(LootCriteriaType type)
         {
             return type switch
@@ -68,6 +70,20 @@ namespace LootEditor.Models
         }
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
+
+        public virtual bool IsMatch(string[] filter)
+        {
+            if (filter.Length < 2)
+                return false;
+
+            if (string.IsNullOrEmpty(filter[1]))
+                return false;
+
+            if (!Enum.TryParse<LootCriteriaType>(filter[1], out var type))
+                return false;
+
+            return type == Type;
+        }
 
         public virtual async Task ReadAsync(TextReader reader, int version)
         {

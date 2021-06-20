@@ -17,6 +17,8 @@ namespace LootEditor.Models
         public override Enums.LootCriteriaType Type { get; }
         public T Value { get; set; }
 
+        public override string Filter => $"{base.Filter}:{Value}";
+
         protected ValueLootCriteria(SerializationInfo info, StreamingContext context)
         {
             Type = (Enums.LootCriteriaType)info.GetValue(nameof(Type), typeof(Enums.LootCriteriaType));
@@ -76,6 +78,30 @@ namespace LootEditor.Models
         {
             info.AddValue(nameof(Type), Type, typeof(Enums.LootCriteriaType));
             info.AddValue(nameof(Value), Value, typeof(T));
+        }
+
+        public override bool IsMatch(string[] filter)
+        {
+            if (!base.IsMatch(filter))
+                return false;
+
+            if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+            {
+                switch (Value)
+                {
+                    case string str:
+                        return str.Contains(filter[2]);
+
+                    case Enum:
+                        return Enum.TryParse(typeof(T), filter[2], out var test) && test.Equals(Value);
+
+                    default:
+                        var testValue = Convert.ChangeType(filter[2], typeof(T));
+                        return testValue.Equals(Value);
+                }
+            }
+
+            return true;
         }
     }
 }

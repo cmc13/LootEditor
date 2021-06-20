@@ -45,7 +45,7 @@ namespace LootEditor.ViewModels
                 generator.Emit(OpCodes.Ret);
 
                 foreach (PropertyInfo propertyInfo in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(p => typeof(LootCriteriaViewModel).GetProperty(p.Name) == null))
+                    .Where(p => p.CanWrite && typeof(LootCriteriaViewModel).GetProperty(p.Name) == null))
                 {        // Update the setter of the class
                     PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(propertyInfo.Name,
                         PropertyAttributes.None, propertyInfo.PropertyType, null);
