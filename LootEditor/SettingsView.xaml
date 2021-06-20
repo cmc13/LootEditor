@@ -7,7 +7,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TabControl TabStripPlacement="Left">
-        <TabItem Header="Templates">
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/Icons/ListView_16x.png" Height="16" />
+                    <TextBlock Text="Templates" />
+                </StackPanel>
+            </TabItem.Header>
             <local:TemplateEditor DataContext="{Binding TemplateEditorViewModel}" />
         </TabItem>
     </TabControl>
