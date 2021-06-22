@@ -50,6 +50,9 @@ namespace LootEditor.ViewModels
             templateService.TemplatesChanged += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
         }
 
+        public string Name { get; } = "Rules";
+        public string Icon { get; } = "Assets/Icons/ListView.png";
+
         public ObservableCollection<LootRuleViewModel> LootRules { get; } = new ObservableCollection<LootRuleViewModel>();
 
         public IEnumerable<MenuItemViewModel> RuleTemplates

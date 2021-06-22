@@ -88,13 +88,13 @@
                     <UniformGrid Grid.Row="1" Columns="2">
                         <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Add_16x.png" />
+                                <Image Source="Assets/Icons/Add_16x.png" />
                             </xctk:IconButton.Icon>
                             <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                         </xctk:IconButton>
                         <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}">
                             <xctk:IconButton.Icon>
-                                <Image Source="Assets/Trash_16x.png" />
+                                <Image Source="Assets/Icons/Trash_16x.png" />
                             </xctk:IconButton.Icon>
                             <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
                         </xctk:IconButton>

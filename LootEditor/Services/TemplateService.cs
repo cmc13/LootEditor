@@ -10,14 +10,17 @@ namespace LootEditor.Services
 {
     public class TemplateService
     {
-        private static readonly string TEMPLATES_FOLDER = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Loot Editor", "Templates");
-        private readonly FileSystemWatcher fsw = new(TEMPLATES_FOLDER, "*.ruleTemplate");
+        private static readonly string TEMPLATES_FOLDER = Path.Combine(FileSystemService.AppDataDirectory, "Templates");
+        private readonly FileSystemWatcher fsw;
         private readonly DialogService dialogService = new();
+        private readonly FileSystemService fileSystemService = new();
 
         public event EventHandler TemplatesChanged;
 
         public TemplateService()
         {
+            fileSystemService.TryCreateDirectory(TEMPLATES_FOLDER);
+            fsw = new(TEMPLATES_FOLDER, "*.ruleTemplate");
             //fsw.Changed += (s, e) => TemplatesChanged?.Invoke(this, EventArgs.Empty);
             fsw.Created += (s, e) => TemplatesChanged?.Invoke(this, EventArgs.Empty);
             fsw.Deleted += (s, e) => TemplatesChanged?.Invoke(this, EventArgs.Empty);
@@ -25,20 +28,25 @@ namespace LootEditor.Services
             fsw.EnableRaisingEvents = true;
         }
 
+        public void DeleteTemplate(RuleTemplate template)
+        {
+            fileSystemService.DeleteFile(template.FileName);
+        }
+
         public IEnumerable<RuleTemplate> GetTemplates()
         {
-            if (Directory.Exists(TEMPLATES_FOLDER))
+            if (fileSystemService.DirectoryExists(TEMPLATES_FOLDER))
             {
-                foreach (var file in Directory.EnumerateFiles(TEMPLATES_FOLDER, "*.ruleTemplate"))
+                foreach (var file in fileSystemService.GetFilesInDirectory(TEMPLATES_FOLDER, "*.ruleTemplate"))
                     yield return new RuleTemplate(file);
             }
         }
 
         public async Task<LootRule> GetRuleFromTemplate(RuleTemplate template)
         {
-            if (File.Exists(template.FileName))
+            if (fileSystemService.FileExists(template.FileName))
             {
-                using var fs = File.OpenRead(template.FileName);
+                using var fs = fileSystemService.OpenFileForReadAccess(template.FileName);
                 using var reader = new StreamReader(fs);
                 var rule = await LootRule.ReadRuleAsync(1, reader);
                 return rule;
@@ -58,7 +66,7 @@ namespace LootEditor.Services
 
                 if (!string.IsNullOrWhiteSpace(vm.TemplateName))
                 {
-                    if (File.Exists(Path.Combine(TEMPLATES_FOLDER, vm.TemplateName + ".ruleTemplate")))
+                    if (fileSystemService.FileExists(Path.Combine(TEMPLATES_FOLDER, vm.TemplateName + ".ruleTemplate")))
                     {
                         var mbResult = MessageBox.Show(
                             $"A template named {vm.TemplateName} already exists. Would you like to overwrite it?",
@@ -74,12 +82,21 @@ namespace LootEditor.Services
                 }
             }
 
-            if (!Directory.Exists(TEMPLATES_FOLDER))
-                Directory.CreateDirectory(TEMPLATES_FOLDER);
-            using var fs = File.OpenWrite(Path.Combine(TEMPLATES_FOLDER, vm.TemplateName + ".ruleTemplate"));
+            await SaveRuleAsTemplate(rule, vm.TemplateName).ConfigureAwait(false);
+        }
+
+        public async Task SaveRuleAsTemplate(LootRule rule, string templateName)
+        {
+            fileSystemService.TryCreateDirectory(TEMPLATES_FOLDER);
+            using var fs = fileSystemService.OpenFileForWriteAccess(Path.Combine(TEMPLATES_FOLDER, templateName + ".ruleTemplate"));
             using var writer = new StreamWriter(fs);
             await rule.WriteAsync(writer).ConfigureAwait(false);
             await fs.FlushAsync().ConfigureAwait(false);
+        }
+
+        public void RenameTemplate(RuleTemplate template, string newName)
+        {
+            fileSystemService.MoveFile(template.FileName, Path.Combine(TEMPLATES_FOLDER, newName + ".ruleTemplate"));
         }
     }
 }

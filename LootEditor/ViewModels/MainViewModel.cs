@@ -1,5 +1,6 @@
 ﻿using LootEditor.Models;
 using LootEditor.Models.Enums;
+using LootEditor.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -19,8 +20,8 @@ namespace LootEditor.ViewModels
 {
     public class MainViewModel : ObservableRecipient
     {
-        private static readonly string RECENT_FILE_NAME = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Loot Editor", "RecentFiles.json");
-        private static readonly string BACKUP_FILE_NAME = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Loot Editor", "backup.utl");
+        private static readonly string RECENT_FILE_NAME = Path.Combine(FileSystemService.AppDataDirectory, "RecentFiles.json");
+        private static readonly string BACKUP_FILE_NAME = Path.Combine(FileSystemService.AppDataDirectory, "backup.utl");
         private const int RECENT_FILE_COUNT = 10;
         private string saveFileName = null;
         private LootFile lootFile = null;
@@ -31,6 +32,7 @@ namespace LootEditor.ViewModels
         private string busyStatus;
         private readonly DispatcherTimer backupTimer;
         private readonly Dialogs.DialogService dialogService = new();
+        private readonly FileSystemService fileSystemService = new();
 
         public string SaveFileName
         {
@@ -131,7 +133,7 @@ namespace LootEditor.ViewModels
 
         public bool IsDirty => LootRuleListViewModel.IsDirty || SalvageCombineListViewModel.IsDirty;
 
-        public AsyncRelayCommand NewFileCommand { get; }
+        public RelayCommand NewFileCommand { get; }
         public AsyncRelayCommand OpenFileCommand { get; }
         public AsyncRelayCommand SaveFileCommand { get; }
         public AsyncRelayCommand SaveAsCommand { get; }
@@ -152,48 +154,54 @@ namespace LootEditor.ViewModels
 
             if (true)
             {
-                if (File.Exists(RECENT_FILE_NAME))
+                if (fileSystemService.FileExists(RECENT_FILE_NAME))
                 {
-                    var json = File.ReadAllText(RECENT_FILE_NAME);
-                    var files = JsonSerializer.Deserialize<IEnumerable<string>>(json);
-                    RecentFiles.AddRange(files);
-                    while (RecentFiles.Count > RECENT_FILE_COUNT)
-                        RecentFiles.RemoveAt(RecentFiles.Count - 1);
-                    OnPropertyChanged(nameof(RecentFiles));
+                    Task.Run(async () =>
+                    {
+                        var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
+                        var files = await JsonSerializer.DeserializeAsync<IEnumerable<string>>(fs).ConfigureAwait(false);
+                        RecentFiles.AddRange(files);
+                        while (RecentFiles.Count > RECENT_FILE_COUNT)
+                            RecentFiles.RemoveAt(RecentFiles.Count - 1);
+                        OnPropertyChanged(nameof(RecentFiles));
+                    });
                 }
 
-                if (File.Exists(BACKUP_FILE_NAME))
+                if (fileSystemService.FileExists(BACKUP_FILE_NAME))
                 {
                     try
                     {
-                        var fileName = File.ReadLines(BACKUP_FILE_NAME).First();
+                        using var fs = fileSystemService.OpenFileForReadAccess(BACKUP_FILE_NAME);
+                        using var reader = new StreamReader(fs);
+                        var fileName = reader.ReadLine();
                         if (string.IsNullOrEmpty(fileName))
                             fileName = null;
                         var mbResult = MessageBox.Show($"File {fileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (mbResult == MessageBoxResult.Yes)
                         {
-                            OpenFileAsync(BACKUP_FILE_NAME, saveFileName: fileName, ignoreFirstLine: true)
-                                .GetAwaiter()
-                                .GetResult();
-                            SaveFileName = fileName;
+                            Task.Run(async () =>
+                            {
+                                await ReadLootFileAsync(reader).ConfigureAwait(false);
+                                SaveFileName = fileName;
+                            });
                         }
                     }
                     catch { }
                     finally
                     {
-                        File.Delete(BACKUP_FILE_NAME);
+                        fileSystemService.DeleteFile(BACKUP_FILE_NAME);
                     }
                 }
             }
 
-            NewFileCommand = new AsyncRelayCommand(async () =>
+            NewFileCommand = new RelayCommand(() =>
             {
                 if (IsDirty)
                 {
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
-                        await SaveFileAsync(SaveFileName).ConfigureAwait(false);
+                        SaveFileCommand.Execute(null);
                     }
                     else if (mbResult == MessageBoxResult.Cancel)
                         return;
@@ -274,7 +282,7 @@ namespace LootEditor.ViewModels
                     else
                     {
                         backupTimer.Stop();
-                        File.Delete(BACKUP_FILE_NAME);
+                        fileSystemService.DeleteFile(BACKUP_FILE_NAME);
                     }
                 }
             });
@@ -294,7 +302,7 @@ namespace LootEditor.ViewModels
                         return;
                 }
 
-                if (File.Exists(fileName))
+                if (fileSystemService.FileExists(fileName))
                     await OpenFileAsync(fileName).ConfigureAwait(false);
                 else
                 {
@@ -412,7 +420,7 @@ namespace LootEditor.ViewModels
                 var result = ofd.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
-                    using var fs = File.OpenRead(ofd.FileName);
+                    using var fs = fileSystemService.OpenFileForReadAccess(ofd.FileName);
                     using var reader = new StreamReader(fs);
                     var lf = new LootFile();
                     await lf.ReadFileAsync(reader).ConfigureAwait(false);
@@ -462,16 +470,11 @@ namespace LootEditor.ViewModels
             IsBusy = true;
             try
             {
-                using (var fs = File.OpenRead(fileName))
-                using (var reader = new StreamReader(fs))
-                {
-                    if (ignoreFirstLine)
-                        await reader.ReadLineAsync().ConfigureAwait(false);
-
-                    var lf = new LootFile();
-                    await lf.ReadFileAsync(reader).ConfigureAwait(false);
-                    LootFile = lf;
-                }
+                using var fs = fileSystemService.OpenFileForReadAccess(fileName);
+                using var reader = new StreamReader(fs);
+                if (ignoreFirstLine)
+                    await reader.ReadLineAsync().ConfigureAwait(false);
+                await ReadLootFileAsync(reader).ConfigureAwait(false);
 
                 SaveFileName = saveFileName ?? fileName;
             }
@@ -483,6 +486,13 @@ namespace LootEditor.ViewModels
             {
                 IsBusy = false;
             }
+        }
+
+        private async Task ReadLootFileAsync(StreamReader reader)
+        {
+            var lf = new LootFile();
+            await lf.ReadFileAsync(reader).ConfigureAwait(false);
+            LootFile = lf;
         }
 
         private async Task SaveFileAsync(string fileName)
@@ -509,7 +519,7 @@ namespace LootEditor.ViewModels
 
         private async Task WriteFileAsync(string fileName, string saveFileName = null, bool writeFileName = false)
         {
-            using var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            using var fs = fileSystemService.OpenFileForWriteAccess(fileName);
             using var writer = new StreamWriter(fs, Encoding.UTF8, 65535);
             if (writeFileName)
                 await writer.WriteLineAsync(saveFileName ?? "").ConfigureAwait(false);
@@ -526,8 +536,7 @@ namespace LootEditor.ViewModels
             OnPropertyChanged(nameof(RecentFiles));
 
             var json = JsonSerializer.Serialize(RecentFiles);
-            if (!Directory.Exists(Path.GetDirectoryName(RECENT_FILE_NAME)))
-                Directory.CreateDirectory(Path.GetDirectoryName(RECENT_FILE_NAME));
+            fileSystemService.TryCreateDirectory(Path.GetDirectoryName(RECENT_FILE_NAME));
             File.WriteAllText(RECENT_FILE_NAME, json);
         }
 
@@ -544,15 +553,14 @@ namespace LootEditor.ViewModels
                 else if (!IsDirty && backupTimer.IsEnabled)
                 {
                     backupTimer.Stop();
-                    File.Delete(BACKUP_FILE_NAME);
+                    fileSystemService.DeleteFile(BACKUP_FILE_NAME);
                 }
             }
         }
 
         private async void BackupTimer_Tick(object sender, EventArgs e)
         {
-            if (!Directory.Exists(Path.GetDirectoryName(BACKUP_FILE_NAME)))
-                Directory.CreateDirectory(Path.GetDirectoryName(BACKUP_FILE_NAME));
+            fileSystemService.TryCreateDirectory(Path.GetDirectoryName(BACKUP_FILE_NAME));
             await WriteFileAsync(BACKUP_FILE_NAME, saveFileName, writeFileName: true).ConfigureAwait(false);
         }
     }

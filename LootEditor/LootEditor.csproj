@@ -18,6 +18,8 @@
     <None Remove="Assets\DeleteListItem_16x.png" />
     <None Remove="Assets\Filter_16x.png" />
     <None Remove="Assets\History_16x.png" />
+    <None Remove="Assets\Icons\Checkmark_16x.png" />
+    <None Remove="Assets\Icons\Edit_16x.png" />
     <None Remove="Assets\Icons\ExportFile_16x.png" />
     <None Remove="Assets\Icons\ImportFile_16x.png" />
     <None Remove="Assets\Icons\ListView_16x.png" />
@@ -239,6 +241,7 @@
     <Resource Include="Assets\Icons\Add_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Icons\Checkmark_16x.png" />
     <Resource Include="Assets\Icons\Clone_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -254,6 +257,7 @@
     <Resource Include="Assets\Icons\DeleteListItem_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\Icons\Edit_16x.png" />
     <Resource Include="Assets\Icons\ExportFile_16x.png" />
     <Resource Include="Assets\Icons\Filter_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

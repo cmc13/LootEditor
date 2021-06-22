@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor"
              xmlns:vm="clr-namespace:LootEditor.ViewModels"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:view="clr-namespace:LootEditor"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -13,7 +14,7 @@
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0" ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}">
+        <ListBox Grid.Column="0" ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}" HorizontalContentAlignment="Stretch">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -21,8 +22,29 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Text="{Binding Name, Mode=OneWay}" />
-                        <Button Grid.Column="1">Delete</Button>
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" Visibility="{Binding IsEditingTemplateName, Converter={StaticResource ReverseBooleanToVisibilityConverter}}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EditTemplateNameCommand}" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBox Grid.Column="0" Text="{Binding Name}" IsVisibleChanged="TextBox_IsVisibleChanged" PreviewKeyDown="TextBox_KeyDown" Visibility="{Binding IsEditingTemplateName, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="LostFocus">
+                                    <b:InvokeCommandAction Command="{Binding DoneEditingTemplateCommand}" />
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </TextBox>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Button ToolTip="Rename Template" Command="{Binding DoneEditingTemplateCommand}" Visibility="{Binding IsEditingTemplateName, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Image Source="Assets/Icons/Checkmark_16x.png" />
+                            </Button>
+                            <Button ToolTip="Rename Template" Command="{Binding EditTemplateNameCommand}" Visibility="{Binding IsEditingTemplateName, Converter={StaticResource ReverseBooleanToVisibilityConverter}}">
+                                <Image Source="Assets/Icons/Edit_16x.png" />
+                            </Button>
+                            <Button ToolTip="Delete Template" Command="{Binding DeleteTemplateCommand}">
+                                <Image Source="Assets/Icons/Trash_16x.png" />
+                            </Button>
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

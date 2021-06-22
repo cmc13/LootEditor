@@ -15,6 +15,9 @@ namespace LootEditor.ViewModels
             private string combineRange;
             private int? combineValue;
 
+            public string Name { get; } = "Salvage Combine";
+            public string Icon { get; } = "Assets/ObjectClass/Ust.png";
+
             public string CombineRange
             {
                 get => combineRange;

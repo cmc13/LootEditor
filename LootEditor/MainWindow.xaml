@@ -29,6 +29,7 @@
         <cvt:SalvageGroupToMaterialListConverter x:Key="SalvageGroupToMaterialListConverter" />
         <cvt:AllNotNullConverter x:Key="AllNotNullConverter" />
         <cvt:FullPathToFileNameConverter x:Key="FullPathToFileNameConverter" />
+        <cvt:CompactFilePathConverter x:Key="CompactFilePathConverter" />
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding NewFileCommand}" />
@@ -81,7 +82,7 @@
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="{Binding Key}" />
-                                                <TextBlock Text="{Binding Value}" Margin="3,0,0,0" />
+                                                <TextBlock Text="{Binding Value, Converter={StaticResource CompactFilePathConverter}}" Margin="3,0,0,0" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </Setter.Value>
@@ -98,18 +99,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <!--<MenuItem Header="Edit">
-                </MenuItem>-->
-                <MenuItem Header="View" ItemsSource="{Binding ElementName=tabMain, Path=Items}">
-                    <MenuItem.ItemContainerStyle>
-                        <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding Header}" />
-                            <Setter Property="IsCheckable" Value="True" />
-                            <Setter Property="IsChecked" Value="{Binding IsSelected}" />
-                        </Style>
-                    </MenuItem.ItemContainerStyle>
-                </MenuItem>
-                <MenuItem Header="Bulk Updates">
+                <MenuItem Header="Bulk Updates" Visibility="{Binding ElementName=tabLootRules, Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <MenuItem Header="Add/Update Salvage Rules" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SalvageGroup}}">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
@@ -121,7 +111,7 @@
                     </MenuItem>
                     <MenuItem Header="Bulk Add/Update Criteria" Command="{Binding BulkAddCommand}" />
                 </MenuItem>
-                <MenuItem Header="Rule">
+                <MenuItem Header="Rule" Visibility="{Binding ElementName=tabLootRules, Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding LootRuleListViewModel.CutItemCommand}">
                         <MenuItem.Icon>
                             <Image Source="Assets/Icons/Cut_16x.png" />
@@ -170,7 +160,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Criteria">
+                <MenuItem Header="Criteria" Visibility="{Binding ElementName=tabLootRules, Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <MenuItem.IsEnabled>
                         <MultiBinding Converter="{StaticResource AllNotNullConverter}">
                             <Binding Path="LootRuleListViewModel.SelectedRule" />
@@ -203,7 +193,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="Filter Rules With Matching Criteria" Command="{Binding LootRuleListViewModel.SelectedRule.FilterMatchingRulesCommand}">
+                    <MenuItem Header="Filter Rules With Matching Criteria" Command="{Binding LootRuleListViewModel.SelectedRule.FilterMatchingRulesCommand}" CommandParameter="{Binding LootRuleListViewModel}">
                         <MenuItem.Icon>
                             <Image Source="Assets/Icons/Filter_16x.png" />
                         </MenuItem.Icon>
@@ -212,7 +202,7 @@
             </Menu>
 
             <TabControl TabStripPlacement="Bottom" Margin="2" x:Name="tabMain">
-                <TabItem>
+                <TabItem Name="tabLootRules">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <Image Source="Assets/Icons/ListView_16x.png" />
@@ -224,7 +214,7 @@
                 <TabItem>
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="Assets/ObjectClass/Ust.png" Height="12" />
+                            <Image Source="Assets/ObjectClass/Ust.png" Height="16" />
                             <TextBlock Text="Salvage Combine" />
                         </StackPanel>
                     </TabItem.Header>
