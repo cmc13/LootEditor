@@ -2,7 +2,6 @@
 using LootEditor.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using System;
 using System.IO;
 
 namespace LootEditor.ViewModels

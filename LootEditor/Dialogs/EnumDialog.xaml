@@ -15,7 +15,7 @@
 
         <TextBlock Grid.Row="0" Text="{Binding Message, FallbackValue=Message goes here}" Margin="5" />
 
-        <CheckBox Grid.Row="1" Margin="5" HorizontalAlignment="Right" IsChecked="{Binding DoForAllItems}">Do this for all items</CheckBox>
+        <CheckBox Grid.Row="1" Margin="5" IsChecked="{Binding DoForAllItems}">Do this for all items</CheckBox>
         
         <ItemsControl Grid.Row="2" ItemsSource="{Binding EnumValues}">
             <ItemsControl.ItemsPanel>

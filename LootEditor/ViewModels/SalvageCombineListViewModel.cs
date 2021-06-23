@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace LootEditor.ViewModels
 {
-    public class SalvageCombineListViewModel : ObservableRecipient
+    public class SalvageCombineListViewModel : DirtyViewModel
     {
         public class SalvageObj : ObservableObject
         {
@@ -59,7 +59,6 @@ namespace LootEditor.ViewModels
         }
 
         private readonly SalvageCombineBlockType salvageCombineBlock;
-        private bool isDirty = false;
         private KeyValuePair<Material, SalvageObj>? selectedItem;
         private SalvageCombineViewModel currentSalvageCombineViewModel;
 
@@ -98,7 +97,7 @@ namespace LootEditor.ViewModels
             CombineRules.CollectionChanged += CombineRules_CollectionChanged;
         }
 
-        public RelayCommand AddSalvageCommand => new RelayCommand(() =>
+        public RelayCommand AddSalvageCommand => new(() =>
         {
             var first = new KeyValuePair<Material, SalvageObj>(
                 Enum.GetValues(typeof(Material)).Cast<Material>().FirstOrDefault(m => !CombineRules.ContainsKey(m)),
@@ -107,7 +106,7 @@ namespace LootEditor.ViewModels
             SelectedItem = first;
         }, () => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m)));
 
-        public RelayCommand DeleteSalvageCommand => new RelayCommand(() =>
+        public RelayCommand DeleteSalvageCommand => new(() =>
         {
             CombineRules.Remove(SelectedItem.Value.Key);
         }, () => SelectedItem.HasValue);
@@ -152,19 +151,6 @@ namespace LootEditor.ViewModels
                     }
 
                     OnPropertyChanged(nameof(SalvageCombineViewModel));
-                }
-            }
-        }
-
-        public bool IsDirty
-        {
-            get => isDirty;
-            set
-            {
-                if (isDirty != value)
-                {
-                    isDirty = value;
-                    OnPropertyChanged(nameof(IsDirty));
                 }
             }
         }

@@ -3,22 +3,19 @@ using LootEditor.Dialogs;
 using LootEditor.Models;
 using LootEditor.Models.Enums;
 using LootEditor.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace LootEditor.ViewModels
 {
-    public class LootRuleListViewModel : ObservableRecipient, IDropTarget
+    public class LootRuleListViewModel : DirtyViewModel, IDropTarget
     {
         private readonly LootFile lootFile;
-        private bool isDirty = false;
         private LootRuleViewModel selectedRule = null;
         private string filter;
         private readonly DialogService dialogService = new();
@@ -99,17 +96,10 @@ namespace LootEditor.ViewModels
             }
         }
 
-        public bool IsDirty
+        public override bool IsDirty
         {
-            get => isDirty || LootRules.Any(r => r.IsDirty);
-            set
-            {
-                if (isDirty != value)
-                {
-                    isDirty = value;
-                    OnPropertyChanged(nameof(IsDirty));
-                }
-            }
+            get => base.IsDirty || LootRules.Any(r => r.IsDirty);
+            set => base.IsDirty = value;
         }
 
         public RelayCommand AddRuleCommand { get; }

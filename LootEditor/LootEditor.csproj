@@ -225,9 +225,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\ColorSlots.Default.xml">
+    <EmbeddedResource Include="Assets\ColorSlots.Default.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

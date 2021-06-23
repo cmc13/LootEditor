@@ -17,6 +17,9 @@
         <DataTemplate DataType="{x:Type local:SaveRuleTemplateViewModel}">
             <local:SaveRuleTemplateView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type local:ImportRulesViewModel}">
+            <local:ImportRulesView />
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>

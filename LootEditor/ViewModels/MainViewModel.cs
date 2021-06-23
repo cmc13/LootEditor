@@ -1,4 +1,5 @@
-﻿using LootEditor.Models;
+﻿using LootEditor.Dialogs;
+using LootEditor.Models;
 using LootEditor.Models.Enums;
 using LootEditor.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -21,7 +22,7 @@ namespace LootEditor.ViewModels
     public class MainViewModel : ObservableRecipient
     {
         private static readonly string RECENT_FILE_NAME = Path.Combine(FileSystemService.AppDataDirectory, "RecentFiles.json");
-        private static readonly string BACKUP_FILE_NAME = Path.Combine(FileSystemService.AppDataDirectory, "backup.utl");
+        private readonly BackupService backupService = new();
         private const int RECENT_FILE_COUNT = 10;
         private string saveFileName = null;
         private LootFile lootFile = null;
@@ -30,7 +31,6 @@ namespace LootEditor.ViewModels
         private readonly SettingsViewModel settingsViewModel = new();
         private bool isBusy = false;
         private string busyStatus;
-        private readonly DispatcherTimer backupTimer;
         private readonly Dialogs.DialogService dialogService = new();
         private readonly FileSystemService fileSystemService = new();
 
@@ -133,11 +133,11 @@ namespace LootEditor.ViewModels
 
         public bool IsDirty => LootRuleListViewModel.IsDirty || SalvageCombineListViewModel.IsDirty;
 
-        public RelayCommand NewFileCommand { get; }
+        public AsyncRelayCommand NewFileCommand { get; }
         public AsyncRelayCommand OpenFileCommand { get; }
         public AsyncRelayCommand SaveFileCommand { get; }
         public AsyncRelayCommand SaveAsCommand { get; }
-        public RelayCommand<CancelEventArgs> ClosingCommand { get; }
+        public AsyncRelayCommand<CancelEventArgs> ClosingCommand { get; }
         public RelayCommand<Window> ExitCommand { get; }
         public AsyncRelayCommand<string> OpenRecentFileCommand { get; }
         public RelayCommand<Models.Enums.SalvageGroup> AddUpdateSalvageRulesCommand { get; }
@@ -147,10 +147,6 @@ namespace LootEditor.ViewModels
         public MainViewModel()
         {
             LootFile = new LootFile();
-
-            backupTimer = new();
-            backupTimer.Interval = TimeSpan.FromMinutes(5);
-            backupTimer.Tick += BackupTimer_Tick;
 
             if (true)
             {
@@ -167,41 +163,38 @@ namespace LootEditor.ViewModels
                     });
                 }
 
-                if (fileSystemService.FileExists(BACKUP_FILE_NAME))
+                if (backupService.BackupExists)
                 {
                     try
                     {
-                        using var fs = fileSystemService.OpenFileForReadAccess(BACKUP_FILE_NAME);
-                        using var reader = new StreamReader(fs);
-                        var fileName = reader.ReadLine();
-                        if (string.IsNullOrEmpty(fileName))
-                            fileName = null;
-                        var mbResult = MessageBox.Show($"File {fileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        var mbResult = MessageBox.Show($"File {backupService.BackupFileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (mbResult == MessageBoxResult.Yes)
                         {
                             Task.Run(async () =>
                             {
+                                using var fs = backupService.OpenBackupFileForReadAccess();
+                                using var reader = new StreamReader(fs);
                                 await ReadLootFileAsync(reader).ConfigureAwait(false);
-                                SaveFileName = fileName;
+                                SaveFileName = backupService.BackupFileName;
                             });
                         }
                     }
                     catch { }
                     finally
                     {
-                        fileSystemService.DeleteFile(BACKUP_FILE_NAME);
+                        backupService.DeleteBackupFile();
                     }
                 }
             }
 
-            NewFileCommand = new RelayCommand(() =>
+            NewFileCommand = new AsyncRelayCommand(async () =>
             {
                 if (IsDirty)
                 {
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
-                        SaveFileCommand.Execute(null);
+                        await Save().ConfigureAwait(false);
                     }
                     else if (mbResult == MessageBoxResult.Cancel)
                         return;
@@ -218,7 +211,7 @@ namespace LootEditor.ViewModels
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
-                        SaveFileCommand.Execute(null);
+                        await Save().ConfigureAwait(false);
                     }
                     else if (mbResult == MessageBoxResult.Cancel)
                         return;
@@ -232,43 +225,21 @@ namespace LootEditor.ViewModels
                     CheckPathExists = true
                 };
 
-                var result = ofd.ShowDialog();
-                if (result.HasValue && result.Value)
+                await Application.Current.Dispatcher.Invoke(async () =>
                 {
-                    await OpenFileAsync(ofd.FileName).ConfigureAwait(false);
-                }
+                    var result = ofd.ShowDialog();
+                    if (result.HasValue && result.Value)
+                    {
+                        await OpenFileAsync(ofd.FileName).ConfigureAwait(false);
+                    }
+                }).ConfigureAwait(false);
             });
 
-            SaveFileCommand = new AsyncRelayCommand(async () =>
-            {
-                if (string.IsNullOrEmpty(saveFileName))
-                {
-                    SaveAsCommand.Execute(null);
-                }
-                else
-                    await SaveFileAsync(saveFileName).ConfigureAwait(false);
-            });
+            SaveFileCommand = new AsyncRelayCommand(Save);
 
-            SaveAsCommand = new AsyncRelayCommand(async () =>
-            {
-                var sfd = new SaveFileDialog()
-                {
-                    CheckPathExists = true,
-                    Filter = "Loot Files|*.utl",
-                    OverwritePrompt = true
-                };
+            SaveAsCommand = new AsyncRelayCommand(SaveAs);
 
-                var result = sfd.ShowDialog();
-                if (result.HasValue && result.Value)
-                {
-                    SaveFileName = sfd.FileName;
-
-                    if (!string.IsNullOrEmpty(saveFileName))
-                        await SaveFileAsync(saveFileName).ConfigureAwait(false);
-                }
-            });
-
-            ClosingCommand = new RelayCommand<CancelEventArgs>(e =>
+            ClosingCommand = new AsyncRelayCommand<CancelEventArgs>(async e =>
             {
                 if (IsDirty)
                 {
@@ -277,12 +248,11 @@ namespace LootEditor.ViewModels
                         e.Cancel = true;
                     else if (mbResult == MessageBoxResult.Yes)
                     {
-                        SaveFileCommand.Execute(null);
+                        await Save().ConfigureAwait(false);
                     }
                     else
                     {
-                        backupTimer.Stop();
-                        fileSystemService.DeleteFile(BACKUP_FILE_NAME);
+                        backupService.StopBackups();
                     }
                 }
             });
@@ -296,7 +266,7 @@ namespace LootEditor.ViewModels
                     var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                     if (mbResult == MessageBoxResult.Yes)
                     {
-                        SaveAsCommand.Execute(null);
+                        await Save().ConfigureAwait(false);
                     }
                     else if (mbResult == MessageBoxResult.Cancel)
                         return;
@@ -312,7 +282,7 @@ namespace LootEditor.ViewModels
                 }
             });
 
-            AddUpdateSalvageRulesCommand = new RelayCommand<Models.Enums.SalvageGroup>(group =>
+            AddUpdateSalvageRulesCommand = new RelayCommand<SalvageGroup>(group =>
             {
                 var wk = new Dialogs.SalvageGroupWorkmanshipViewModel(group);
                 var result = dialogService.ShowDialog("Select Workmanship", wk);
@@ -425,43 +395,77 @@ namespace LootEditor.ViewModels
                     var lf = new LootFile();
                     await lf.ReadFileAsync(reader).ConfigureAwait(false);
 
-                    var mbResult = MessageBox.Show($"Importing {lf.RuleCount} rules from {ofd.FileName}. Do you wish to continue?", "Continue?", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (mbResult == MessageBoxResult.Yes)
+                    var vm = new ImportRulesViewModel(lf);
+
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Dialogs.SkipOverwriteAddDialogResult? doForAllResult = null;
-                        foreach (var rule in lf.Rules)
+                        var mbResult = dialogService.ShowDialog("Select Rules to Import", vm);
+                        if (mbResult.HasValue && mbResult.Value == true)
                         {
-                            if (LootRuleListViewModel.LootRules.Any(r => r.Name.Equals(rule.Name)))
+                            SkipOverwriteAddDialogResult? doForAllResult = null;
+                            foreach (var rule in vm.CheckedRules)
                             {
-                                Dialogs.SkipOverwriteAddDialogResult? eResult;
-                                if (!doForAllResult.HasValue)
+                                if (LootRuleListViewModel.LootRules.Any(r => r.Name.Equals(rule.Name)))
                                 {
-                                    eResult = dialogService.ShowEnumDialog<Dialogs.SkipOverwriteAddDialogResult>($"Both files contain a rule named {rule.Name}. What would you like to do?", "Rule Exists", out var doForAll);
-                                    if (doForAll && eResult.HasValue)
-                                        doForAllResult = eResult;
+                                    SkipOverwriteAddDialogResult? eResult;
+                                    if (!doForAllResult.HasValue)
+                                    {
+                                        eResult = dialogService.ShowEnumDialog<SkipOverwriteAddDialogResult>($"Both files contain a rule named {rule.Name}. What would you like to do?", "Rule Exists", out var doForAll);
+                                        if (doForAll && eResult.HasValue)
+                                            doForAllResult = eResult;
+                                    }
+                                    else
+                                        eResult = doForAllResult;
+
+                                    switch (eResult)
+                                    {
+                                        case null:
+                                            return;
+
+                                        case SkipOverwriteAddDialogResult.Skip:
+                                            continue;
+
+                                        case SkipOverwriteAddDialogResult.Overwrite:
+                                            LootRuleListViewModel.ReplaceRule(rule);
+                                            continue;
+                                    }
                                 }
-                                else
-                                    eResult = doForAllResult;
 
-                                switch (eResult)
-                                {
-                                    case null:
-                                        return;
-
-                                    case Dialogs.SkipOverwriteAddDialogResult.Skip:
-                                        continue;
-
-                                    case Dialogs.SkipOverwriteAddDialogResult.Overwrite:
-                                        LootRuleListViewModel.ReplaceRule(rule);
-                                        continue;
-                                }
+                                LootRuleListViewModel.AddRule(rule);
                             }
-
-                            LootRuleListViewModel.AddRule(rule);
                         }
-                    }
+                    });
                 }
             });
+
+            async Task Save()
+            {
+                if (string.IsNullOrEmpty(saveFileName))
+                {
+                    await SaveAs().ConfigureAwait(false);
+                }
+                else
+                    await SaveFileAsync(saveFileName).ConfigureAwait(false);
+            }
+
+            async Task SaveAs()
+            {
+                var sfd = new SaveFileDialog()
+                {
+                    CheckPathExists = true,
+                    Filter = "Loot Files|*.utl",
+                    OverwritePrompt = true
+                };
+
+                var result = sfd.ShowDialog();
+                if (result.HasValue && result.Value)
+                {
+                    SaveFileName = sfd.FileName;
+
+                    if (!string.IsNullOrEmpty(saveFileName))
+                        await SaveFileAsync(saveFileName).ConfigureAwait(false);
+                }
+            };
         }
 
         public async Task OpenFileAsync(string fileName, string saveFileName = null, bool ignoreFirstLine = false)
@@ -535,9 +539,10 @@ namespace LootEditor.ViewModels
 
             OnPropertyChanged(nameof(RecentFiles));
 
-            var json = JsonSerializer.Serialize(RecentFiles);
             fileSystemService.TryCreateDirectory(Path.GetDirectoryName(RECENT_FILE_NAME));
-            File.WriteAllText(RECENT_FILE_NAME, json);
+            using var fs = fileSystemService.OpenFileForWriteAccess(RECENT_FILE_NAME);
+            using var writer = new Utf8JsonWriter(fs);
+            JsonSerializer.Serialize(writer, RecentFiles);
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -546,22 +551,15 @@ namespace LootEditor.ViewModels
             {
                 OnPropertyChanged(nameof(IsDirty));
 
-                if (IsDirty && !backupTimer.IsEnabled)
+                if (IsDirty)
                 {
-                    backupTimer.Start();
+                    backupService.StartBackups(LootFile, SaveFileName);
                 }
-                else if (!IsDirty && backupTimer.IsEnabled)
+                else
                 {
-                    backupTimer.Stop();
-                    fileSystemService.DeleteFile(BACKUP_FILE_NAME);
+                    backupService.StopBackups();
                 }
             }
-        }
-
-        private async void BackupTimer_Tick(object sender, EventArgs e)
-        {
-            fileSystemService.TryCreateDirectory(Path.GetDirectoryName(BACKUP_FILE_NAME));
-            await WriteFileAsync(BACKUP_FILE_NAME, saveFileName, writeFileName: true).ConfigureAwait(false);
         }
     }
 }

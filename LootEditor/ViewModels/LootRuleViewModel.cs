@@ -1,7 +1,6 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using LootEditor.Models;
 using LootEditor.Models.Enums;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,22 +8,14 @@ using System.Windows;
 
 namespace LootEditor.ViewModels
 {
-    public class LootRuleViewModel : ObservableRecipient, IDropTarget
+    public class LootRuleViewModel : DirtyViewModel, IDropTarget
     {
-        private bool isDirty;
         private LootCriteriaViewModel selectedCriteria;
 
-        public bool IsDirty
+        public override bool IsDirty
         {
-            get => isDirty || Criteria.Any(c => c.IsDirty);
-            set
-            {
-                if (isDirty != value)
-                {
-                    isDirty = value;
-                    OnPropertyChanged(nameof(IsDirty));
-                }
-            }
+            get => base.IsDirty || Criteria.Any(c => c.IsDirty);
+            set => base.IsDirty = value;
         }
 
         public string Name
@@ -138,11 +129,11 @@ namespace LootEditor.ViewModels
             OnPropertyChanged(nameof(Criteria));
         }
 
-        private bool CanPaste() => Clipboard.ContainsData(typeof(LootCriteria).Name);
+        private bool CanPaste() => Clipboard.ContainsData(nameof(LootCriteria));
 
         private void PasteItem()
         {
-            var data = Clipboard.GetData(typeof(LootCriteria).Name) as LootCriteria;
+            var data = Clipboard.GetData(nameof(LootCriteria)) as LootCriteria;
 
             var newCriteria = data.Clone() as LootCriteria;
             AddCriteria(newCriteria);
@@ -150,13 +141,13 @@ namespace LootEditor.ViewModels
 
         private void CopyItem()
         {
-            Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
+            Clipboard.SetData(nameof(LootCriteria), SelectedCriteria.Criteria);
             PasteItemCommand?.NotifyCanExecuteChanged();
         }
 
         private void CutItem()
         {
-            Clipboard.SetData(typeof(LootCriteria).Name, SelectedCriteria.Criteria);
+            Clipboard.SetData(nameof(LootCriteria), SelectedCriteria.Criteria);
             DeleteCriteriaCommand.Execute(null);
             PasteItemCommand?.NotifyCanExecuteChanged();
         }

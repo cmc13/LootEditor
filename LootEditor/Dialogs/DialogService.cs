@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System;
 using System.Windows;
 
 namespace LootEditor.Dialogs
@@ -7,8 +8,15 @@ namespace LootEditor.Dialogs
     {
         public bool? ShowDialog<TViewModel>(string title, TViewModel viewModel) where TViewModel : ObservableRecipient
         {
-            var window = new DialogBase() { DataContext = new DialogViewModel<TViewModel>(title, viewModel), Owner = Application.Current.MainWindow };
-            return window.ShowDialog();
+            try
+            {
+                var window = new DialogBase() { DataContext = new DialogViewModel<TViewModel>(title, viewModel), Owner = Application.Current.MainWindow };
+                return window.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public TEnum? ShowEnumDialog<TEnum>(string message, string caption, out bool doForAllItems) where TEnum : struct

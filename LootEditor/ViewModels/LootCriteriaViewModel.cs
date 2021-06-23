@@ -1,14 +1,12 @@
 ﻿using LootEditor.Models;
 using LootEditor.Models.Enums;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace LootEditor.ViewModels
 {
-    public class LootCriteriaViewModel : ObservableRecipient
+    public class LootCriteriaViewModel : DirtyViewModel
     {
         private LootCriteriaType? myType = null;
         public LootCriteria Criteria { get; }
-        private bool isDirty;
 
         public LootCriteriaViewModel(LootCriteria criteria)
         {
@@ -39,19 +37,6 @@ namespace LootEditor.ViewModels
                     Criteria.RequirementLength = value;
                     OnPropertyChanged(nameof(RequirementLength));
                     IsDirty = true;
-                }
-            }
-        }
-
-        public bool IsDirty
-        {
-            get => isDirty;
-            set
-            {
-                if (isDirty != value)
-                {
-                    isDirty = value;
-                    OnPropertyChanged(nameof(IsDirty));
                 }
             }
         }
