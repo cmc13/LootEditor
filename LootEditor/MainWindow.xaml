@@ -41,7 +41,7 @@
         <KeyBinding Key="V" Modifiers="Ctrl" Command="{Binding LootRuleListViewModel.PasteItemCommand}"/>
     </Window.InputBindings>
     <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyStatus}">
-        <DockPanel>
+        <DockPanel AllowDrop="True" Drop="DockPanel_Drop" DragOver="DockPanel_DragOver">
             <Menu DockPanel.Dock="Top" Grid.ColumnSpan="3">
                 <MenuItem Header="File">
                     <MenuItem Header="New File" Command="{Binding NewFileCommand}" InputGestureText="Ctrl+N">
