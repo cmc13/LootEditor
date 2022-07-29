@@ -42,6 +42,8 @@ namespace LootEditor.ViewModels
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.Emit(OpCodes.Ldarg, 1);
                 generator.Emit(OpCodes.Call, baseConstructor);
+                generator.Emit(OpCodes.Nop);
+                generator.Emit(OpCodes.Nop);
                 generator.Emit(OpCodes.Ret);
 
                 foreach (PropertyInfo propertyInfo in vmType.GetProperties(BindingFlags.Public | BindingFlags.Instance)

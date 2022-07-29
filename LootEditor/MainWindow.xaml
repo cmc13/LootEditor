@@ -14,7 +14,7 @@
         Height="450" Width="800">
     <Window.Title>
         <MultiBinding StringFormat="Loot Editor - {0}{1}">
-            <Binding Path="SaveFileName" />
+            <Binding Path="SaveFileName" TargetNullValue="New File" />
             <Binding Path="IsDirty" Converter="{StaticResource BoolToAsteriskConverter}" />
         </MultiBinding>
     </Window.Title>
@@ -54,12 +54,18 @@
                             <Image Source="Assets/Icons/OpenFile_16x.png" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Save File" Command="{Binding SaveFileCommand}" InputGestureText="Ctrl+S">
+                    <MenuItem Command="{Binding SaveFileCommand}" InputGestureText="Ctrl+S">
+                        <MenuItem.Header>
+                            <Run Text="{Binding SaveFileName, StringFormat=Save {0}, Mode=OneWay, FallbackValue=Save File}" />
+                        </MenuItem.Header>
                         <MenuItem.Icon>
                             <Image Source="Assets/Icons/Save_16x.png" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Save As..." Command="{Binding SaveAsCommand}" InputGestureText="Ctrl+Shift+S">
+                    <MenuItem Command="{Binding SaveAsCommand}" InputGestureText="Ctrl+Shift+S">
+                        <MenuItem.Header>
+                            <Run Text="{Binding SaveFileName, StringFormat=Save {0} As..., Mode=OneWay, FallbackValue=Save As...}" />
+                        </MenuItem.Header>
                         <MenuItem.Icon>
                             <Image Source="Assets/Icons/SaveAs_16x.png" />
                         </MenuItem.Icon>

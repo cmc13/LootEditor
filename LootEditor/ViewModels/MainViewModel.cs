@@ -36,7 +36,7 @@ namespace LootEditor.ViewModels
 
         public string SaveFileName
         {
-            get => string.IsNullOrEmpty(saveFileName) ? "New File" : Path.GetFileName(saveFileName);
+            get => Path.GetFileName(saveFileName);
             set
             {
                 if (saveFileName != value)
@@ -148,42 +148,39 @@ namespace LootEditor.ViewModels
         {
             LootFile = new LootFile();
 
-            if (true)
+            if (fileSystemService.FileExists(RECENT_FILE_NAME))
             {
-                if (fileSystemService.FileExists(RECENT_FILE_NAME))
+                Task.Run(async () =>
                 {
-                    Task.Run(async () =>
-                    {
-                        var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
-                        var files = await JsonSerializer.DeserializeAsync<IEnumerable<string>>(fs).ConfigureAwait(false);
-                        RecentFiles.AddRange(files);
-                        while (RecentFiles.Count > RECENT_FILE_COUNT)
-                            RecentFiles.RemoveAt(RecentFiles.Count - 1);
-                        OnPropertyChanged(nameof(RecentFiles));
-                    });
-                }
+                    using var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
+                    var files = await JsonSerializer.DeserializeAsync<IEnumerable<string>>(fs).ConfigureAwait(false);
+                    RecentFiles.AddRange(files);
+                    while (RecentFiles.Count > RECENT_FILE_COUNT)
+                        RecentFiles.RemoveAt(RecentFiles.Count - 1);
+                    OnPropertyChanged(nameof(RecentFiles));
+                });
+            }
 
-                if (backupService.BackupExists)
+            if (backupService.BackupExists)
+            {
+                try
                 {
-                    try
+                    var mbResult = MessageBox.Show($"File {backupService.BackupFileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (mbResult == MessageBoxResult.Yes)
                     {
-                        var mbResult = MessageBox.Show($"File {backupService.BackupFileName ?? "[New File]"} was not saved properly. Would you like to restore it?", "Restore Backup", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (mbResult == MessageBoxResult.Yes)
+                        Task.Run(async () =>
                         {
-                            Task.Run(async () =>
-                            {
-                                using var fs = backupService.OpenBackupFileForReadAccess();
-                                using var reader = new StreamReader(fs);
-                                await ReadLootFileAsync(reader).ConfigureAwait(false);
-                                SaveFileName = backupService.BackupFileName;
-                            });
-                        }
+                            using var fs = backupService.OpenBackupFileForReadAccess();
+                            using var reader = new StreamReader(fs);
+                            await ReadLootFileAsync(reader).ConfigureAwait(false);
+                            SaveFileName = backupService.BackupFileName;
+                        });
                     }
-                    catch { }
-                    finally
-                    {
-                        backupService.DeleteBackupFile();
-                    }
+                }
+                catch { }
+                finally
+                {
+                    backupService.DeleteBackupFile();
                 }
             }
 
@@ -277,6 +274,7 @@ namespace LootEditor.ViewModels
                 else
                 {
                     RecentFiles.RemoveAll(f => fileName.Equals(f, StringComparison.OrdinalIgnoreCase));
+                    OnPropertyChanged(nameof(RecentFiles));
                     MessageBox.Show($"The file {fileName} is no longer on disk. Removing from recent files list.",
                         "File Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -399,6 +397,8 @@ namespace LootEditor.ViewModels
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
+                        var rulesToAdd = new List<LootRule>();
+                        var rulesToReplace = new List<LootRule>();
                         var mbResult = dialogService.ShowDialog("Select Rules to Import", vm);
                         if (mbResult.HasValue && mbResult.Value == true)
                         {
@@ -410,7 +410,7 @@ namespace LootEditor.ViewModels
                                     SkipOverwriteAddDialogResult? eResult;
                                     if (!doForAllResult.HasValue)
                                     {
-                                        eResult = dialogService.ShowEnumDialog<SkipOverwriteAddDialogResult>($"Both files contain a rule named {rule.Name}. What would you like to do?", "Rule Exists", out var doForAll);
+                                        eResult = dialogService.ShowEnumDialog<SkipOverwriteAddDialogResult>($"Both files contain a rule named {(string.IsNullOrEmpty(rule.Name) ? "<blank>" : rule.Name)}. What would you like to do?", "Rule Exists", out var doForAll);
                                         if (doForAll && eResult.HasValue)
                                             doForAllResult = eResult;
                                     }
@@ -426,13 +426,18 @@ namespace LootEditor.ViewModels
                                             continue;
 
                                         case SkipOverwriteAddDialogResult.Overwrite:
-                                            LootRuleListViewModel.ReplaceRule(rule);
+                                            rulesToReplace.Add(rule);
                                             continue;
                                     }
                                 }
 
-                                LootRuleListViewModel.AddRule(rule);
+                                rulesToAdd.Add(rule);
                             }
+
+                            foreach (var r in rulesToAdd)
+                                LootRuleListViewModel.AddRule(r);
+                            foreach (var r in rulesToReplace)
+                                LootRuleListViewModel.ReplaceRule(r);
                         }
                     });
                 }

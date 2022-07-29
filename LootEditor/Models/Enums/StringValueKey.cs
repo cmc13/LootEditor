@@ -9,7 +9,7 @@ namespace LootEditor.Models.Enums
         Title = 5,
         Inscription = 7,
         [Description("Inscribed By")] InscribedBy = 8,
-        [Description("FellowshipName")] FellowshipName = 10,
+        [Description("Fellowship Name")] FellowshipName = 10,
         [Description("Usage Instructions")] UsageInstructions = 14,
         [Description("Simple Description")] SimpleDescription = 15,
         [Description("Full Description")] FullDescription = 16,

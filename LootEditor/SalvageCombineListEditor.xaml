@@ -9,6 +9,7 @@
              xmlns:vr="clr-namespace:LootEditor.ValidationRules"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -61,6 +62,9 @@
 
                     <ListView Grid.Row="0" ItemsSource="{Binding CombineRules}" SelectedItem="{Binding SelectedItem}"
                               BorderThickness="0" SelectionMode="Single" FontSize="16">
+                        <b:Interaction.Behaviors>
+                            <local:ScrollIntoViewBehavior />
+                        </b:Interaction.Behaviors>
                         <ListView.View>
                             <GridView>
                                 <GridView.ColumnHeaderContainerStyle>
@@ -86,13 +90,13 @@
                     </ListView>
 
                     <UniformGrid Grid.Row="1" Columns="2">
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}" IsEnabled="{Binding AddSalvageCommand_CanExecute}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Icons/Add_16x.png" />
                             </xctk:IconButton.Icon>
                             <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                         </xctk:IconButton>
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}" IsEnabled="{Binding DeleteSalvageCommand_CanExecute}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Icons/Trash_16x.png" />
                             </xctk:IconButton.Icon>

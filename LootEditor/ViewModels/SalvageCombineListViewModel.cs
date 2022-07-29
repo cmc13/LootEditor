@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace LootEditor.ViewModels
 {
@@ -104,22 +105,25 @@ namespace LootEditor.ViewModels
                 new SalvageObj() { CombineRange = null, CombineValue = null });
             CombineRules.Add(first);
             SelectedItem = first;
-        }, () => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m)));
+        });
 
         public RelayCommand DeleteSalvageCommand => new(() =>
         {
-            CombineRules.Remove(SelectedItem.Value.Key);
-        }, () => SelectedItem.HasValue);
+            if (SelectedItem != null)
+                CombineRules.Remove(SelectedItem.Value.Key);
+        });
 
         public KeyValuePair<Material, SalvageObj>? SelectedItem
         {
             get => selectedItem;
             set
             {
-                if (!selectedItem.Equals(value))
+                if ((selectedItem == null && value != null) || !selectedItem.Equals(value))
                 {
                     selectedItem = value;
                     OnPropertyChanged(nameof(SelectedItem));
+                    OnPropertyChanged(nameof(AddSalvageCommand_CanExecute));
+                    OnPropertyChanged(nameof(DeleteSalvageCommand_CanExecute));
 
                     if (selectedItem.HasValue)
                         SalvageCombineViewModel = new SalvageCombineViewModel(selectedItem.Value.Key, selectedItem.Value.Value);
@@ -169,19 +173,23 @@ namespace LootEditor.ViewModels
             }
         }
 
-        public ObservableDictionary<Material, SalvageObj> CombineRules { get; } = new ObservableDictionary<Material, SalvageObj>();
+        public bool AddSalvageCommand_CanExecute => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m));
 
-        public void Clean()
-        {
-            IsDirty = false;
-        }
+        public bool DeleteSalvageCommand_CanExecute => SelectedItem.HasValue;
+
+        public ObservableDictionary<Material, SalvageObj> CombineRules { get; } = new();
+
+        public void Clean() => IsDirty = false;
 
         private void Vm_AcceptPendingChange(object sender, AcceptPendingChangeEventArgs e)
         {
             if (e.PropertyName == nameof(SalvageCombineViewModel.Material))
             {
-                if (salvageCombineBlock.Materials.ContainsKey((Material)e.NewValue) || salvageCombineBlock.MaterialValues.ContainsKey((Material)e.NewValue))
+                if (CombineRules.ContainsKey((Material)e.NewValue))
+                {
                     e.Cancel = true;
+                    SelectedItem = CombineRules.First(kv => kv.Key == (Material)e.NewValue);
+                }
                 else
                 {
                     SelectedItem = null;
@@ -237,7 +245,7 @@ namespace LootEditor.ViewModels
                         salvageCombineBlock.MaterialValues.Add(item.Key, item.Value.CombineValue.Value);
                 }
 
-                AddSalvageCommand?.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(AddSalvageCommand_CanExecute));
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {
@@ -249,7 +257,7 @@ namespace LootEditor.ViewModels
                         salvageCombineBlock.MaterialValues.Remove(item.Key);
                 }
 
-                AddSalvageCommand?.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(AddSalvageCommand_CanExecute));
             }
             else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
             {
