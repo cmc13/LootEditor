@@ -1,80 +1,76 @@
-﻿using LootEditor.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LootEditor.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace LootEditor.ViewModels
+namespace LootEditor.ViewModels;
+
+public class TemplateEditorViewModel : ObservableRecipient
 {
-    public class TemplateEditorViewModel : ObservableRecipient
+    private readonly TemplateService templateService = new();
+    private TemplateListItemViewModel selectedTemplate;
+    private LootRuleViewModel selectedRule;
+
+    public RelayCommand DeleteTemplateCommand { get; }
+
+    public TemplateEditorViewModel()
     {
-        private readonly TemplateService templateService = new();
-        private TemplateListItemViewModel selectedTemplate;
-        private LootRuleViewModel selectedRule;
+        templateService.TemplatesChanged += (s, e) => OnPropertyChanged(nameof(Templates));
 
-        public RelayCommand DeleteTemplateCommand { get; }
+        DeleteTemplateCommand = new RelayCommand(() => templateService.DeleteTemplate(SelectedTemplate.Template), () => SelectedTemplate != null);
+    }
 
-        public TemplateEditorViewModel()
+    public IEnumerable<TemplateListItemViewModel> Templates => templateService.GetTemplates().Select(t => new TemplateListItemViewModel(t, templateService));
+
+    public TemplateListItemViewModel SelectedTemplate
+    {
+        get => selectedTemplate;
+        set
         {
-            templateService.TemplatesChanged += (s, e) => OnPropertyChanged(nameof(Templates));
-
-            DeleteTemplateCommand = new RelayCommand(() => templateService.DeleteTemplate(SelectedTemplate.Template), () => SelectedTemplate != null);
-        }
-
-        public IEnumerable<TemplateListItemViewModel> Templates => templateService.GetTemplates().Select(t => new TemplateListItemViewModel(t, templateService));
-
-        public TemplateListItemViewModel SelectedTemplate
-        {
-            get => selectedTemplate;
-            set
+            if (selectedTemplate != value)
             {
-                if (selectedTemplate != value)
-                {
-                    selectedTemplate = value;
-                    OnPropertyChanged(nameof(SelectedTemplate));
+                selectedTemplate = value;
+                OnPropertyChanged(nameof(SelectedTemplate));
 
-                    if (selectedTemplate != null)
-                    {
-                        templateService.GetRuleFromTemplate(selectedTemplate.Template)
-                            .ContinueWith(t =>
-                            {
-                                SelectedRule = new LootRuleViewModel(t.Result);
-                                OnPropertyChanged(nameof(SelectedRule));
-                            }, System.Threading.Tasks.TaskContinuationOptions.OnlyOnRanToCompletion);
-                    }
+                if (selectedTemplate != null)
+                {
+                    templateService.GetRuleFromTemplate(selectedTemplate.Template)
+                        .ContinueWith(t =>
+                        {
+                            SelectedRule = new LootRuleViewModel(t.Result);
+                            OnPropertyChanged(nameof(SelectedRule));
+                        }, System.Threading.Tasks.TaskContinuationOptions.OnlyOnRanToCompletion);
                 }
             }
         }
+    }
 
-        public LootRuleViewModel SelectedRule
+    public LootRuleViewModel SelectedRule
+    {
+        get => selectedRule;
+        private set
         {
-            get => selectedRule;
-            private set
+            if (selectedRule != value)
             {
-                if (selectedRule != value)
-                {
-                    if (selectedRule != null)
-                        selectedRule.PropertyChanged -= SelectedRule_PropertyChanged;
-                    selectedRule = value;
-                    OnPropertyChanged(nameof(SelectedRule));
-                    if (selectedRule != null)
-                        selectedRule.PropertyChanged += SelectedRule_PropertyChanged;
-                }
+                if (selectedRule != null)
+                    selectedRule.PropertyChanged -= SelectedRule_PropertyChanged;
+                selectedRule = value;
+                OnPropertyChanged(nameof(SelectedRule));
+                if (selectedRule != null)
+                    selectedRule.PropertyChanged += SelectedRule_PropertyChanged;
             }
         }
+    }
 
-        private async void SelectedRule_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private async void SelectedRule_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(LootRuleViewModel.IsDirty))
         {
-            if (e.PropertyName == nameof(LootRuleViewModel.IsDirty))
+            if (SelectedRule.IsDirty)
             {
-                if (SelectedRule.IsDirty)
-                {
-                    await templateService.SaveRuleAsTemplate(SelectedRule.Rule, SelectedTemplate.Name).ConfigureAwait(false);
-                    SelectedRule.IsDirty = false;
-                }
+                await templateService.SaveRuleAsTemplate(SelectedRule.Rule, SelectedTemplate.Name).ConfigureAwait(false);
+                SelectedRule.IsDirty = false;
             }
         }
     }

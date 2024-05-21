@@ -1,34 +1,33 @@
 ﻿using Microsoft.Xaml.Behaviors;
 using System.Windows.Controls;
 
-namespace LootEditor
-{
-    public class ScrollIntoViewBehavior : Behavior<ListBox>
-    {
-        protected override void OnAttached()
-        {
-            base.OnAttached();
-            base.AssociatedObject.SelectionChanged += AssociatedObject_SelectionChanged;
-        }
-        protected override void OnDetaching()
-        {
-            base.OnDetaching();
-            base.AssociatedObject.SelectionChanged -= AssociatedObject_SelectionChanged;
-        }
+namespace LootEditor;
 
-        private void AssociatedObject_SelectionChanged(object sender, SelectionChangedEventArgs e)
+public class ScrollIntoViewBehavior : Behavior<ListBox>
+{
+    protected override void OnAttached()
+    {
+        base.OnAttached();
+        base.AssociatedObject.SelectionChanged += AssociatedObject_SelectionChanged;
+    }
+    protected override void OnDetaching()
+    {
+        base.OnDetaching();
+        base.AssociatedObject.SelectionChanged -= AssociatedObject_SelectionChanged;
+    }
+
+    private void AssociatedObject_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ListBox listBox)
         {
-            if (sender is ListBox listBox)
+            if (listBox.SelectedItem != null)
             {
-                if (listBox.SelectedItem != null)
+                listBox.Dispatcher.Invoke(() =>
                 {
-                    listBox.Dispatcher.Invoke(() =>
-                    {
-                        listBox.UpdateLayout();
-                        if (listBox.SelectedItem != null)
-                            listBox.ScrollIntoView(listBox.SelectedItem);
-                    });
-                }
+                    listBox.UpdateLayout();
+                    if (listBox.SelectedItem != null)
+                        listBox.ScrollIntoView(listBox.SelectedItem);
+                });
             }
         }
     }

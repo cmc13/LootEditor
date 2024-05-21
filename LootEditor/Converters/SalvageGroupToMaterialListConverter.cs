@@ -5,25 +5,24 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace LootEditor.Converters
+namespace LootEditor.Converters;
+
+public class SalvageGroupToMaterialListConverter : IValueConverter
 {
-    public class SalvageGroupToMaterialListConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value is SalvageGroup group)
         {
-            if (value is SalvageGroup group)
-            {
-                var td = TypeDescriptor.GetConverter(typeof(Material));
-                var materials = group.GetMaterials();
-                return $"Materials: {string.Join(", ", materials.Select(m => td.ConvertToInvariantString(m)))}";
-            }
-
-            return value;
+            var td = TypeDescriptor.GetConverter(typeof(Material));
+            var materials = group.GetMaterials();
+            return $"Materials: {string.Join(", ", materials.Select(m => td.ConvertToInvariantString(m)))}";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

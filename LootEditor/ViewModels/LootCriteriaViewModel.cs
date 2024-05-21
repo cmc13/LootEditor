@@ -1,51 +1,50 @@
 ﻿using LootEditor.Models;
 using LootEditor.Models.Enums;
 
-namespace LootEditor.ViewModels
+namespace LootEditor.ViewModels;
+
+public class LootCriteriaViewModel : DirtyViewModel
 {
-    public class LootCriteriaViewModel : DirtyViewModel
+    private LootCriteriaType? myType = null;
+    public LootCriteria Criteria { get; }
+
+    public LootCriteriaViewModel(LootCriteria criteria)
     {
-        private LootCriteriaType? myType = null;
-        public LootCriteria Criteria { get; }
+        Criteria = criteria;
+    }
 
-        public LootCriteriaViewModel(LootCriteria criteria)
+    public LootCriteriaType Type
+    {
+        get => myType ?? Criteria.Type;
+        set
         {
-            Criteria = criteria;
-        }
-
-        public LootCriteriaType Type
-        {
-            get => myType ?? Criteria.Type;
-            set
+            if (Criteria.Type != value)
             {
-                if (Criteria.Type != value)
-                {
-                    myType = value;
-                    OnPropertyChanged(nameof(Type));
-                    IsDirty = true;
-                }
+                myType = value;
+                OnPropertyChanged(nameof(Type));
+                IsDirty = true;
             }
         }
+    }
 
-        public int RequirementLength
+    public int RequirementLength
+    {
+        get => Criteria.RequirementLength;
+        set
         {
-            get => Criteria.RequirementLength;
-            set
+            if (Criteria.RequirementLength != value)
             {
-                if (Criteria.RequirementLength != value)
-                {
-                    Criteria.RequirementLength = value;
-                    OnPropertyChanged(nameof(RequirementLength));
-                    IsDirty = true;
-                }
+                Criteria.RequirementLength = value;
+                OnPropertyChanged(nameof(RequirementLength));
+                IsDirty = true;
             }
         }
+    }
 
-        public string DisplayValue => Criteria.ToString();
+    public string DisplayValue => Criteria.ToString();
 
-        public void Clean()
-        {
-            IsDirty = false;
-        }
+    public void Clean()
+    {
+        IsDirty = false;
     }
 }

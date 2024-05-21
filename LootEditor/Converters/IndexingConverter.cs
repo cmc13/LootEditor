@@ -4,28 +4,27 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace LootEditor.Converters
+namespace LootEditor.Converters;
+
+public class IndexingConverter : IValueConverter
 {
-    public class IndexingConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is IEnumerable e)
-                return IndexedValues(e);
+        if (value is IEnumerable e)
+            return IndexedValues(e);
 
-            return value;
-        }
+        return value;
+    }
 
-        private IEnumerable<KeyValuePair<int, object>> IndexedValues(IEnumerable e)
-        {
-            var i = 0;
-            foreach (var val in e)
-                yield return new KeyValuePair<int, object>(++i, val);
-        }
+    private static IEnumerable<KeyValuePair<int, object>> IndexedValues(IEnumerable e)
+    {
+        var i = 0;
+        foreach (var val in e)
+            yield return new KeyValuePair<int, object>(++i, val);
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

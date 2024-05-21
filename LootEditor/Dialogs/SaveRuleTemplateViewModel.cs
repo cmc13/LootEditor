@@ -1,21 +1,20 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LootEditor.Dialogs
+namespace LootEditor.Dialogs;
+
+public class SaveRuleTemplateViewModel : ObservableRecipient
 {
-    public class SaveRuleTemplateViewModel : ObservableRecipient
-    {
-        private string templateName;
+    private string templateName;
 
-        public string TemplateName
+    public string TemplateName
+    {
+        get => templateName;
+        set
         {
-            get => templateName;
-            set
+            if (templateName != value)
             {
-                if (templateName != value)
-                {
-                    templateName = value;
-                    OnPropertyChanged(nameof(TemplateName));
-                }
+                templateName = value;
+                OnPropertyChanged(nameof(TemplateName));
             }
         }
     }

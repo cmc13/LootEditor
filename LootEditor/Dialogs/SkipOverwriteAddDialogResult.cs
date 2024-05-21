@@ -1,9 +1,8 @@
-﻿namespace LootEditor.Dialogs
+﻿namespace LootEditor.Dialogs;
+
+public enum SkipOverwriteAddDialogResult
 {
-    public enum SkipOverwriteAddDialogResult
-    {
-        Skip,
-        Overwrite,
-        Add
-    }
+    Skip,
+    Overwrite,
+    Add
 }

@@ -2,38 +2,37 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace LootEditor.Converters
+namespace LootEditor.Converters;
+
+public class HexStringToIntConverter : IValueConverter
 {
-    public class HexStringToIntConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value is int iValue)
         {
-            if (value is int iValue)
-            {
-                return iValue.ToString("X");
-            }
-
-            return value;
+            return iValue.ToString("X");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        return value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is string strValue)
         {
-            if (value is string strValue)
+            if (strValue.StartsWith("0x"))
+                strValue = strValue[2..];
+
+            try
             {
-                if (strValue.StartsWith("0x"))
-                    strValue = strValue.Substring(2);
-
-                try
-                {
-                    return System.Convert.ToInt32(strValue, 16);
-                }
-                catch
-                {
-                    return 0;
-                }
+                return System.Convert.ToInt32(strValue, 16);
             }
-
-            return value;
+            catch
+            {
+                return 0;
+            }
         }
+
+        return value;
     }
 }

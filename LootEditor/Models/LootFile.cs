@@ -5,108 +5,107 @@ using System.Threading.Tasks;
 
 using static LootEditor.Models.Constants.Constants;
 
-namespace LootEditor.Models
+namespace LootEditor.Models;
+
+public class LootFile
 {
-    public class LootFile
+    private readonly List<LootRule> lootRules = [];
+
+    public int Version { get; set; } = MAX_FILE_VERSION;
+
+    public int RuleCount { get; set; }
+
+    public IEnumerable<LootRule> Rules => lootRules.AsReadOnly();
+    public IEnumerable<ExtraBlock> ExtraBlocks { get; set; } = [new SalvageCombineBlockType()];
+
+    public async Task ReadFileAsync(StreamReader reader)
     {
-        private readonly List<LootRule> lootRules = new();
-
-        public int Version { get; set; } = MAX_FILE_VERSION;
-
-        public int RuleCount { get; set; }
-
-        public IEnumerable<LootRule> Rules => lootRules.AsReadOnly();
-        public IEnumerable<ExtraBlock> ExtraBlocks { get; set; } = new[] { new SalvageCombineBlockType() };
-
-        public async Task ReadFileAsync(StreamReader reader)
+        var firstLine = await reader.ReadLineAsync().ConfigureAwait(false);
+        if (firstLine.Equals("UTL"))
         {
-            var firstLine = await reader.ReadLineAsync().ConfigureAwait(false);
-            if (firstLine.Equals("UTL"))
+            var versionLine = await reader.ReadLineAsync().ConfigureAwait(false);
+            if (!int.TryParse(versionLine, out var version))
             {
-                var versionLine = await reader.ReadLineAsync().ConfigureAwait(false);
-                if (!int.TryParse(versionLine, out var version))
+                if (Version > MAX_FILE_VERSION)
                 {
-                    if (Version > MAX_FILE_VERSION)
-                    {
-                        throw new Exception($"Unknown file version detected. Max version is {MAX_FILE_VERSION}, file is version {version}.");
-                    }
+                    throw new Exception($"Unknown file version detected. Max version is {MAX_FILE_VERSION}, file is version {version}.");
                 }
-
-                Version = version;
-
-                var countLine = await reader.ReadLineAsync().ConfigureAwait(false);
-                if (!int.TryParse(countLine, out var ruleCount))
-                {
-                    throw new Exception("Unable to read rule count from file.");
-                }
-
-                RuleCount = ruleCount;
-            }
-            else
-            {
-                Version = 0;
-
-                if (!int.TryParse(firstLine, out var ruleCount))
-                {
-                    throw new Exception("Unable to read rule count from file.");
-                }
-
-                RuleCount = ruleCount;
             }
 
-            for (var i = 0; i < RuleCount; ++i)
+            Version = version;
+
+            var countLine = await reader.ReadLineAsync().ConfigureAwait(false);
+            if (!int.TryParse(countLine, out var ruleCount))
             {
-                if (reader.EndOfStream)
-                {
-                    throw new Exception("Unexpected end of file found.");
-                }
-
-                var rule = await LootRule.ReadRuleAsync(Version, reader).ConfigureAwait(false);
-
-                lootRules.Add(rule);
+                throw new Exception("Unable to read rule count from file.");
             }
 
-            var blocks = new List<ExtraBlock>();
-            while (!reader.EndOfStream)
-            {
-                var block = await ExtraBlock.ReadBlockAsync(reader).ConfigureAwait(false);
+            RuleCount = ruleCount;
+        }
+        else
+        {
+            Version = 0;
 
-                blocks.Add(block);
+            if (!int.TryParse(firstLine, out var ruleCount))
+            {
+                throw new Exception("Unable to read rule count from file.");
             }
 
-            ExtraBlocks = blocks.AsReadOnly();
+            RuleCount = ruleCount;
         }
 
-        public async Task WriteFileAsync(TextWriter writer)
+        for (var i = 0; i < RuleCount; ++i)
         {
-            await writer.WriteLineAsync("UTL").ConfigureAwait(false);
-            await writer.WriteLineAsync(MAX_FILE_VERSION.ToString()).ConfigureAwait(false);
-            await writer.WriteLineAsync(RuleCount.ToString()).ConfigureAwait(false);
+            if (reader.EndOfStream)
+            {
+                throw new Exception("Unexpected end of file found.");
+            }
 
-            foreach (var rule in Rules)
-                await rule.WriteAsync(writer);
+            var rule = await LootRule.ReadRuleAsync(Version, reader).ConfigureAwait(false);
 
-            foreach (var block in ExtraBlocks)
-                await block.WriteAsync(writer);
+            lootRules.Add(rule);
         }
 
-        public void AddRule(LootRule newRule)
+        var blocks = new List<ExtraBlock>();
+        while (!reader.EndOfStream)
         {
-            lootRules.Add(newRule);
-            RuleCount++;
+            var block = await ExtraBlock.ReadBlockAsync(reader).ConfigureAwait(false);
+
+            blocks.Add(block);
         }
 
-        public void RemoveRule(LootRule rule)
-        {
-            lootRules.Remove(rule);
-            RuleCount--;
-        }
+        ExtraBlocks = blocks.AsReadOnly();
+    }
 
-        public void MoveRule(int index, int newIndex)
-        {
-            var item = lootRules[index];
-            lootRules.RemoveAt(index);
-            lootRules.Insert(newIndex, item);
-        }
+    public async Task WriteFileAsync(TextWriter writer)
+    {
+        await writer.WriteLineAsync("UTL").ConfigureAwait(false);
+        await writer.WriteLineAsync(MAX_FILE_VERSION.ToString()).ConfigureAwait(false);
+        await writer.WriteLineAsync(RuleCount.ToString()).ConfigureAwait(false);
+
+        foreach (var rule in Rules)
+            await rule.WriteAsync(writer);
+
+        foreach (var block in ExtraBlocks)
+            await block.WriteAsync(writer);
+    }
+
+    public void AddRule(LootRule newRule)
+    {
+        lootRules.Add(newRule);
+        RuleCount++;
+    }
+
+    public void RemoveRule(LootRule rule)
+    {
+        lootRules.Remove(rule);
+        RuleCount--;
+    }
+
+    public void MoveRule(int index, int newIndex)
+    {
+        var item = lootRules[index];
+        lootRules.RemoveAt(index);
+        lootRules.Insert(newIndex, item);
     }
 }

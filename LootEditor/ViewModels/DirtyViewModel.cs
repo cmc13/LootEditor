@@ -1,21 +1,20 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LootEditor.ViewModels
+namespace LootEditor.ViewModels;
+
+public class DirtyViewModel : ObservableRecipient
 {
-    public class DirtyViewModel : ObservableRecipient
-    {
-        private bool isDirty = false;
+    private bool isDirty = false;
 
-        public virtual bool IsDirty
+    public virtual bool IsDirty
+    {
+        get => isDirty;
+        set
         {
-            get => isDirty;
-            set
+            if (isDirty != value)
             {
-                if (isDirty != value)
-                {
-                    isDirty = value;
-                    OnPropertyChanged(nameof(IsDirty));
-                }
+                isDirty = value;
+                OnPropertyChanged(nameof(IsDirty));
             }
         }
     }

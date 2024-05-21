@@ -1,9 +1,8 @@
-﻿namespace LootEditor.Dialogs
+﻿namespace LootEditor.Dialogs;
+
+public enum WhichRules
 {
-    public enum WhichRules
-    {
-        All,
-        Enabled,
-        Disabled
-    }
+    All,
+    Enabled,
+    Disabled
 }

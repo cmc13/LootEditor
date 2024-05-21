@@ -1,33 +1,31 @@
-﻿using LootEditor.Models.Enums;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Linq;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LootEditor.Models.Enums;
 
-namespace LootEditor.Dialogs
+namespace LootEditor.Dialogs;
+
+public class SalvageGroupWorkmanshipViewModel : ObservableRecipient
 {
-    public class SalvageGroupWorkmanshipViewModel : ObservableRecipient
+    private double workmanship = 1;
+
+    public SalvageGroupWorkmanshipViewModel(SalvageGroup selectedSalvageGroup)
     {
-        private double workmanship = 1;
+        SelectedSalvageGroup = selectedSalvageGroup;
+    }
 
-        public SalvageGroupWorkmanshipViewModel(SalvageGroup selectedSalvageGroup)
+    public string MaterialString => string.Join(", ", SelectedSalvageGroup.GetMaterials());
+
+    public double Workmanship
+    {
+        get => workmanship;
+        set
         {
-            SelectedSalvageGroup = selectedSalvageGroup;
-        }
-
-        public string MaterialString => string.Join(", ", SelectedSalvageGroup.GetMaterials());
-
-        public double Workmanship
-        {
-            get => workmanship;
-            set
+            if (workmanship != value)
             {
-                if (workmanship != value)
-                {
-                    workmanship = value;
-                    OnPropertyChanged(nameof(Workmanship));
-                }
+                workmanship = value;
+                OnPropertyChanged(nameof(Workmanship));
             }
         }
-
-        public SalvageGroup SelectedSalvageGroup { get; }
     }
+
+    public SalvageGroup SelectedSalvageGroup { get; }
 }
