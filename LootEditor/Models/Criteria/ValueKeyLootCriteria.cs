@@ -71,7 +71,29 @@ public class ValueKeyLootCriteria<TKey, TValue> : ValueLootCriteria<TValue> wher
                 break;
         }
 
-        sb.Append(Value);
+
+
+        if (Key is Enums.DoubleValueKey doubleKey)
+        {
+            switch (doubleKey)
+            {
+                case Enums.DoubleValueKey.AttackBonus:
+                case Enums.DoubleValueKey.MeleeDefenseBonus:
+                case Enums.DoubleValueKey.MissileDBonus:
+                case Enums.DoubleValueKey.MagicDBonus:
+                case Enums.DoubleValueKey.DamageBonus:
+                    sb.AppendFormat("{0:N1}", (Convert.ToDouble(Value) - 1.0) * 100).Append('%');
+                    break;
+                case Enums.DoubleValueKey.ManaCBonus:
+                    sb.AppendFormat("{0:N1}", Convert.ToDouble(Value) * 100).Append('%');
+                    break;
+                default:
+                    sb.AppendFormat("{0:0.0##}", Value);
+                    break;
+            }
+        }
+        else
+            sb.Append(Value);
 
         if (Type == Enums.LootCriteriaType.LongValKeyFlagExists)
         {

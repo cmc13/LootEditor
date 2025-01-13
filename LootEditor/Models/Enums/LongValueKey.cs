@@ -6,6 +6,7 @@ namespace LootEditor.Models.Enums;
 public enum LongValueKey
 {
     [Description("Species")] Species = 2,
+    [Description("Palette Template")] PaletteTemplate = 3,
     [Description("Burden")] Burden = 5,
     [Description("Equipped Slots")] EquippedSlots = 10,
     [Description("Rare Id")] RareId = 17,

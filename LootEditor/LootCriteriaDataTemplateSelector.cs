@@ -5,7 +5,8 @@ using System.Windows.Controls;
 
 namespace LootEditor;
 
-public class LootCriteriaDataTemplateSelector : DataTemplateSelector
+public sealed class LootCriteriaDataTemplateSelector
+    : DataTemplateSelector
 {
     public DataTemplate ColorLootCriteriaTemplate { get; set; }
     public DataTemplate DisabledRuleTemplate { get; set; }

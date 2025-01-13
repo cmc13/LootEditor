@@ -19,42 +19,6 @@
         <cvt:HasNonDisabledTypeCriteriaConverter x:Key="HasNonDisabledTypeCriteriaConverter" />
         <cvt:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
         <cvt:FullPathToFileNameConverter x:Key="FullPathToFileNameConverter" />
-        <DataTemplate x:Key="LootRuleItemTemplate" DataType="{x:Type vm:LootRuleViewModel}">
-            <Grid ToolTip="{Binding Name}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}" FontSize="14">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsDisabled}" Value="True">
-                                    <Setter Property="TextDecorations" Value="Strikethrough" />
-                                    <Setter Property="FontStyle" Value="Italic" />
-                                    <Setter Property="Opacity" Value="0.5" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-
-                <Grid Grid.Row="1" Opacity="0.5" Visibility="{Binding Criteria, Converter={StaticResource HasNonDisabledTypeCriteriaConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Column="0">
-                        <TextBlock Text="{Binding Action, Converter={StaticResource EnumDescriptionConverter}}" FontSize="8" />
-                        <TextBlock Visibility="{Binding Action, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LootAction.KeepUpTo}}" Text="{Binding KeepUpToCount}" FontSize="8" />
-                    </StackPanel>
-                    <TextBlock Grid.Column="2" Text="{Binding Criteria.Count, StringFormat=({0})}" FontSize="8" />
-                </Grid>
-            </Grid>
-        </DataTemplate>
-        <CollectionViewSource x:Key="LootRules" Source="{Binding LootRules}" Filter="CollectionViewSource_Filter"></CollectionViewSource>
     </UserControl.Resources>
 
     <Grid>
@@ -69,8 +33,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="0" Margin="0,5" Text="{Binding Filter}"
-                                   TextChanged="TxtFilter_TextChanged">
+            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="0" Margin="0,5" Text="{Binding Filter}">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Assets/Icons/Filter_16x.png" />
@@ -85,9 +48,9 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <ListBox Grid.Row="0" ItemsSource="{Binding Source={StaticResource LootRules}}" BorderThickness="0"
-                         ItemTemplate="{StaticResource LootRuleItemTemplate}"
-                         SelectedItem="{Binding SelectedRule}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
+                    <ListBox Grid.Row="0" ItemsSource="{Binding FilteredLootRules}" BorderThickness="0"
+                             SelectedItem="{Binding SelectedRule}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"
                          dd:DragDrop.DropHandler="{Binding}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
                         <b:Interaction.Behaviors>
                             <local:ScrollIntoViewBehavior />
@@ -99,17 +62,17 @@
                         </ListBox.InputBindings>
                         <ListBox.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutItemCommand}">
+                                <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutRuleCommand}">
                                     <MenuItem.Icon>
                                         <Image Source="Assets/Icons/Cut_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyItemCommand}">
+                                <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyRuleCommand}">
                                     <MenuItem.Icon>
                                         <Image Source="Assets/Icons/Copy_16x.png" />
                                     </MenuItem.Icon>
                                 </MenuItem>
-                                <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteItemCommand}">
+                                <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteRuleCommand}">
                                     <MenuItem.Icon>
                                         <Image Source="Assets/Icons/Paste_16x.png" />
                                     </MenuItem.Icon>
@@ -159,6 +122,43 @@
                                 <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick" />
                             </Style>
                         </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:LootRuleViewModel}">
+                                <Grid ToolTip="{Binding Name}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}" FontSize="14">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsDisabled}" Value="True">
+                                                        <Setter Property="TextDecorations" Value="Strikethrough" />
+                                                        <Setter Property="FontStyle" Value="Italic" />
+                                                        <Setter Property="Opacity" Value="0.5" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+
+                                    <Grid Grid.Row="1" Opacity="0.5" Visibility="{Binding Criteria, Converter={StaticResource HasNonDisabledTypeCriteriaConverter}}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                            <TextBlock Text="{Binding Action, Converter={StaticResource EnumDescriptionConverter}}" FontSize="8" />
+                                            <TextBlock Visibility="{Binding Action, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LootAction.KeepUpTo}}" Text="{Binding KeepUpToCount}" FontSize="8" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding Criteria.Count, StringFormat=({0})}" FontSize="8" />
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
 
                     <Grid Grid.Row="1">

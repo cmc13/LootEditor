@@ -3,7 +3,8 @@ using LootEditor.Models.Enums;
 
 namespace LootEditor.ViewModels;
 
-public class LootCriteriaViewModel : DirtyViewModel
+public class LootCriteriaViewModel
+    : DirtyViewModel
 {
     private LootCriteriaType? myType = null;
     public LootCriteria Criteria { get; }

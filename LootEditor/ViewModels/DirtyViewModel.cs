@@ -2,7 +2,8 @@
 
 namespace LootEditor.ViewModels;
 
-public class DirtyViewModel : ObservableRecipient
+public partial class DirtyViewModel
+    : ObservableRecipient
 {
     private bool isDirty = false;
 

@@ -36,7 +36,7 @@
 
                 <CheckBox Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Name="cbxName"
                           IsChecked="{Binding Name, Converter={StaticResource NullableToBoolConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">Name:</CheckBox>
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}"
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="5"
                          IsEnabled="{Binding IsChecked, ElementName=cbxName}">
                     <TextBox.Text>
                         <Binding Path="Name"

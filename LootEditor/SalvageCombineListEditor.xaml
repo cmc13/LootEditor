@@ -33,7 +33,7 @@
             </Grid.ColumnDefinitions>
             
             <TextBlock Grid.Column="0">Default Combine Range:</TextBlock>
-            <TextBox Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="2,0,0,0">
+            <TextBox Grid.Column="1" Margin="2,0,0,0" Style="{StaticResource TextBoxErrorStyle}">
                 <TextBox.Text>
                     <Binding Path="DefaultCombineRange"
                                  Mode="TwoWay"
@@ -90,13 +90,13 @@
                     </ListView>
 
                     <UniformGrid Grid.Row="1" Columns="2">
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}" IsEnabled="{Binding AddSalvageCommand_CanExecute}">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}" IsEnabled="{Binding CanAddSalvage}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Icons/Add_16x.png" />
                             </xctk:IconButton.Icon>
                             <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                         </xctk:IconButton>
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}" IsEnabled="{Binding DeleteSalvageCommand_CanExecute}">
+                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}" IsEnabled="{Binding CanDeleteSalvage}">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Icons/Trash_16x.png" />
                             </xctk:IconButton.Icon>

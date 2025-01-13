@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35209.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LootEditor", "LootEditor\LootEditor.csproj", "{C7422F4D-A9E6-4BDB-B583-1BE07256AD39}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LootEditor.Install", "LootEditor.Install\LootEditor.Install.vdproj", "{E9056A55-EC28-46DD-BE85-B2FD1E31D61B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{C7422F4D-A9E6-4BDB-B583-1BE07256AD39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7422F4D-A9E6-4BDB-B583-1BE07256AD39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7422F4D-A9E6-4BDB-B583-1BE07256AD39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9056A55-EC28-46DD-BE85-B2FD1E31D61B}.Debug|Any CPU.ActiveCfg = Debug
+		{E9056A55-EC28-46DD-BE85-B2FD1E31D61B}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

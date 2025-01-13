@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using GongSolutions.Wpf.DragDrop;
 using LootEditor.Models;
 using LootEditor.Models.Enums;
@@ -6,22 +7,26 @@ using LootEditor.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace LootEditor.ViewModels;
 
-public class LootRuleListViewModel : DirtyViewModel, IDropTarget
+public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
 {
     private readonly LootFile lootFile;
-    private LootRuleViewModel selectedRule = null;
-    private string filter;
     private readonly TemplateService templateService = new();
 
     public LootRuleListViewModel(LootFile lootFile)
     {
         this.lootFile = lootFile;
+
+        FilteredLootRules = CollectionViewSource.GetDefaultView(LootRules);
+        FilteredLootRules.Filter += filterLootRules;
+        FilteredLootRules.SortDescriptions.Add(new SortDescription("", ListSortDirection.Ascending));
 
         foreach (var rule in lootFile.Rules)
         {
@@ -30,23 +35,35 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
             LootRules.Add(vm);
         }
 
-        ToggleDisabledCommand = new RelayCommand(() => SelectedRule.ToggleDisabledCommand.Execute(null), () => SelectedRule != null);
-        AddRuleCommand = new(AddRule);
-        CloneRuleCommand = new(CloneRule, SelectedRule_CanExecute);
-        DeleteRuleCommand = new(DeleteRule, SelectedRule_CanExecute);
-        MoveSelectedItemDownCommand = new(MoveSelectedItemDown, SelectedRule_CanExecute);
-        MoveSelectedItemUpCommand = new(MoveSelectedItemUp, SelectedRule_CanExecute);
-        CutItemCommand = new(CutRule, SelectedRule_CanExecute);
-        CopyItemCommand = new(CopyRule, SelectedRule_CanExecute);
-        PasteItemCommand = new(PasteRule, () => Clipboard.ContainsData(typeof(LootRule).Name));
-        AddRuleFromTemplateCommand = new(AddRuleFromTemplate, s => s != null);
-        SaveRuleAsTemplateCommand = new(SaveRuleAsTemplate, SelectedRule_CanExecute);
-
         templateService.TemplatesChanged += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
+    }
+
+    private bool filterLootRules(object obj)
+    {
+        if (string.IsNullOrEmpty(Filter))
+            return true;
+
+        if (Filter.StartsWith("has:"))
+        {
+            // Try to parse criteria filter
+            var parts = Filter.Split(':', StringSplitOptions.TrimEntries);
+            if (parts.Length > 1)
+            {
+                if (Enum.TryParse<LootCriteriaType>(parts[1], out var criteriaType))
+                {
+                    return obj is LootRuleViewModel vmm && vmm.Criteria.Any(c => c.Criteria.IsMatch(parts));
+                }
+            }
+        }
+
+        var comparison = Filter.IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        return obj is LootRuleViewModel vm && vm.Name.Contains(Filter, comparison);
     }
 
     public string Name { get; } = "Rules";
     public string Icon { get; } = "Assets/Icons/ListView.png";
+
+    public ICollectionView FilteredLootRules { get; }
 
     public ObservableCollection<LootRuleViewModel> LootRules { get; } = [];
 
@@ -59,58 +76,29 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         }
     }
 
-    public LootRuleViewModel SelectedRule
-    {
-        get => selectedRule;
-        set
-        {
-            if (selectedRule != value)
-            {
-                selectedRule = value;
-                OnPropertyChanged(nameof(SelectedRule));
+    [ObservableProperty]
+    private LootRuleViewModel selectedRule = null;
 
-                CutItemCommand?.NotifyCanExecuteChanged();
-                CopyItemCommand.NotifyCanExecuteChanged();
-                MoveSelectedItemUpCommand?.NotifyCanExecuteChanged();
-                MoveSelectedItemDownCommand?.NotifyCanExecuteChanged();
-                ToggleDisabledCommand?.NotifyCanExecuteChanged();
-                CloneRuleCommand?.NotifyCanExecuteChanged();
-                DeleteRuleCommand?.NotifyCanExecuteChanged();
-                SaveRuleAsTemplateCommand?.NotifyCanExecuteChanged();
-            }
-        }
+    partial void OnSelectedRuleChanged(LootRuleViewModel value)
+    {
+        CutRuleCommand?.NotifyCanExecuteChanged();
+        CopyRuleCommand?.NotifyCanExecuteChanged();
+        CloneRuleCommand?.NotifyCanExecuteChanged();
+        DeleteRuleCommand?.NotifyCanExecuteChanged();
+        MoveSelectedItemUpCommand?.NotifyCanExecuteChanged();
+        MoveSelectedItemDownCommand?.NotifyCanExecuteChanged();
+        ToggleDisabledCommand?.NotifyCanExecuteChanged();
+        SaveRuleAsTemplateCommand?.NotifyCanExecuteChanged();
     }
 
-    public string Filter
-    {
-        get => filter;
-        set
-        {
-            if (filter != value)
-            {
-                filter = value;
-                OnPropertyChanged(nameof(Filter));
-            }
-        }
-    }
+    [ObservableProperty]
+    private string filter;
 
     public override bool IsDirty
     {
         get => base.IsDirty || LootRules.Any(r => r.IsDirty);
         set => base.IsDirty = value;
     }
-
-    public RelayCommand AddRuleCommand { get; }
-    public RelayCommand CloneRuleCommand { get; }
-    public RelayCommand DeleteRuleCommand { get; }
-    public RelayCommand<int> MoveSelectedItemDownCommand { get; }
-    public RelayCommand<int> MoveSelectedItemUpCommand { get; }
-    public RelayCommand CutItemCommand { get; }
-    public RelayCommand CopyItemCommand { get; }
-    public RelayCommand PasteItemCommand { get; }
-    public RelayCommand ToggleDisabledCommand { get; }
-    public AsyncRelayCommand<RuleTemplate> AddRuleFromTemplateCommand { get; }
-    public AsyncRelayCommand SaveRuleAsTemplateCommand { get; }
 
     public void AddRule(LootRule rule)
     {
@@ -158,24 +146,28 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         }
     }
 
+    [RelayCommand(CanExecute = nameof(SelectedRule_CanExecute))]
     private void CutRule()
     {
         CopyRule();
         DeleteRule();
     }
 
+    [RelayCommand(CanExecute = nameof(SelectedRule_CanExecute))]
     private void CopyRule()
     {
         Clipboard.SetData(typeof(LootRule).Name, SelectedRule.Rule);
-        PasteItemCommand?.NotifyCanExecuteChanged();
+        PasteRuleCommand?.NotifyCanExecuteChanged();
     }
 
+    [RelayCommand(CanExecute = nameof(PasteRule_CanExecute))]
     private void PasteRule()
     {
         var newRule = (LootRule)Clipboard.GetData(typeof(LootRule).Name);
         AddRule(newRule);
     }
 
+    [RelayCommand(CanExecute = nameof(MoveItem_CanExecute))]
     private void MoveSelectedItemUp(int index)
     {
         LootRules.Move(index, index - 1);
@@ -183,6 +175,7 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         IsDirty = true;
     }
 
+    [RelayCommand(CanExecute = nameof(MoveItem_CanExecute))]
     private void MoveSelectedItemDown(int index)
     {
         LootRules.Move(index, index + 1);
@@ -190,6 +183,7 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         IsDirty = true;
     }
 
+    [RelayCommand(CanExecute = nameof(SelectedRule_CanExecute))]
     private void DeleteRule()
     {
         var sel = SelectedRule;
@@ -202,6 +196,7 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         }
     }
 
+    [RelayCommand(CanExecute = nameof(SelectedRule_CanExecute))]
     private void CloneRule()
     {
         var sel = SelectedRule;
@@ -219,6 +214,7 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         }
     }
 
+    [RelayCommand]
     private void AddRule()
     {
         var rule = new LootRule()
@@ -230,31 +226,16 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         AddRule(rule);
     }
 
-    public void ReplaceRule(LootRule rule)
-    {
-        var matchingRule = LootRules.FirstOrDefault(r => r.Name.Equals(rule.Name));
-        matchingRule.PropertyChanged -= Vm_PropertyChanged;
-        LootRules.Remove(matchingRule);
-        lootFile.RemoveRule(matchingRule.Rule);
+    [RelayCommand(CanExecute = nameof(SelectedRule_CanExecute))]
+    private void ToggleDisabled() => SelectedRule.ToggleDisabledCommand.Execute(null);
 
-        AddRule(rule);
+    [RelayCommand(CanExecute = nameof(SelectedRule_CanExecute))]
+    public async Task SaveRuleAsTemplate()
+    {
+        await templateService.SaveRuleAsTemplate(SelectedRule.Rule).ConfigureAwait(false);
     }
 
-    private bool SelectedRule_CanExecute<T>(T _) => SelectedRule_CanExecute();
-
-    private bool SelectedRule_CanExecute()
-    {
-        return SelectedRule != null;
-    }
-
-    private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(LootRuleViewModel.IsDirty))
-        {
-            OnPropertyChanged(nameof(IsDirty));
-        }
-    }
-
+    [RelayCommand(CanExecute = nameof(AddRuleFromTemplate_CanExecute))]
     public async Task AddRuleFromTemplate(RuleTemplate template)
     {
         try
@@ -268,8 +249,29 @@ public class LootRuleListViewModel : DirtyViewModel, IDropTarget
         }
     }
 
-    public async Task SaveRuleAsTemplate()
+    public void ReplaceRule(LootRule rule)
     {
-        await templateService.SaveRuleAsTemplate(SelectedRule.Rule).ConfigureAwait(false);
+        var matchingRule = LootRules.FirstOrDefault(r => r.Name.Equals(rule.Name));
+        matchingRule.PropertyChanged -= Vm_PropertyChanged;
+        LootRules.Remove(matchingRule);
+        lootFile.RemoveRule(matchingRule.Rule);
+
+        AddRule(rule);
+    }
+
+    private bool MoveItem_CanExecute(int _) => SelectedRule_CanExecute();
+
+    private bool SelectedRule_CanExecute() => SelectedRule != null;
+
+    private static bool AddRuleFromTemplate_CanExecute(RuleTemplate template) => template != null;
+
+    private static bool PasteRule_CanExecute() => Clipboard.ContainsData(typeof(LootRule).Name);
+
+    private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(LootRuleViewModel.IsDirty))
+        {
+            OnPropertyChanged(nameof(IsDirty));
+        }
     }
 }

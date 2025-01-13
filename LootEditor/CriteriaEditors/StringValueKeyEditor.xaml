@@ -22,7 +22,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:StringValueKey}}" SelectedItem="{Binding Key}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
+        <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5">
             <xctk:WatermarkTextBox.Watermark>
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Assets/Icons/RegularExpression_16x.png" />

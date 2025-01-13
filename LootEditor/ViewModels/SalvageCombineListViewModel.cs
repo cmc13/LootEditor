@@ -8,7 +8,8 @@ using System.Linq;
 
 namespace LootEditor.ViewModels;
 
-public class SalvageCombineListViewModel : DirtyViewModel
+public partial class SalvageCombineListViewModel
+    : DirtyViewModel
 {
     public class SalvageObj : ObservableObject
     {
@@ -60,7 +61,6 @@ public class SalvageCombineListViewModel : DirtyViewModel
 
     private readonly SalvageCombineBlockType salvageCombineBlock;
     private KeyValuePair<Material, SalvageObj>? selectedItem;
-    private SalvageCombineViewModel currentSalvageCombineViewModel;
 
     public SalvageCombineListViewModel(LootFile lootFile)
     {
@@ -97,20 +97,22 @@ public class SalvageCombineListViewModel : DirtyViewModel
         CombineRules.CollectionChanged += CombineRules_CollectionChanged;
     }
 
-    public RelayCommand AddSalvageCommand => new(() =>
+    [RelayCommand(CanExecute = nameof(AddSalvageCommand_CanExecute))]
+    public void AddSalvage()
     {
         var first = new KeyValuePair<Material, SalvageObj>(
             Enum.GetValues(typeof(Material)).Cast<Material>().FirstOrDefault(m => !CombineRules.ContainsKey(m)),
             new SalvageObj() { CombineRange = null, CombineValue = null });
         CombineRules.Add(first);
         SelectedItem = first;
-    });
+    }
 
-    public RelayCommand DeleteSalvageCommand => new(() =>
+    [RelayCommand(CanExecute = nameof(DeleteSalvageCommand_CanExecute))]
+    public void DeleteSalvage()
     {
         if (SelectedItem != null)
             CombineRules.Remove(SelectedItem.Value.Key);
-    });
+    }
 
     public KeyValuePair<Material, SalvageObj>? SelectedItem
     {
@@ -132,29 +134,24 @@ public class SalvageCombineListViewModel : DirtyViewModel
         }
     }
 
-    public SalvageCombineViewModel SalvageCombineViewModel
+    [ObservableProperty]
+    private SalvageCombineViewModel salvageCombineViewModel;
+
+    partial void OnSalvageCombineViewModelChanging(SalvageCombineViewModel oldValue, SalvageCombineViewModel newValue)
     {
-        get => currentSalvageCombineViewModel;
-        set
+        if (oldValue != null)
         {
-            if (currentSalvageCombineViewModel != value)
-            {
-                if (currentSalvageCombineViewModel != null)
-                {
-                    currentSalvageCombineViewModel.PropertyChanged -= Vm_PropertyChanged;
-                    currentSalvageCombineViewModel.AcceptPendingChange -= Vm_AcceptPendingChange;
-                }
+            oldValue.PropertyChanged -= Vm_PropertyChanged;
+            oldValue.AcceptPendingChange -= Vm_AcceptPendingChange;
+        }
+    }
 
-                currentSalvageCombineViewModel = value;
-
-                if (currentSalvageCombineViewModel != null)
-                {
-                    currentSalvageCombineViewModel.PropertyChanged += Vm_PropertyChanged;
-                    currentSalvageCombineViewModel.AcceptPendingChange += Vm_AcceptPendingChange;
-                }
-
-                OnPropertyChanged(nameof(SalvageCombineViewModel));
-            }
+    partial void OnSalvageCombineViewModelChanged(SalvageCombineViewModel oldValue, SalvageCombineViewModel newValue)
+    {
+        if (newValue != null)
+        {
+            newValue.PropertyChanged += Vm_PropertyChanged;
+            newValue.AcceptPendingChange += Vm_AcceptPendingChange;
         }
     }
 
@@ -172,9 +169,13 @@ public class SalvageCombineListViewModel : DirtyViewModel
         }
     }
 
-    public bool AddSalvageCommand_CanExecute => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m));
+    public bool AddSalvageCommand_CanExecute() => CanAddSalvage;
 
-    public bool DeleteSalvageCommand_CanExecute => SelectedItem.HasValue;
+    public bool DeleteSalvageCommand_CanExecute() => CanDeleteSalvage;
+
+    public bool CanAddSalvage => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m));
+
+    public bool CanDeleteSalvage => SelectedItem.HasValue;
 
     public ObservableDictionary<Material, SalvageObj> CombineRules { get; } = [];
 

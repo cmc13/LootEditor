@@ -8,7 +8,7 @@ using System.Windows.Media;
 namespace LootEditor.Models;
 
 [Serializable]
-public class ColorLootCriteria : LootCriteria
+public partial class ColorLootCriteria : LootCriteria
 {
     public byte R { get; set; }
     public byte G { get; set; }
@@ -126,7 +126,7 @@ public class ColorLootCriteria : LootCriteria
                 else
                     return false;
             }
-            else if (Regex.IsMatch(filter[2], @"^\d+(,\d+){2,3}$"))
+            else if (ColorRegex().IsMatch(filter[2]))
             {
                 var rgb = filter[2].Split(',');
                 if (rgb.Length == 4)
@@ -175,4 +175,7 @@ public class ColorLootCriteria : LootCriteria
 
         return true;
     }
+
+    [GeneratedRegex(@"^\d+(,\d+){2,3}$")]
+    private static partial Regex ColorRegex();
 }

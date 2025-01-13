@@ -20,7 +20,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding Key}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Skill Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
             <TextBox.Text>
                 <Binding Path="Value"
                          UpdateSourceTrigger="PropertyChanged"

@@ -32,7 +32,7 @@
         </TextBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Buffed Melee D Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
             <TextBox.Text>
                 <Binding Path="BuffedMeleeDefenseBonus"
                          UpdateSourceTrigger="PropertyChanged"
@@ -47,7 +47,7 @@
         </TextBox>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Buffed Attack Bonus:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
             <TextBox.Text>
                 <Binding Path="BuffedAttackBonus"
                          UpdateSourceTrigger="PropertyChanged"

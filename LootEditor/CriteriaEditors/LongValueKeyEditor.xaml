@@ -29,7 +29,7 @@
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Value:" VerticalAlignment="Center" HorizontalAlignment="Right" />
         <Grid Grid.Row="1" Grid.Column="1" Margin="5">
-            <TextBox ToolTip="{Binding Value}" Style="{StaticResource TextBoxErrorStyle}"
+            <TextBox ToolTip="{Binding Value}"
                          Visibility="{Binding Key, Converter={StaticResource LongValueKeyToVisibilityConverter}}">
                 <TextBox.Text>
                     <Binding Path="Value"
@@ -101,6 +101,9 @@
                     </MultiBinding>
                 </ComboBox.Visibility>
             </ComboBox>
+            <ComboBox ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SlayerSpecies}}"
+                      SelectedItem="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource IntToEnumConverter}, ConverterParameter={x:Type modelEnums:SlayerSpecies}}"
+                      Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:LongValueKey.SlayerSpecies}}" />
         </Grid>
     </Grid>
 </UserControl>

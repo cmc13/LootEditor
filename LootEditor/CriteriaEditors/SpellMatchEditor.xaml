@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Matches:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:WatermarkTextBox Grid.Row="0" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
+        <xctk:WatermarkTextBox Grid.Row="0" Grid.Column="1" Margin="5">
             <xctk:WatermarkTextBox.Watermark>
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Assets/Icons/RegularExpression_16x.png" />
@@ -38,7 +38,7 @@
         </xctk:WatermarkTextBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Does NOT Match:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
+        <xctk:WatermarkTextBox Grid.Row="1" Grid.Column="1" Margin="5">
             <xctk:WatermarkTextBox.Watermark>
                 <StackPanel Orientation="Horizontal">
                     <Image Source="../Assets/Icons/RegularExpression_16x.png" />

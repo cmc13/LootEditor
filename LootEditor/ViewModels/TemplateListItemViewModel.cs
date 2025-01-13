@@ -6,28 +6,19 @@ using System.IO;
 
 namespace LootEditor.ViewModels;
 
-public class TemplateListItemViewModel : ObservableRecipient
+public partial class TemplateListItemViewModel : ObservableRecipient
 {
-    private bool isEditingTemplateName;
     private readonly TemplateService templateService;
 
-    public RelayCommand DeleteTemplateCommand { get; }
-    public RelayCommand EditTemplateNameCommand { get; }
-    public RelayCommand DoneEditingTemplateCommand { get; }
     public RuleTemplate Template { get; }
-    public bool IsEditingTemplateName
+
+    [ObservableProperty]
+    private bool isEditingTemplateName;
+
+    partial void OnIsEditingTemplateNameChanged(bool value)
     {
-        get => isEditingTemplateName;
-        set
-        {
-            if (isEditingTemplateName != value)
-            {
-                isEditingTemplateName = value;
-                OnPropertyChanged(nameof(IsEditingTemplateName));
-                EditTemplateNameCommand?.NotifyCanExecuteChanged();
-                DoneEditingTemplateCommand?.NotifyCanExecuteChanged();
-            }
-        }
+        EditTemplateNameCommand?.NotifyCanExecuteChanged();
+        DoneEditingTemplateCommand?.NotifyCanExecuteChanged();
     }
 
     public string Name
@@ -53,10 +44,20 @@ public class TemplateListItemViewModel : ObservableRecipient
 
     public TemplateListItemViewModel(RuleTemplate template, TemplateService templateService)
     {
-        DeleteTemplateCommand = new RelayCommand(() => File.Delete(template.FileName));
-        EditTemplateNameCommand = new RelayCommand(() => IsEditingTemplateName = true, () => !IsEditingTemplateName);
-        DoneEditingTemplateCommand = new RelayCommand(() => IsEditingTemplateName = false, () => IsEditingTemplateName);
         Template = template;
         this.templateService = templateService;
     }
+
+    [RelayCommand]
+    public void DeleteTemplate() => File.Delete(Template.FileName);
+
+    [RelayCommand(CanExecute = nameof(EditTemplateName_CanExecute))]
+    public void EditTemplateName() => IsEditingTemplateName = true;
+
+    private bool EditTemplateName_CanExecute() => !IsEditingTemplateName;
+
+    [RelayCommand(CanExecute = nameof(DoneEditingTemplate_CanExecute))]
+    public void DoneEditingTemplate() => IsEditingTemplateName = false;
+
+    private bool DoneEditingTemplate_CanExecute() => IsEditingTemplateName;
 }

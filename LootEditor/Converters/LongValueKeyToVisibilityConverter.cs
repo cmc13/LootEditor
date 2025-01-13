@@ -14,7 +14,7 @@ public class LongValueKeyToVisibilityConverter : IValueConverter
         {
             if (key == LongValueKey.Material || key == LongValueKey.Slot || key == LongValueKey.WeaponMasteryCategory ||
                 key == LongValueKey.EquipSkill || key == LongValueKey.WieldReqAttribute || key == LongValueKey.ArmorSetID ||
-                key == LongValueKey.Workmanship || key == LongValueKey.Unenchantable)
+                key == LongValueKey.Workmanship || key == LongValueKey.Unenchantable || key == LongValueKey.SlayerSpecies)
             {
                 return Visibility.Collapsed;
             }

@@ -21,7 +21,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:SkillType}}" SelectedItem="{Binding SkillType}" Margin="5" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Min Base Skill Level:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
             <TextBox.Text>
                 <Binding Path="MinSkillValue"
                          UpdateSourceTrigger="PropertyChanged"
@@ -35,7 +35,7 @@
         </TextBox>
 
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Base Skill Level:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Style="{StaticResource TextBoxErrorStyle}">
             <TextBox.Text>
                 <Binding Path="MaxSkillValue"
                          UpdateSourceTrigger="PropertyChanged"

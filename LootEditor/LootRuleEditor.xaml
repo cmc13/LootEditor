@@ -57,7 +57,7 @@
                             <local:ScrollIntoViewBehavior />
                         </b:Interaction.Behaviors>
                         <ListBox.InputBindings>
-                            <KeyBinding Key="Delete" Command="{Binding DeleteCriteriaCommand}" />
+                            <KeyBinding Key="Delete" Command="{Binding RemoveCriteriaCommand}" />
                             <KeyBinding Key="X" Modifiers="Ctrl+Shift" Command="{Binding CutItemCommand}" />
                             <KeyBinding Key="C" Modifiers="Ctrl+Shift" Command="{Binding CopyItemCommand}" />
                             <KeyBinding Key="V" Modifiers="Ctrl+Shift" Command="{Binding PasteItemCommand}" />
@@ -96,7 +96,7 @@
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
-                                <MenuItem Header="Delete Criteria" Command="{Binding DeleteCriteriaCommand}" InputGestureText="Del">
+                                <MenuItem Header="Delete Criteria" Command="{Binding RemoveCriteriaCommand}" InputGestureText="Del">
                                     <MenuItem.Icon>
                                         <Image Source="Assets/Icons/DeleteListItem_16x.png" />
                                     </MenuItem.Icon>
@@ -126,7 +126,7 @@
                             </xctk:IconButton.Icon>
                             <TextBlock TextTrimming="CharacterEllipsis">Clone</TextBlock>
                         </xctk:IconButton>
-                        <xctk:IconButton Command="{Binding DeleteCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Delete">
+                        <xctk:IconButton Command="{Binding RemoveCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Delete">
                             <xctk:IconButton.Icon>
                                 <Image Source="Assets/Icons/Trash_16x.png" />
                             </xctk:IconButton.Icon>

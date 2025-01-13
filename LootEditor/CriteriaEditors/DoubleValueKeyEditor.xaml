@@ -10,6 +10,7 @@
              mc:Ignorable="d" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:EqualityToVisibilityConverter Reverse="True" x:Key="InequalityConverter" />
+        <cvt:BonusPercentConverter x:Key="BonusPercentConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -40,10 +41,25 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <DockPanel Grid.Row="1" Grid.Column="1" Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.SalvageWorkmanship}}">
+            <DockPanel Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.SalvageWorkmanship}}">
                 <xctk:DoubleUpDown FormatString="N2" Value="{Binding Value}" Minimum="1" Maximum="10" Increment="0.01" Margin="0,0,5,0" Width="75" />
                 <Slider Value="{Binding Value}" Minimum="1" Maximum="10" SmallChange="0.01" LargeChange="1" TickFrequency="0.01" IsSnapToTickEnabled="True" />
             </DockPanel>
+            <xctk:DoubleUpDown Value="{Binding Value, Converter={StaticResource BonusPercentConverter}}"
+                                Minimum="0" Maximum="100" Increment="0.001" FormatString="P1"
+                                Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.AttackBonus}}" />
+            <xctk:DoubleUpDown Value="{Binding Value, Converter={StaticResource BonusPercentConverter}}"
+                                Minimum="0" Maximum="100" Increment="0.001" FormatString="P1"
+                                Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.MagicDBonus}}" />
+            <xctk:DoubleUpDown Value="{Binding Value, Converter={StaticResource BonusPercentConverter}}"
+                                Minimum="0" Maximum="100" Increment="0.001" FormatString="P1"
+                                Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.MeleeDefenseBonus}}" />
+            <xctk:DoubleUpDown Value="{Binding Value, Converter={StaticResource BonusPercentConverter}}"
+                                Minimum="0" Maximum="100" Increment="0.001" FormatString="P1"
+                                Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.MissileDBonus}}" />
+            <xctk:DoubleUpDown Value="{Binding Value}"
+                                Minimum="0" Maximum="100" Increment="0.001" FormatString="P1"
+                                Visibility="{Binding Key, Converter={StaticResource EqualityConverter}, ConverterParameter={x:Static modelEnums:DoubleValueKey.ManaCBonus}}" />
         </Grid>
     </Grid>
 </UserControl>

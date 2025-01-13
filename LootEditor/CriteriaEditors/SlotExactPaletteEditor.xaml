@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Slot:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5">
             <TextBox.Text>
                 <Binding Path="Slot"
                          UpdateSourceTrigger="PropertyChanged"
@@ -34,7 +34,7 @@
         </TextBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Palette:" VerticalAlignment="Center" HorizontalAlignment="Right" />
-        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBoxErrorStyle}" Margin="5">
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="5">
             <TextBox.Text>
                 <Binding Path="Palette"
                          UpdateSourceTrigger="PropertyChanged"

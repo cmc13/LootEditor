@@ -5,12 +5,24 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows.Media.Media3D;
 
 namespace LootEditor.ViewModels;
 
-public class LootRuleViewModel : DirtyViewModel, IDropTarget
+public partial class LootRuleViewModel : DirtyViewModel, IDropTarget
 {
+    [ObservableProperty]
     private LootCriteriaViewModel selectedCriteria;
+
+    partial void OnSelectedCriteriaChanged(LootCriteriaViewModel value)
+    {
+        CloneCriteriaCommand?.NotifyCanExecuteChanged();
+        RemoveCriteriaCommand?.NotifyCanExecuteChanged();
+        CutItemCommand?.NotifyCanExecuteChanged();
+        CopyItemCommand?.NotifyCanExecuteChanged();
+        FilterMatchingRulesCommand?.NotifyCanExecuteChanged();
+    }
 
     public override bool IsDirty
     {
@@ -64,35 +76,7 @@ public class LootRuleViewModel : DirtyViewModel, IDropTarget
 
     public bool IsDisabled => Rule.Criteria.Any(c => c.Type == LootCriteriaType.DisabledRule && ((ValueLootCriteria<bool>)c).Value == true);
 
-    public ObservableCollection<LootCriteriaViewModel> Criteria { get; } = new ObservableCollection<LootCriteriaViewModel>();
-
-    public LootCriteriaViewModel SelectedCriteria
-    {
-        get => selectedCriteria;
-        set
-        {
-            if (selectedCriteria != value)
-            {
-                selectedCriteria = value;
-                OnPropertyChanged(nameof(SelectedCriteria));
-
-                CloneCriteriaCommand?.NotifyCanExecuteChanged();
-                DeleteCriteriaCommand?.NotifyCanExecuteChanged();
-                CutItemCommand?.NotifyCanExecuteChanged();
-                CopyItemCommand?.NotifyCanExecuteChanged();
-                FilterMatchingRulesCommand?.NotifyCanExecuteChanged();
-            }
-        }
-    }
-
-    public RelayCommand AddCriteriaCommand { get; }
-    public RelayCommand CloneCriteriaCommand { get; }
-    public RelayCommand DeleteCriteriaCommand { get; }
-    public RelayCommand CutItemCommand { get; }
-    public RelayCommand CopyItemCommand { get; }
-    public RelayCommand PasteItemCommand { get; }
-    public RelayCommand ToggleDisabledCommand { get; }
-    public RelayCommand<LootRuleListViewModel> FilterMatchingRulesCommand { get; }
+    public ObservableCollection<LootCriteriaViewModel> Criteria { get; } = [];
 
     public LootRuleViewModel(LootRule rule)
     {
@@ -106,22 +90,6 @@ public class LootRuleViewModel : DirtyViewModel, IDropTarget
         }
 
         Criteria.CollectionChanged += Criteria_CollectionChanged;
-
-        AddCriteriaCommand = new RelayCommand(AddCriteria);
-
-        CloneCriteriaCommand = new RelayCommand(CloneCriteria, SelectedCriteria_CanExecute);
-
-        DeleteCriteriaCommand = new RelayCommand(RemoveCriteria, SelectedCriteria_CanExecute);
-
-        CutItemCommand = new RelayCommand(CutItem, SelectedCriteria_CanExecute);
-
-        CopyItemCommand = new RelayCommand(CopyItem, SelectedCriteria_CanExecute);
-
-        PasteItemCommand = new RelayCommand(PasteItem, CanPaste);
-
-        ToggleDisabledCommand = new RelayCommand(ToggleDisabled);
-
-        FilterMatchingRulesCommand = new(FilterMatchingRules, _ => SelectedCriteria_CanExecute());
     }
 
     private void Criteria_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -131,6 +99,7 @@ public class LootRuleViewModel : DirtyViewModel, IDropTarget
 
     private bool CanPaste() => Clipboard.ContainsData(nameof(LootCriteria));
 
+    [RelayCommand(CanExecute = nameof(CanPaste))]
     private void PasteItem()
     {
         var data = Clipboard.GetData(nameof(LootCriteria)) as LootCriteria;
@@ -139,25 +108,29 @@ public class LootRuleViewModel : DirtyViewModel, IDropTarget
         AddCriteria(newCriteria);
     }
 
+    [RelayCommand(CanExecute = nameof(SelectedCriteria_CanExecute))]
     private void CopyItem()
     {
         Clipboard.SetData(nameof(LootCriteria), SelectedCriteria.Criteria);
         PasteItemCommand?.NotifyCanExecuteChanged();
     }
 
+    [RelayCommand(CanExecute = nameof(SelectedCriteria_CanExecute))]
     private void CutItem()
     {
         Clipboard.SetData(nameof(LootCriteria), SelectedCriteria.Criteria);
-        DeleteCriteriaCommand.Execute(null);
+        RemoveCriteriaCommand.Execute(null);
         PasteItemCommand?.NotifyCanExecuteChanged();
     }
 
+    [RelayCommand]
     private void AddCriteria()
     {
         var newCriteria = LootCriteria.CreateLootCriteria(LootCriteriaType.AnySimilarColor);
         AddCriteria(newCriteria);
     }
 
+    [RelayCommand]
     private void ToggleDisabled()
     {
         if (IsDisabled)
@@ -181,6 +154,33 @@ public class LootRuleViewModel : DirtyViewModel, IDropTarget
 
         IsDirty = true;
         OnPropertyChanged(nameof(IsDisabled));
+    }
+
+    [RelayCommand(CanExecute = nameof(SelectedCriteria_CanExecute))]
+    private void CloneCriteria()
+    {
+        var sel = SelectedCriteria;
+        if (sel != null)
+        {
+            var newCriteria = sel.Criteria.Clone() as LootCriteria;
+            AddCriteria(newCriteria);
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(SelectedCriteria_CanExecute))]
+    private void RemoveCriteria()
+    {
+        var sel = SelectedCriteria;
+        if (sel != null)
+        {
+            sel.PropertyChanged -= Vm_PropertyChanged;
+            Rule.RemoveCriteria(sel.Criteria);
+            Criteria.Remove(sel);
+            IsDirty = true;
+
+            if (sel.Type == LootCriteriaType.DisabledRule)
+                OnPropertyChanged(nameof(IsDisabled));
+        }
     }
 
     private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -215,32 +215,19 @@ public class LootRuleViewModel : DirtyViewModel, IDropTarget
         OnPropertyChanged(nameof(IsDirty));
     }
 
+    [RelayCommand(CanExecute = nameof(FilterMatchingRules_CanExecute))]
+    private void FilterMatchingRules(LootRuleListViewModel lootRuleListViewModel)
+    {
+        // Generate filter
+        var filter = SelectedCriteria.Criteria.Filter;
+
+        // Send to MainVM
+        lootRuleListViewModel.Filter = filter;
+    }
+
+    private bool FilterMatchingRules_CanExecute(LootRuleListViewModel _) => SelectedCriteria_CanExecute();
+
     private bool SelectedCriteria_CanExecute() => SelectedCriteria != null;
-
-    private void CloneCriteria()
-    {
-        var sel = SelectedCriteria;
-        if (sel != null)
-        {
-            var newCriteria = sel.Criteria.Clone() as LootCriteria;
-            AddCriteria(newCriteria);
-        }
-    }
-
-    private void RemoveCriteria()
-    {
-        var sel = SelectedCriteria;
-        if (sel != null)
-        {
-            sel.PropertyChanged -= Vm_PropertyChanged;
-            Rule.RemoveCriteria(sel.Criteria);
-            Criteria.Remove(sel);
-            IsDirty = true;
-
-            if (sel.Type == LootCriteriaType.DisabledRule)
-                OnPropertyChanged(nameof(IsDisabled));
-        }
-    }
 
     public void Clean()
     {
@@ -288,14 +275,5 @@ public class LootRuleViewModel : DirtyViewModel, IDropTarget
 
         IsDirty = true;
         SelectedCriteria = vm;
-    }
-
-    private void FilterMatchingRules(LootRuleListViewModel lootRuleListViewModel)
-    {
-        // Generate filter
-        var filter = SelectedCriteria.Criteria.Filter;
-
-        // Send to MainVM
-        lootRuleListViewModel.Filter = filter;
     }
 }
