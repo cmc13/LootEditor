@@ -91,13 +91,13 @@
                     </ListView>
 
                     <UniformGrid Grid.Row="1" Columns="2">
-                        <Button FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}" IsEnabled="{Binding CanAddSalvage}">
+                        <Button FontSize="14" Padding="3" BorderThickness="1" ToolTip="Add" Command="{Binding AddSalvageCommand}" IsEnabled="{Binding CanAddSalvage}">
                             <StackPanel Orientation="Horizontal">
                                 <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}" IsEnabled="{Binding CanDeleteSalvage}">
+                        <Button FontSize="14" Padding="3" BorderThickness="1" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}" IsEnabled="{Binding CanDeleteSalvage}">
                             <StackPanel Orientation="Horizontal">
                                 <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>

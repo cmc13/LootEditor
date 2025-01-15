@@ -100,9 +100,6 @@ public partial class MainViewModel
     [ObservableProperty]
     private string busyStatus;
 
-    [ObservableProperty]
-    private bool recentFilesLoaded = false;
-
     public ObservableCollection<string> RecentFiles { get; } = [];
 
     public bool IsDirty => LootRuleListViewModel.IsDirty || SalvageCombineListViewModel.IsDirty;
@@ -113,24 +110,13 @@ public partial class MainViewModel
 
         if (fileSystemService.FileExists(RECENT_FILE_NAME))
         {
-            Task.Run(async () =>
-            {
-                try
+                using var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
+                foreach (var file in JsonSerializer.Deserialize<string[]>(fs))
                 {
-                    using var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
-                    await foreach (var file in JsonSerializer.DeserializeAsyncEnumerable<string>(fs).ConfigureAwait(false))
-                    {
-                        RecentFiles.Add(file);
-                    }
-                    while (RecentFiles.Count > RECENT_FILE_COUNT)
-                        RecentFiles.RemoveAt(RecentFiles.Count - 1);
+                    RecentFiles.Add(file);
+                    if (RecentFiles.Count >= RECENT_FILE_COUNT)
+                        break;
                 }
-                finally
-                {
-                    await Task.Delay(3000).ConfigureAwait(false);
-                    RecentFilesLoaded = true;
-                }
-            });
         }
 
         if (backupService.BackupExists)

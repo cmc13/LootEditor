@@ -9,24 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\Add_16x.png" />
-    <None Remove="Assets\Clone_16x.png" />
-    <None Remove="Assets\Close_16x.png" />
-    <None Remove="Assets\ColorSlots.Default.xml" />
-    <None Remove="Assets\Copy_16x.png" />
-    <None Remove="Assets\Create_16x.png" />
-    <None Remove="Assets\Cut_16x.png" />
-    <None Remove="Assets\DeleteListItem_16x.png" />
-    <None Remove="Assets\Filter_16x.png" />
-    <None Remove="Assets\History_16x.png" />
-    <None Remove="Assets\Icons\Checkmark_16x.png" />
-    <None Remove="Assets\Icons\Edit_16x.png" />
-    <None Remove="Assets\Icons\ExportFile_16x.png" />
-    <None Remove="Assets\Icons\ImportFile_16x.png" />
-    <None Remove="Assets\Icons\ListView_16x.png" />
-    <None Remove="Assets\Icons\Settings_16x.png" />
-    <None Remove="Assets\Import_16x.png" />
-    <None Remove="Assets\Lock_16x.png" />
     <None Remove="Assets\Material\Agate.png" />
     <None Remove="Assets\Material\Alabaster.png" />
     <None Remove="Assets\Material\Amber.png" />
@@ -173,7 +155,6 @@
     <None Remove="Assets\Material\YellowGarnet.png" />
     <None Remove="Assets\Material\YellowTopaz.png" />
     <None Remove="Assets\Material\Zircon.png" />
-    <None Remove="Assets\NewFile_16x.png" />
     <None Remove="Assets\ObjectClass\Armor.png" />
     <None Remove="Assets\ObjectClass\BaseAlchemy.png" />
     <None Remove="Assets\ObjectClass\BaseCooking.png" />
@@ -217,12 +198,7 @@
     <None Remove="Assets\ObjectClass\Ust.png" />
     <None Remove="Assets\ObjectClass\Vendor.png" />
     <None Remove="Assets\ObjectClass\WandStaffOrb.png" />
-    <None Remove="Assets\OpenFile_16x.png" />
-    <None Remove="Assets\Paste_16x.png" />
     <None Remove="Assets\RegularExpression_16x.png" />
-    <None Remove="Assets\SaveAs_16x.png" />
-    <None Remove="Assets\Save_16x.png" />
-    <None Remove="Assets\Trash_16x.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -244,39 +220,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\Icons\Add_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Checkmark_16x.png" />
-    <Resource Include="Assets\Icons\Clone_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Close_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Copy_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Cut_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\DeleteListItem_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Edit_16x.png" />
-    <Resource Include="Assets\Icons\ExportFile_16x.png" />
-    <Resource Include="Assets\Icons\Filter_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\ImportFile_16x.png" />
-    <Resource Include="Assets\Icons\Import_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\ListView_16x.png" />
-    <Resource Include="Assets\Icons\Lock_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Settings_16x.png" />
     <Resource Include="Assets\Material\Agate.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -496,9 +439,6 @@
     <Resource Include="Assets\Material\Zircon.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Assets\Icons\NewFile_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Assets\ObjectClass\Armor.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -626,36 +566,6 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\ObjectClass\WandStaffOrb.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\OpenFile_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Paste_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\SaveAs_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets\Icons\Save_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\Icons\History_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\Icons\Trash_16x.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Assets\Icons\Create_16x.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

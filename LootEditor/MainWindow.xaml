@@ -79,13 +79,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
-                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}">
-                        <MenuItem.IsEnabled>
-                            <MultiBinding Converter="{StaticResource AllTrueConverter}">
-                                <Binding Path="RecentFiles.Count" Converter="{StaticResource GreaterThanZeroConverter}" />
-                                <Binding Path="RecentFilesLoaded" />
-                            </MultiBinding>
-                        </MenuItem.IsEnabled>
+                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}" IsEnabled="{Binding RecentFiles.Count, Converter={StaticResource GreaterThanZeroConverter}}">
                         <MenuItem.Icon>
                             <iconPacks:PackIconFontAwesome Kind="ClockRotateLeftSolid" />
                         </MenuItem.Icon>
@@ -103,6 +97,7 @@
                                 </Setter>
                                 <Setter Property="MenuItem.Command" Value="{Binding RelativeSource={RelativeSource AncestorType=Menu}, Path=DataContext.OpenRecentFileCommand}" />
                                 <Setter Property="MenuItem.CommandParameter" Value="{Binding Value}" />
+                                <Setter Property="ToolTip" Value="{Binding Value}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>

@@ -125,7 +125,7 @@
                                 <TextBlock TextTrimming="CharacterEllipsis">Clone</TextBlock>
                             </StackPanel>
                         </Button>
-                        <Button Command="{Binding RemoveCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Delete">
+                        <Button Command="{Binding RemoveCriteriaCommand}" Padding="5" BorderThickness="1" ToolTip="Delete">
                             <StackPanel Orientation="Horizontal">
                                 <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" VerticalAlignment="Center" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
