@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LootEditor"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
             xmlns:vm="clr-namespace:LootEditor.ViewModels"
             xmlns:dd="urn:gong-wpf-dragdrop"
             xmlns:cvt="clr-namespace:LootEditor.Converters"
@@ -36,7 +37,7 @@
             <xctk:WatermarkTextBox Grid.Row="0" Margin="0,5" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="Assets/Icons/Filter_16x.png" />
+                        <iconPacks:PackIconFontAwesome Kind="FilterSolid" />
                         <TextBlock>Filter</TextBlock>
                     </StackPanel>
                 </xctk:WatermarkTextBox.Watermark>
@@ -64,34 +65,34 @@
                             <ContextMenu>
                                 <MenuItem Header="Cut Rule" InputGestureText="Ctrl+X" Command="{Binding CutRuleCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Cut_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="ScissorsSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Copy Rule" InputGestureText="Ctrl+C" Command="{Binding CopyRuleCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Copy_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="CopyRegular" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Paste Rule" InputGestureText="Ctrl+V" Command="{Binding PasteRuleCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Paste_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="PasteRegular" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
                                 <MenuItem Header="{Binding SelectedRule.IsDisabled, Converter={StaticResource BoolToEnableDisableStringConverter}}" Command="{Binding ToggleDisabledCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Lock_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="LockSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
                                 <MenuItem Header="Add Rule" Command="{Binding AddRuleCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Add_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="PlusSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Add Rule from Template" ItemsSource="{Binding RuleTemplates}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/ImportFile_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="FileImportSolid" />
                                     </MenuItem.Icon>
                                     <MenuItem.ItemContainerStyle>
                                         <Style TargetType="MenuItem">
@@ -102,12 +103,12 @@
                                 </MenuItem>
                                 <MenuItem Header="Save Rule as Template" Command="{Binding SaveRuleAsTemplateCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/ExportFile_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="FileExportSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Clone Rule" Command="{Binding CloneRuleCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Clone_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="CloneRegular" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Delete Rule" Command="{Binding DeleteRuleCommand}" InputGestureText="Del">
@@ -167,30 +168,30 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <xctk:IconButton Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Add">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Create_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <xctk:IconButton.Content>
-                                <TextBlock Text="Add" TextTrimming="CharacterEllipsis" />
-                            </xctk:IconButton.Content>
-                        </xctk:IconButton>
-                        <xctk:IconButton Grid.Column="1" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Clone">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Clone_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <xctk:IconButton.Content>
-                                <TextBlock Text="Clone" TextTrimming="CharacterEllipsis" />
-                            </xctk:IconButton.Content>
-                        </xctk:IconButton>
-                        <xctk:IconButton Grid.Column="2" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" BorderThickness="0" ToolTip="Delete">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Trash_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <xctk:IconButton.Content>
-                                <TextBlock Text="Delete" TextTrimming="CharacterEllipsis" />
-                            </xctk:IconButton.Content>
-                        </xctk:IconButton>
+                        <Button Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" BorderThickness="1" ToolTip="Add" BorderBrush="Black">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconFontAwesome Kind="PlusSolid" />
+                                    <TextBlock Text="Add" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                        <Button Grid.Column="1" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" BorderThickness="1" ToolTip="Clone">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconFontAwesome Kind="CloneRegular" />
+                                    <TextBlock Text="Clone" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                        <Button Grid.Column="2" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" BorderThickness="1" ToolTip="Delete">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" />
+                                    <TextBlock Text="Delete" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                     </Grid>
                 </Grid>
             </Border>

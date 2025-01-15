@@ -10,6 +10,7 @@
              xmlns:dd="urn:gong-wpf-dragdrop"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignWidth="800" d:DesignHeight="600" FontSize="20">
     <UserControl.Resources>
@@ -82,17 +83,17 @@
                             <ContextMenu>
                                 <MenuItem Header="Cut Criteria" InputGestureText="Ctrl+Shift+X" Command="{Binding CutItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Cut_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="ScissorsSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Copy Criteria" InputGestureText="Ctrl+Shift+C" Command="{Binding CopyItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Copy_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="CopyRegular" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Paste Criteria" InputGestureText="Ctrl+Shift+V" Command="{Binding PasteItemCommand}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Paste_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="PasteRegular" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
@@ -104,7 +105,7 @@
                                 <Separator />
                                 <MenuItem Header="Filter Rules with Matching Criteria" Command="{Binding FilterMatchingRulesCommand}" CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ContextMenu}}">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/Filter_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="FilterSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>
@@ -112,26 +113,24 @@
                     </ListBox>
 
                     <UniformGrid Grid.Row="1" Columns="3">
-                        <xctk:IconButton Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Add">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Create_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <xctk:IconButton.Content>
+                        <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="1" ToolTip="Add">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconFontAwesome Kind="AsteriskSolid" VerticalAlignment="Center" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
-                            </xctk:IconButton.Content>
-                        </xctk:IconButton>
-                        <xctk:IconButton Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Clone">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Clone_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <TextBlock TextTrimming="CharacterEllipsis">Clone</TextBlock>
-                        </xctk:IconButton>
-                        <xctk:IconButton Command="{Binding RemoveCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Delete">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Trash_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
-                        </xctk:IconButton>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" BorderThickness="1" ToolTip="Clone">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconFontAwesome Kind="CloneRegular" VerticalAlignment="Center" />
+                                <TextBlock TextTrimming="CharacterEllipsis">Clone</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding RemoveCriteriaCommand}" Padding="5" BorderThickness="0" ToolTip="Delete">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" VerticalAlignment="Center" />
+                                <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
+                            </StackPanel>
+                        </Button>
                     </UniformGrid>
                 </Grid>
             </Border>
