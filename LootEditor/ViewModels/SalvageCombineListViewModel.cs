@@ -17,7 +17,6 @@ public partial class SalvageCombineListViewModel
         private int? combineValue;
 
         public string Name { get; } = "Salvage Combine";
-        public string Icon { get; } = "Assets/ObjectClass/Ust.png";
 
         public string CombineRange
         {

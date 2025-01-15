@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:LootEditor.ViewModels"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:view="clr-namespace:LootEditor"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -36,13 +37,13 @@
                         </TextBox>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button ToolTip="Rename Template" Command="{Binding DoneEditingTemplateCommand}" Visibility="{Binding IsEditingTemplateName, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                <Image Source="Assets/Icons/Checkmark_16x.png" />
+                                <iconPacks:PackIconFontAwesome Kind="CheckSolid" />
                             </Button>
                             <Button ToolTip="Rename Template" Command="{Binding EditTemplateNameCommand}" Visibility="{Binding IsEditingTemplateName, Converter={StaticResource ReverseBooleanToVisibilityConverter}}">
-                                <Image Source="Assets/Icons/Edit_16x.png" />
+                                <iconPacks:PackIconFontAwesome Kind="PenToSquareSolid" />
                             </Button>
                             <Button ToolTip="Delete Template" Command="{Binding DeleteTemplateCommand}">
-                                <Image Source="Assets/Icons/Trash_16x.png" />
+                                <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" />
                             </Button>
                         </StackPanel>
                     </Grid>

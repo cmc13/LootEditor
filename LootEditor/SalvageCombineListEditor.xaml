@@ -10,6 +10,7 @@
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -90,18 +91,18 @@
                     </ListView>
 
                     <UniformGrid Grid.Row="1" Columns="2">
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}" IsEnabled="{Binding CanAddSalvage}">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Add_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
-                        </xctk:IconButton>
-                        <xctk:IconButton FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}" IsEnabled="{Binding CanDeleteSalvage}">
-                            <xctk:IconButton.Icon>
-                                <Image Source="Assets/Icons/Trash_16x.png" />
-                            </xctk:IconButton.Icon>
-                            <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
-                        </xctk:IconButton>
+                        <Button FontSize="14" Padding="3" BorderThickness="0" ToolTip="Add" Command="{Binding AddSalvageCommand}" IsEnabled="{Binding CanAddSalvage}">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" />
+                                <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button FontSize="14" Padding="3" BorderThickness="0" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}" IsEnabled="{Binding CanDeleteSalvage}">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" />
+                                <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
+                            </StackPanel>
+                        </Button>
                     </UniformGrid>
                 </Grid>
             </Border>

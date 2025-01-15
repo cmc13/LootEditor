@@ -113,7 +113,7 @@
                                 </MenuItem>
                                 <MenuItem Header="Delete Rule" Command="{Binding DeleteRuleCommand}" InputGestureText="Del">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/DeleteListItem_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="SquareMinusSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>

@@ -12,7 +12,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Threading;
 
 namespace LootEditor.ViewModels;
 
@@ -61,7 +60,6 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
     }
 
     public string Name { get; } = "Rules";
-    public string Icon { get; } = "Assets/Icons/ListView.png";
 
     public ICollectionView FilteredLootRules { get; }
 

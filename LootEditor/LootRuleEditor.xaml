@@ -99,7 +99,7 @@
                                 <Separator />
                                 <MenuItem Header="Delete Criteria" Command="{Binding RemoveCriteriaCommand}" InputGestureText="Del">
                                     <MenuItem.Icon>
-                                        <Image Source="Assets/Icons/DeleteListItem_16x.png" />
+                                        <iconPacks:PackIconFontAwesome Kind="SquareMinusSolid" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator />
@@ -115,7 +115,7 @@
                     <UniformGrid Grid.Row="1" Columns="3">
                         <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="1" ToolTip="Add">
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconFontAwesome Kind="AsteriskSolid" VerticalAlignment="Center" />
+                                <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" VerticalAlignment="Center" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                             </StackPanel>
                         </Button>
