@@ -33,7 +33,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <xctk:WatermarkTextBox x:Name="txtFilter" Grid.Row="0" Margin="0,5" Text="{Binding Filter}">
+            <xctk:WatermarkTextBox Grid.Row="0" Margin="0,5" Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
                 <xctk:WatermarkTextBox.Watermark>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Assets/Icons/Filter_16x.png" />

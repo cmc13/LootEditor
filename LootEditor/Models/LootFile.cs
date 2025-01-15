@@ -61,9 +61,15 @@ public class LootFile
                 throw new Exception("Unexpected end of file found.");
             }
 
-            var rule = await LootRule.ReadRuleAsync(Version, reader).ConfigureAwait(false);
-
-            lootRules.Add(rule);
+            try
+            {
+                var rule = await LootRule.ReadRuleAsync(Version, reader).ConfigureAwait(false);
+                lootRules.Add(rule);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         var blocks = new List<ExtraBlock>();

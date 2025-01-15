@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace LootEditor.ViewModels;
 
@@ -26,7 +27,6 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
 
         FilteredLootRules = CollectionViewSource.GetDefaultView(LootRules);
         FilteredLootRules.Filter += filterLootRules;
-        FilteredLootRules.SortDescriptions.Add(new SortDescription("", ListSortDirection.Ascending));
 
         foreach (var rule in lootFile.Rules)
         {
@@ -189,10 +189,13 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
         var sel = SelectedRule;
         if (sel != null)
         {
-            sel.PropertyChanged -= Vm_PropertyChanged;
-            LootRules.Remove(sel);
-            lootFile.RemoveRule(sel.Rule);
-            IsDirty = true;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                sel.PropertyChanged -= Vm_PropertyChanged;
+                LootRules.Remove(sel);
+                lootFile.RemoveRule(sel.Rule);
+                IsDirty = true;
+            });
         }
     }
 
@@ -273,5 +276,10 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
         {
             OnPropertyChanged(nameof(IsDirty));
         }
+    }
+
+    partial void OnFilterChanged(string value)
+    {
+        FilteredLootRules.Refresh();
     }
 }
