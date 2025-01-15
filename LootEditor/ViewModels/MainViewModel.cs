@@ -148,7 +148,7 @@ public partial class MainViewModel
     {
         if (IsDirty)
         {
-            var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            var mbResult = MessageBox.Show($"File {SaveFileName ?? "[New File]"} has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
             if (mbResult == MessageBoxResult.Yes)
             {
                 await SaveAsync().ConfigureAwait(false);
@@ -166,7 +166,7 @@ public partial class MainViewModel
     {
         if (IsDirty)
         {
-            var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            var mbResult = MessageBox.Show($"File {SaveFileName ?? "[New File]"} has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
             if (mbResult == MessageBoxResult.Yes)
             {
                 await SaveAsync().ConfigureAwait(false);
@@ -229,7 +229,7 @@ public partial class MainViewModel
     {
         if (IsDirty)
         {
-            var mbResult = MessageBox.Show("File has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            var mbResult = MessageBox.Show($"File {SaveFileName ?? "[New File]"} has changed. Would you like to save changes?", "File Changed", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
             if (mbResult == MessageBoxResult.Yes)
             {
                 await SaveAsync().ConfigureAwait(false);
