@@ -7,11 +7,9 @@ using LootEditor.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 
 namespace LootEditor.ViewModels;
 
@@ -24,9 +22,6 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
     {
         this.lootFile = lootFile;
 
-        FilteredLootRules = CollectionViewSource.GetDefaultView(LootRules);
-        FilteredLootRules.Filter += filterLootRules;
-
         foreach (var rule in lootFile.Rules)
         {
             var vm = new LootRuleViewModel(rule);
@@ -37,31 +32,7 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
         templateService.TemplatesChanged += (s, e) => OnPropertyChanged(nameof(RuleTemplates));
     }
 
-    private bool filterLootRules(object obj)
-    {
-        if (string.IsNullOrEmpty(Filter))
-            return true;
-
-        if (Filter.StartsWith("has:"))
-        {
-            // Try to parse criteria filter
-            var parts = Filter.Split(':', StringSplitOptions.TrimEntries);
-            if (parts.Length > 1)
-            {
-                if (Enum.TryParse<LootCriteriaType>(parts[1], out var criteriaType))
-                {
-                    return obj is LootRuleViewModel vmm && vmm.Criteria.Any(c => c.Criteria.IsMatch(parts));
-                }
-            }
-        }
-
-        var comparison = Filter.IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-        return obj is LootRuleViewModel vm && vm.Name.Contains(Filter, comparison);
-    }
-
     public string Name { get; } = "Rules";
-
-    public ICollectionView FilteredLootRules { get; }
 
     public ObservableCollection<LootRuleViewModel> LootRules { get; } = [];
 
@@ -187,13 +158,10 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
         var sel = SelectedRule;
         if (sel != null)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                sel.PropertyChanged -= Vm_PropertyChanged;
-                LootRules.Remove(sel);
-                lootFile.RemoveRule(sel.Rule);
-                IsDirty = true;
-            });
+            sel.PropertyChanged -= Vm_PropertyChanged;
+            LootRules.Remove(sel);
+            lootFile.RemoveRule(sel.Rule);
+            IsDirty = true;
         }
     }
 
@@ -274,10 +242,5 @@ public partial class LootRuleListViewModel : DirtyViewModel, IDropTarget
         {
             OnPropertyChanged(nameof(IsDirty));
         }
-    }
-
-    partial void OnFilterChanged(string value)
-    {
-        FilteredLootRules.Refresh();
     }
 }

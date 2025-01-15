@@ -24,5 +24,31 @@ namespace LootEditor
             var vm = item.DataContext as LootRuleViewModel;
             vm.ToggleDisabledCommand.Execute(null);
         }
+
+        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            if (txtFilter.Text.StartsWith("has:"))
+            {
+                // Try to parse criteria filter
+                var parts = txtFilter.Text.Split(':', StringSplitOptions.TrimEntries);
+                if (parts.Length > 1)
+                {
+                    if (Enum.TryParse<LootCriteriaType>(parts[1], out var criteriaType))
+                    {
+                        e.Accepted = e.Item is LootRuleViewModel vmm && vmm.Criteria.Any(c => c.Criteria.IsMatch(parts));
+                        return;
+                    }
+                }
+            }
+
+            var comparison = txtFilter.Text.IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            e.Accepted = e.Item is LootRuleViewModel vm && vm.Name.Contains(txtFilter.Text, comparison);
+        }
+
+        private void TxtFilter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var cvs = Resources["LootRules"] as CollectionViewSource;
+            cvs.View.Refresh();
+        }
     }
 }

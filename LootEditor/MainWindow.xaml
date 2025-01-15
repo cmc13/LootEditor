@@ -69,7 +69,7 @@
                             <Run Text="{Binding SaveFileName, StringFormat=Save {0} As..., Mode=OneWay, FallbackValue=Save As...}" />
                         </MenuItem.Header>
                         <MenuItem.Icon>
-                            <Image Source="Assets/Icons/SaveAs_16x.png" />
+                            <iconPacks:PackIconFontAwesome Kind="HardDriveSolid" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
