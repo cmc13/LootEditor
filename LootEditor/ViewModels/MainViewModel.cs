@@ -42,7 +42,7 @@ public partial class MainViewModel
                 OnPropertyChanged(nameof(SaveFileName));
 
                 if (!string.IsNullOrEmpty(saveFileName))
-                    AddRecentFile(saveFileName);
+                    Application.Current.Dispatcher.Invoke(() => AddRecentFile(saveFileName));
             }
         }
     }
@@ -248,8 +248,11 @@ public partial class MainViewModel
         {
             for (var i = RecentFiles.Count - 1; i >= 0; i--)
             {
-                if (RecentFiles[i].Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                    RecentFiles.RemoveAt(i);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (RecentFiles[i].Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                        RecentFiles.RemoveAt(i);
+                });
             }
             MessageBox.Show($"The file {fileName} is no longer on disk. Removing from recent files list.",
                 "File Not Found", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -513,6 +516,7 @@ public partial class MainViewModel
             if (RecentFiles[i].Equals(fileName, StringComparison.OrdinalIgnoreCase))
                 RecentFiles.RemoveAt(i);
         }
+
         RecentFiles.Insert(0, fileName);
         while (RecentFiles.Count > RECENT_FILE_COUNT)
             RecentFiles.RemoveAt(RecentFiles.Count - 1);
