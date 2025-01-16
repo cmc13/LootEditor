@@ -2,8 +2,15 @@
   <Package Name="LootEditor" Manufacturer="Seedsoft" Version="1.0.0.0" UpgradeCode="43ca39dc-5b73-48f7-a1be-371f08fe5c81">
     <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
+    <MediaTemplate EmbedCab="yes" />
+    <Icon Id="LootEditorAppIcon" SourceFile="../LootEditor/Chest_Brown_Icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="LootEditorAppIcon" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+    
     <Feature Id="Main">
-      <ComponentGroupRef Id="ExampleComponents" />
+      <ComponentGroupRef Id="Components" />
+      <ComponentRef Id="LootEditorShortcut" />
     </Feature>
   </Package>
 </Wix>

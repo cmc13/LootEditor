@@ -20,6 +20,9 @@
         </MultiBinding>
     </Window.Title>
     <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding LoadCommand}" />
+        </b:EventTrigger>
         <b:EventTrigger EventName="Closing">
             <b:InvokeCommandAction Command="{Binding ClosingCommand}" PassEventArgsToCommand="True" />
         </b:EventTrigger>
@@ -78,8 +81,8 @@
                             <iconPacks:PackIconFontAwesome Kind="FileImportSolid" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <!--<Separator />
-                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}">
+                    <Separator />
+                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles}" AlternationCount="100">
                         <MenuItem.Icon>
                             <iconPacks:PackIconFontAwesome Kind="ClockRotateLeftSolid" />
                         </MenuItem.Icon>
@@ -89,18 +92,18 @@
                                     <Setter.Value>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Key}" />
-                                                <TextBlock Text="{Binding Value, Converter={StaticResource CompactFilePathConverter}}" Margin="3,0,0,0" />
+                                                <TextBlock Text="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}" />
+                                                <TextBlock Text="{Binding Converter={StaticResource CompactFilePathConverter}}" Margin="3,0,0,0" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </Setter.Value>
                                 </Setter>
                                 <Setter Property="MenuItem.Command" Value="{Binding RelativeSource={RelativeSource AncestorType=Menu}, Path=DataContext.OpenRecentFileCommand}" />
-                                <Setter Property="MenuItem.CommandParameter" Value="{Binding Value}" />
-                                <Setter Property="ToolTip" Value="{Binding Value}" />
+                                <Setter Property="MenuItem.CommandParameter" Value="{Binding}" />
+                                <Setter Property="ToolTip" Value="{Binding}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
-                    </MenuItem>-->
+                    </MenuItem>
                     <Separator />
                     <MenuItem Header="Exit" Command="{Binding ExitCommand}" CommandParameter="{Binding ElementName=LootEditorWindow}" InputGestureText="Alt+F4">
                         <MenuItem.Icon>

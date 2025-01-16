@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="LootEditorShortcut" Guid="{DADA6B0A-7A5C-4FFB-9B71-D69ADEE2CC26}">
+        <Shortcut
+            Id="LootEditorStartMenuShortcut"
+            Name="LootEditor"
+            Description="LootEditor - UTL file editor"
+            Target="[INSTALLFOLDER]LootEditor.exe"
+            WorkingDirectory="INSTALLFOLDER"
+            Icon="LootEditorAppIcon"
+            IconIndex="0"
+            Directory="ApplicationProgramsFolder"/>
+
+        <RemoveFolder Id="CleanUpShortcuts" Directory="ApplicationProgramsFolder" On="uninstall" />
+        
+        <RegistryValue Root="HKCU"
+                           Key="Software\!(bind.Property.Manufacturer)\!(bind.Property.ProductName)\StartMenuShorcut"
+                           Name="installed"
+                           Type="integer"
+                           Value="1"
+                           KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

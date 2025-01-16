@@ -1,0 +1,9 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <ComponentGroup Id="Components" Directory="INSTALLFOLDER">
+      <Component Guid="{D580EC46-50BD-4F09-9FDF-2765E3C61973}">
+        <File Source="$(var.LootEditor.ProjectDir)bin\publish\LootEditor.exe" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

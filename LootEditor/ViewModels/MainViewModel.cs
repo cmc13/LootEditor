@@ -108,17 +108,6 @@ public partial class MainViewModel
     {
         LootFile = new LootFile();
 
-        if (fileSystemService.FileExists(RECENT_FILE_NAME))
-        {
-                using var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
-                foreach (var file in JsonSerializer.Deserialize<string[]>(fs))
-                {
-                    RecentFiles.Add(file);
-                    if (RecentFiles.Count >= RECENT_FILE_COUNT)
-                        break;
-                }
-        }
-
         if (backupService.BackupExists)
         {
             try
@@ -139,6 +128,21 @@ public partial class MainViewModel
             finally
             {
                 backupService.DeleteBackupFile();
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void Load()
+    {
+        if (fileSystemService.FileExists(RECENT_FILE_NAME))
+        {
+            using var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
+            foreach (var file in JsonSerializer.Deserialize<string[]>(fs))
+            {
+                RecentFiles.Add(file);
+                if (RecentFiles.Count >= RECENT_FILE_COUNT)
+                    break;
             }
         }
     }
