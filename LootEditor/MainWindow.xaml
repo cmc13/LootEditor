@@ -78,8 +78,8 @@
                             <iconPacks:PackIconFontAwesome Kind="FileImportSolid" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <Separator />
-                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}" IsEnabled="{Binding RecentFiles.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                    <!--<Separator />
+                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles, Converter={StaticResource IndexingConverter}}">
                         <MenuItem.Icon>
                             <iconPacks:PackIconFontAwesome Kind="ClockRotateLeftSolid" />
                         </MenuItem.Icon>
@@ -100,7 +100,7 @@
                                 <Setter Property="ToolTip" Value="{Binding Value}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
-                    </MenuItem>
+                    </MenuItem>-->
                     <Separator />
                     <MenuItem Header="Exit" Command="{Binding ExitCommand}" CommandParameter="{Binding ElementName=LootEditorWindow}" InputGestureText="Alt+F4">
                         <MenuItem.Icon>
