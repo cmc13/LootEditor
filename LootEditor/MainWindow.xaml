@@ -29,7 +29,6 @@
     </b:Interaction.Triggers>
     <Window.Resources>
         <cvt:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
-        <cvt:IndexingConverter x:Key="IndexingConverter" />
         <cvt:SalvageGroupToMaterialListConverter x:Key="SalvageGroupToMaterialListConverter" />
         <cvt:AllNotNullConverter x:Key="AllNotNullConverter" />
         <cvt:FullPathToFileNameConverter x:Key="FullPathToFileNameConverter" />
@@ -82,22 +81,13 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />
-                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles}" AlternationCount="100">
+                    <MenuItem Header="Recent Files" ItemsSource="{Binding RecentFiles}">
                         <MenuItem.Icon>
                             <iconPacks:PackIconFontAwesome Kind="ClockRotateLeftSolid" />
                         </MenuItem.Icon>
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
-                                <Setter Property="MenuItem.HeaderTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource TemplatedParent}}" />
-                                                <TextBlock Text="{Binding Converter={StaticResource CompactFilePathConverter}}" Margin="3,0,0,0" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
+                                <Setter Property="Header" Value="{Binding Converter={StaticResource CompactFilePathConverter}}" />
                                 <Setter Property="MenuItem.Command" Value="{Binding RelativeSource={RelativeSource AncestorType=Menu}, Path=DataContext.OpenRecentFileCommand}" />
                                 <Setter Property="MenuItem.CommandParameter" Value="{Binding}" />
                                 <Setter Property="ToolTip" Value="{Binding}" />
