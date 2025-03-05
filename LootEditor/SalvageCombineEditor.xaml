@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Material:" HorizontalAlignment="Right" VerticalAlignment="Center" />
-        <!--<ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}" SelectedItem="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5">
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{local:EnumBindingSource EnumType={x:Type modelEnums:Material}}" SelectedItem="{Binding Material, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -31,7 +31,7 @@
                     </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
-        </ComboBox>-->
+        </ComboBox>
 
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Combine Range:" HorizontalAlignment="Right" VerticalAlignment="Center" />
         <TextBox Grid.Row="1" Grid.Column="1" Margin="5">

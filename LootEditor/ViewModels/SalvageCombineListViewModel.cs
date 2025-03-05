@@ -59,6 +59,7 @@ public partial class SalvageCombineListViewModel
     }
 
     private readonly SalvageCombineBlockType salvageCombineBlock;
+
     private KeyValuePair<Material, SalvageObj>? selectedItem;
 
     public SalvageCombineListViewModel(LootFile lootFile)
@@ -122,8 +123,7 @@ public partial class SalvageCombineListViewModel
             {
                 selectedItem = value;
                 OnPropertyChanged(nameof(SelectedItem));
-                OnPropertyChanged(nameof(AddSalvageCommand_CanExecute));
-                OnPropertyChanged(nameof(DeleteSalvageCommand_CanExecute));
+                DeleteSalvageCommand.NotifyCanExecuteChanged();
 
                 if (selectedItem.HasValue)
                     SalvageCombineViewModel = new SalvageCombineViewModel(selectedItem.Value.Key, selectedItem.Value.Value);
@@ -168,13 +168,9 @@ public partial class SalvageCombineListViewModel
         }
     }
 
-    public bool AddSalvageCommand_CanExecute() => CanAddSalvage;
+    public bool AddSalvageCommand_CanExecute() => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m));
 
-    public bool DeleteSalvageCommand_CanExecute() => CanDeleteSalvage;
-
-    public bool CanAddSalvage => Enum.GetValues(typeof(Material)).Cast<Material>().Any(m => !CombineRules.ContainsKey(m));
-
-    public bool CanDeleteSalvage => SelectedItem.HasValue;
+    public bool DeleteSalvageCommand_CanExecute() => SelectedItem.HasValue;
 
     public ObservableDictionary<Material, SalvageObj> CombineRules { get; } = [];
 
@@ -244,7 +240,7 @@ public partial class SalvageCombineListViewModel
                     salvageCombineBlock.MaterialValues.Add(item.Key, item.Value.CombineValue.Value);
             }
 
-            OnPropertyChanged(nameof(AddSalvageCommand_CanExecute));
+            AddSalvageCommand.NotifyCanExecuteChanged();
         }
         else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
         {
@@ -256,7 +252,7 @@ public partial class SalvageCombineListViewModel
                     salvageCombineBlock.MaterialValues.Remove(item.Key);
             }
 
-            OnPropertyChanged(nameof(AddSalvageCommand_CanExecute));
+            AddSalvageCommand.NotifyCanExecuteChanged();
         }
         else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
         {
