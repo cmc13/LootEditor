@@ -47,9 +47,9 @@ public class SlotSimilarColorLootCriteria : ColorLootCriteria, ISerializable
         if (!base.IsMatch(filter))
             return false;
 
-        if (filter.Length >= 6 && !string.IsNullOrEmpty(filter[5]))
+        if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
         {
-            if (!int.TryParse(filter[5], out var test) || test != Slot)
+            if (!int.TryParse(filter[4], out var test) || test != Slot)
                 return false;
         }
 

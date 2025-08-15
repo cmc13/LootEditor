@@ -107,8 +107,6 @@ public static class LootCriteriaViewModelFactory
             typedict.Add(vmType, dynamicType);
         }
 
-        var vm = (LootCriteriaViewModel)Activator.CreateInstance(dynamicType, criteria);
-        var type = vm.Type;
-        return vm;
+        return (LootCriteriaViewModel)Activator.CreateInstance(dynamicType, criteria);
     }
 }

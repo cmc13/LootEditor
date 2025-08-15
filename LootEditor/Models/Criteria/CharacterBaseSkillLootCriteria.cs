@@ -58,21 +58,21 @@ public class CharacterBaseSkillLootCriteria : LootCriteria
         if (!base.IsMatch(filter))
             return false;
 
+        if (filter.Length >= 2 && !string.IsNullOrEmpty(filter[1]))
+        {
+            if (!Enum.TryParse<Enums.SkillType>(filter[1], out var test) || test != SkillType)
+                return false;
+        }
+
         if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
         {
-            if (!Enum.TryParse<Enums.SkillType>(filter[2], out var test) || test != SkillType)
+            if (!int.TryParse(filter[2], out var test2) || test2 != MinSkillValue)
                 return false;
         }
 
         if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
         {
-            if (!int.TryParse(filter[3], out var test2) || test2 != MinSkillValue)
-                return false;
-        }
-
-        if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
-        {
-            if (!int.TryParse(filter[4], out var test2) || test2 != MaxSkillValue)
+            if (!int.TryParse(filter[3], out var test2) || test2 != MaxSkillValue)
                 return false;
         }
 

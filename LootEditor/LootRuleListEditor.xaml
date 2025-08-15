@@ -20,6 +20,7 @@
         <cvt:HasNonDisabledTypeCriteriaConverter x:Key="HasNonDisabledTypeCriteriaConverter" />
         <cvt:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
         <cvt:FullPathToFileNameConverter x:Key="FullPathToFileNameConverter" />
+        <cvt:NameToFontSizeConverter x:Key="NameToFontSizeConverter" />
 
         <CollectionViewSource x:Key="LootRules" Source="{Binding LootRules}" Filter="CollectionViewSource_Filter"></CollectionViewSource>
     </UserControl.Resources>
@@ -133,7 +134,7 @@
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}" FontSize="14">
+                                    <TextBlock Grid.Row="0" Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="{Binding Name, Converter={StaticResource NameToFontWeightConverter}}" FontSize="{Binding Name, Converter={StaticResource NameToFontSizeConverter}, ConverterParameter=14}">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
                                                 <Style.Triggers>
@@ -173,7 +174,7 @@
                         <Button Grid.Column="0" Command="{Binding AddRuleCommand}" Padding="5" FontSize="14" BorderThickness="1" ToolTip="Add" BorderBrush="Black">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
-                                    <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" />
+                                    <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" Margin="0,0,3,0" />
                                     <TextBlock Text="Add" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                             </Button.Content>
@@ -181,7 +182,7 @@
                         <Button Grid.Column="1" Command="{Binding CloneRuleCommand}" Padding="5" FontSize="14" BorderThickness="1" ToolTip="Clone">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
-                                    <iconPacks:PackIconFontAwesome Kind="CloneRegular" />
+                                    <iconPacks:PackIconFontAwesome Kind="CloneRegular" Margin="0,0,3,0" />
                                     <TextBlock Text="Clone" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                             </Button.Content>
@@ -189,7 +190,7 @@
                         <Button Grid.Column="2" Command="{Binding DeleteRuleCommand}" Padding="5" FontSize="14" BorderThickness="1" ToolTip="Delete">
                             <Button.Content>
                                 <StackPanel Orientation="Horizontal">
-                                    <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" />
+                                    <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" Margin="0,0,3,0" />
                                     <TextBlock Text="Delete" TextTrimming="CharacterEllipsis" />
                                 </StackPanel>
                             </Button.Content>

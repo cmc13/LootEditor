@@ -53,21 +53,21 @@ public class CalculatedBuffedTinkedTargetMeleeGELootCriteria : LootCriteria
         if (!base.IsMatch(filter))
             return false;
 
+        if (filter.Length >= 2 && !string.IsNullOrEmpty(filter[1]))
+        {
+            if (!double.TryParse(filter[1], out var test) || test != CalculatedBuffedTinkedDamageOverTime)
+                return false;
+        }
+
         if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
         {
-            if (!double.TryParse(filter[2], out var test) || test != CalculatedBuffedTinkedDamageOverTime)
+            if (!double.TryParse(filter[2], out var test) || test != BuffedMeleeDefenseBonus)
                 return false;
         }
 
         if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
         {
-            if (!double.TryParse(filter[3], out var test) || test != BuffedMeleeDefenseBonus)
-                return false;
-        }
-
-        if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
-        {
-            if (!double.TryParse(filter[4], out var test) || test != BuffedAttackBonus)
+            if (!double.TryParse(filter[3], out var test) || test != BuffedAttackBonus)
                 return false;
         }
 

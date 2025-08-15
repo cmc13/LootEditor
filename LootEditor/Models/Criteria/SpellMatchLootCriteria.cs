@@ -13,7 +13,7 @@ public class SpellMatchLootCriteria : LootCriteria
     public string Match { get; set; }
     public string NoMatch { get; set; }
     public int SpellCount { get; set; }
-    public override string Filter => $"{base.Filter}:{Match}:{NoMatch}:{SpellCount}";
+    public override string Filter => $"{base.Filter}:{EscapeFilter(Match)}:{EscapeFilter(NoMatch)}:{SpellCount}";
 
     public SpellMatchLootCriteria()
     {
@@ -55,21 +55,21 @@ public class SpellMatchLootCriteria : LootCriteria
         if (!base.IsMatch(filter))
             return false;
 
+        if (filter.Length >= 2 && !string.IsNullOrEmpty(filter[1]))
+        {
+            if (!Match.Contains(filter[1], filter[1].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                return false;
+        }
+
         if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
         {
-            if (!Match.Contains(filter[2], filter[2].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            if (!NoMatch.Contains(filter[2], filter[2].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 return false;
         }
 
         if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
         {
-            if (!NoMatch.Contains(filter[3], filter[3].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
-                return false;
-        }
-
-        if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
-        {
-            if (!int.TryParse(filter[4], out var test) || test != SpellCount)
+            if (!int.TryParse(filter[3], out var test) || test != SpellCount)
                 return false;
         }
 

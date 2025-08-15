@@ -17,7 +17,7 @@ public class ValueLootCriteria<T> : LootCriteria
     public override Enums.LootCriteriaType Type { get; }
     public T Value { get; set; }
 
-    public override string Filter => $"{base.Filter}:{Value}";
+    public override string Filter => $"{base.Filter}:{EscapeFilter(Value.ToString())}";
 
     protected ValueLootCriteria(SerializationInfo info, StreamingContext context)
     {
@@ -85,19 +85,23 @@ public class ValueLootCriteria<T> : LootCriteria
         if (!base.IsMatch(filter))
             return false;
 
-        if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+        if (filter.Length >= 2 && !string.IsNullOrEmpty(filter[1]))
         {
             switch (Value)
             {
                 case string str:
-                    return str.Contains(filter[2]);
+                    return str.Contains(filter[1]);
 
                 case Enum:
-                    return Enum.TryParse(typeof(T), filter[2], out var test) && test.Equals(Value);
+                    return Enum.TryParse(typeof(T), filter[1], out var test) && test.Equals(Value);
 
                 default:
-                    var testValue = Convert.ChangeType(filter[2], typeof(T));
-                    return testValue.Equals(Value);
+                    try
+                    {
+                        var testValue = Convert.ChangeType(filter[1], typeof(T));
+                        return testValue.Equals(Value);
+                    }
+                    catch { return false; }
             }
         }
 

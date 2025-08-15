@@ -26,7 +26,7 @@ public partial class ColorLootCriteria : LootCriteria
     public double HDiff { get; set; }
     public decimal SVDiff { get; set; }
 
-    public override string Filter => $"{base.Filter}:#{Color.A:X}{Color.R:X}{Color.G:X}{Color.B:X}:{HDiff}:{SVDiff}";
+    public override string Filter => $"{base.Filter}:#{Color.A:X2}{Color.R:X2}{Color.G:X2}{Color.B:X2}:{HDiff}:{SVDiff}";
 
     public override Enums.LootCriteriaType Type { get; }
 
@@ -101,23 +101,23 @@ public partial class ColorLootCriteria : LootCriteria
         if (!base.IsMatch(filter))
             return false;
 
-        if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+        if (filter.Length >= 2 && !string.IsNullOrEmpty(filter[1]))
         {
             //color match
-            if (filter[2].StartsWith('#'))
+            if (filter[1].StartsWith('#'))
             {
                 // try hex
-                if (filter[2].Length == 9)
+                if (filter[1].Length == 9)
                 {
-                    if (!int.TryParse(filter[2].AsSpan(1), System.Globalization.NumberStyles.HexNumber, null, out var argb))
+                    if (!int.TryParse(filter[1].AsSpan(1), System.Globalization.NumberStyles.HexNumber, null, out var argb))
                         return false;
 
                     if (argb != ((Color.A << 24) | (Color.R << 16) | (Color.G << 8) | Color.B))
                         return false;
                 }
-                else if (filter[2].Length == 7)
+                else if (filter[1].Length == 7)
                 {
-                    if (!int.TryParse(filter[2].AsSpan(1), System.Globalization.NumberStyles.HexNumber, null, out var rgb))
+                    if (!int.TryParse(filter[1].AsSpan(1), System.Globalization.NumberStyles.HexNumber, null, out var rgb))
                         return false;
 
                     if (rgb != ((Color.R << 16) | (Color.G << 8) | Color.B))
@@ -126,9 +126,9 @@ public partial class ColorLootCriteria : LootCriteria
                 else
                     return false;
             }
-            else if (ColorRegex().IsMatch(filter[2]))
+            else if (ColorRegex().IsMatch(filter[1]))
             {
-                var rgb = filter[2].Split(',');
+                var rgb = filter[1].Split(',');
                 if (rgb.Length == 4)
                 {
                     if (!byte.TryParse(rgb[0], out var a) || a != Color.A)
@@ -156,20 +156,20 @@ public partial class ColorLootCriteria : LootCriteria
             {
                 // try color name
                 var name = Color.GetColorName();
-                if (!name.Equals(filter[2], filter[2].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                if (!name.Equals(filter[1], filter[1].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                     return false;
             }
         }
 
-        if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
+        if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
         {
-            if (!double.TryParse(filter[3], out var test) || test != HDiff)
+            if (!double.TryParse(filter[2], out var test) || test != HDiff)
                 return false;
         }
 
-        if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
+        if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
         {
-            if (!decimal.TryParse(filter[4], out var test) || test != SVDiff)
+            if (!decimal.TryParse(filter[3], out var test) || test != SVDiff)
                 return false;
         }
 

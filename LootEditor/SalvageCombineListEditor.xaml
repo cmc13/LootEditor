@@ -93,13 +93,13 @@
                     <UniformGrid Grid.Row="1" Columns="2">
                         <Button FontSize="14" Padding="3" BorderThickness="1" ToolTip="Add" Command="{Binding AddSalvageCommand}">
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" />
+                                <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" Margin="0,0,3,0" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                             </StackPanel>
                         </Button>
                         <Button FontSize="14" Padding="3" BorderThickness="1" ToolTip="Delete" Command="{Binding DeleteSalvageCommand}">
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" />
+                                <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" Margin="0,0,3,0" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
                             </StackPanel>
                         </Button>

@@ -20,7 +20,7 @@ public class SimilarArmorColorLootCriteria : ColorLootCriteria, ISerializable
 
     public string ArmorGroup { get; set; }
 
-    public override string Filter => $"{base.Filter}:{ArmorGroup}";
+    public override string Filter => $"{base.Filter}:{EscapeFilter(ArmorGroup)}";
 
     public override string ToString() => $"{base.ToString()}; {ArmorGroup}";
 
@@ -47,9 +47,9 @@ public class SimilarArmorColorLootCriteria : ColorLootCriteria, ISerializable
         if (!base.IsMatch(filter))
             return false;
 
-        if (filter.Length >= 6 && !string.IsNullOrEmpty(filter[5]))
+        if (filter.Length >= 5 && !string.IsNullOrEmpty(filter[4]))
         {
-            if (ArmorGroup.Equals(filter[5], filter[5].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            if (!ArmorGroup.Equals(filter[4], filter[4].IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 return false;
         }
 

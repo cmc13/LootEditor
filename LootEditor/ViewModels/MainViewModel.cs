@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -135,15 +136,25 @@ public partial class MainViewModel
     [RelayCommand]
     private void Load()
     {
-        if (fileSystemService.FileExists(RECENT_FILE_NAME))
+        try
         {
-            using var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
-            foreach (var file in JsonSerializer.Deserialize<string[]>(fs))
+            if (fileSystemService.FileExists(RECENT_FILE_NAME))
             {
-                RecentFiles.Add(file);
-                if (RecentFiles.Count >= RECENT_FILE_COUNT)
-                    break;
+                using var fs = fileSystemService.OpenFileForReadAccess(RECENT_FILE_NAME);
+                var files = JsonSerializer.Deserialize<string[]>(fs) ?? [];
+
+                foreach (var file in files)
+                {
+                    RecentFiles.Add(file);
+                    if (RecentFiles.Count >= RECENT_FILE_COUNT)
+                        break;
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            // Log the error or handle it gracefully
+            Debug.WriteLine($"Error loading recent files: {ex.Message}");
         }
     }
 

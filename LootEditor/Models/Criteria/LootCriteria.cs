@@ -1,6 +1,7 @@
 ﻿using LootEditor.Models.Enums;
 using System;
 using System.IO;
+using System.Printing;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -71,19 +72,21 @@ public abstract class LootCriteria : ICloneable, ISerializable
 
     public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 
-    public virtual bool IsMatch(string[] filter)
+    protected bool BaseMatch(string[] tokens)
     {
-        if (filter.Length < 2)
+        if (tokens.Length <= 0)
             return false;
 
-        if (string.IsNullOrEmpty(filter[1]))
+        if (string.IsNullOrEmpty(tokens[0]))
             return false;
 
-        if (!Enum.TryParse<LootCriteriaType>(filter[1], out var type))
+        if (!Enum.TryParse<LootCriteriaType>(tokens[0], out var type))
             return false;
 
         return type == Type;
     }
+
+    public virtual bool IsMatch(string[] tokens) => BaseMatch(tokens);
 
     public virtual async Task ReadAsync(TextReader reader, int version)
     {
@@ -118,5 +121,11 @@ public abstract class LootCriteria : ICloneable, ISerializable
         var line = await reader.ReadLineForRealAsync().ConfigureAwait(false);
         var value = Convert.ChangeType(line, typeof(TValue));
         return (TValue)value;
+    }
+
+    protected static string EscapeFilter(string p)
+    {
+        p = p.Replace("\\", "\\\\").Replace("\"", "\\\"");
+        return (p.Contains(' ') || p.Contains('\\')) ? $"\"{p}\"" : p;
     }
 }

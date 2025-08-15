@@ -1,12 +1,11 @@
-﻿using GongSolutions.Wpf.DragDrop;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using GongSolutions.Wpf.DragDrop;
 using LootEditor.Models;
 using LootEditor.Models.Enums;
-using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Windows.Media.Media3D;
 
 namespace LootEditor.ViewModels;
 

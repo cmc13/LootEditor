@@ -51,15 +51,15 @@ public class SlotExactPaletteLootCriteria : LootCriteria
         if (!base.IsMatch(filter))
             return false;
 
-        if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
+        if (filter.Length >= 2 && !string.IsNullOrEmpty(filter[1]))
         {
-            if (!int.TryParse(filter[2], out var test) || test != Slot)
+            if (!int.TryParse(filter[1], out var test) || test != Slot)
                 return false;
         }
 
-        if (filter.Length >= 4 && !string.IsNullOrEmpty(filter[3]))
+        if (filter.Length >= 3 && !string.IsNullOrEmpty(filter[2]))
         {
-            if (!int.TryParse(filter[3], System.Globalization.NumberStyles.HexNumber, null, out var test) || test != Palette)
+            if (!int.TryParse(filter[2], System.Globalization.NumberStyles.HexNumber, null, out var test) || test != Palette)
                 return false;
         }
 

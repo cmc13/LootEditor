@@ -1,54 +1,65 @@
-﻿using LootEditor.Models.Enums;
+﻿using LootEditor.Models;
 using LootEditor.ViewModels;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace LootEditor
+namespace LootEditor;
+
+/// <summary>
+/// Interaction logic for LootRuleListEditor.xaml
+/// </summary>
+public partial class LootRuleListEditor : UserControl
 {
-    /// <summary>
-    /// Interaction logic for LootRuleListEditor.xaml
-    /// </summary>
-    public partial class LootRuleListEditor : UserControl
+    public LootRuleListEditor()
     {
-        public LootRuleListEditor()
+        InitializeComponent();
+    }
+
+    private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        var item = sender as ListBoxItem;
+        var vm = item.DataContext as LootRuleViewModel;
+        vm.ToggleDisabledCommand.Execute(null);
+    }
+
+    private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+    {
+        if (e.Item is not LootRuleViewModel vm)
         {
-            InitializeComponent();
+            e.Accepted = false;
+            return;
         }
 
-        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        try
         {
-            var item = sender as ListBoxItem;
-            var vm = item.DataContext as LootRuleViewModel;
-            vm.ToggleDisabledCommand.Execute(null);
-        }
-
-        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
-        {
-            if (txtFilter.Text.StartsWith("has:"))
+            var filters = new Services.FilterParser(txtFilter.Text).ParseAll();
+            if (filters.Count > 0)
             {
-                // Try to parse criteria filter
-                var parts = txtFilter.Text.Split(':', StringSplitOptions.TrimEntries);
-                if (parts.Length > 1)
+                e.Accepted = filters.All(filter =>
                 {
-                    if (Enum.TryParse<LootCriteriaType>(parts[1], out var criteriaType))
-                    {
-                        e.Accepted = e.Item is LootRuleViewModel vmm && vmm.Criteria.Any(c => c.Criteria.IsMatch(parts));
-                        return;
-                    }
-                }
+                    var match = filter.Type != CriteriaFilterType.Unstructured
+                        ? vm.Criteria.Any(c => c.Criteria.IsMatch(filter.Tokens))
+                        : vm.Name?.IndexOf(filter.Tokens[0], filter.Tokens[0].Any(char.IsUpper) ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    return filter.IsNegated ? !match : match;
+                });
+
+                return;
             }
-
-            var comparison = txtFilter.Text.IsLower() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-            e.Accepted = e.Item is LootRuleViewModel vm && vm.Name.Contains(txtFilter.Text, comparison);
         }
+        catch { }
 
-        private void TxtFilter_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var cvs = Resources["LootRules"] as CollectionViewSource;
-            cvs.View.Refresh();
-        }
+        // No filters? Accept all
+        e.Accepted = true;
+    }
+
+    private void TxtFilter_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        var cvs = Resources["LootRules"] as CollectionViewSource;
+        cvs.View.Refresh();
     }
 }

@@ -1,4 +1,7 @@
-﻿using LootEditor.ViewModels;
+﻿using LootEditor.Services;
+using LootEditor.ViewModels;
+using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
@@ -33,6 +36,27 @@ namespace LootEditor
                 e.Handled = true;
                 e.Effects = DragDropEffects.Copy;
             }
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            var settings = WindowSettingsManager.Load();
+            if (settings != null)
+            {
+                Width = settings.Width;
+                Height = settings.Height;
+                Top = settings.Top;
+                Left = settings.Left;
+            }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            WindowSettingsManager.Save(new(Width, Height, Top, Left));
         }
     }
 }

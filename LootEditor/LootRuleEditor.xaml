@@ -115,19 +115,19 @@
                     <UniformGrid Grid.Row="1" Columns="3">
                         <Button Grid.Column="0" Command="{Binding AddCriteriaCommand}" Padding="5" BorderThickness="1" ToolTip="Add">
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" VerticalAlignment="Center" />
+                                <iconPacks:PackIconFontAwesome Kind="CirclePlusSolid" VerticalAlignment="Center" Margin="0,0,3,0" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Add</TextBlock>
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="2" Command="{Binding CloneCriteriaCommand}" Padding="5" BorderThickness="1" ToolTip="Clone">
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconFontAwesome Kind="CloneRegular" VerticalAlignment="Center" />
+                                <iconPacks:PackIconFontAwesome Kind="CloneRegular" VerticalAlignment="Center" Margin="0,0,3,0" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Clone</TextBlock>
                             </StackPanel>
                         </Button>
                         <Button Command="{Binding RemoveCriteriaCommand}" Padding="5" BorderThickness="1" ToolTip="Delete">
                             <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" VerticalAlignment="Center" />
+                                <iconPacks:PackIconFontAwesome Kind="TrashCanRegular" VerticalAlignment="Center" Margin="0,0,3,0" />
                                 <TextBlock TextTrimming="CharacterEllipsis">Delete</TextBlock>
                             </StackPanel>
                         </Button>
